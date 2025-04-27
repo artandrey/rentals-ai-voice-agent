@@ -4,6 +4,7 @@ import { isEnum } from 'class-validator';
 import { Entity, Nominal } from '~shared/domain/entities/entity';
 
 import { UnsupportedLanguageException } from '../exception/unsupported-language.exception';
+import { PhoneNumber } from '../value-objects/phone-number.value';
 
 export type ClientId = Nominal<string, 'ClientId'>;
 
@@ -16,20 +17,18 @@ export class Client extends Entity<ClientId> {
   private _firstName: string;
   private _lastName: string;
   private _middleName: string | null = null;
-  private _phoneNumber: string;
-  private _email: string;
+  private _phoneNumber: PhoneNumber;
 
   private _preferredLanguage: ClientPreferredLanguage | null = null;
   private _preferences: string[] = [];
   private _note: string = '';
 
-  constructor(firstName: string, lastName: string, phoneNumber: string, email: string) {
+  constructor(firstName: string, lastName: string, phoneNumber: PhoneNumber) {
     super();
 
     this._firstName = firstName;
     this._lastName = lastName;
     this._phoneNumber = phoneNumber;
-    this._email = email;
   }
 
   public get firstName(): string {
@@ -40,12 +39,8 @@ export class Client extends Entity<ClientId> {
     return this._lastName;
   }
 
-  public get phoneNumber(): string {
+  public get phoneNumber(): PhoneNumber {
     return this._phoneNumber;
-  }
-
-  public get email(): string {
-    return this._email;
   }
 
   public get middleName(): string | null {

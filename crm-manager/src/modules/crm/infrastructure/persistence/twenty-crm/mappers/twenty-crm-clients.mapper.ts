@@ -1,0 +1,49 @@
+import { Injectable } from '@nestjs/common';
+import { Client_for_Response as ClientTwentyCrm, Client as ClientTwentyCrmInput } from 'twenty-crm-api-client';
+
+import { Client, ClientPreferredLanguage } from '~modules/crm/domain/entities/client';
+import { PhoneNumber } from '~modules/crm/domain/value-objects/phone-number.value';
+import { IDataAccessMapper } from '~shared/domain/mappers/data-access-mapper.interface';
+
+@Injectable()
+export class ClientsTwentyCrmMapper implements IDataAccessMapper<Client, ClientTwentyCrm> {
+  toPersistence(entity: Client): ClientTwentyCrmInput {
+    return {
+      fistname: entity.firstName,
+      lastname: entity.lastName,
+      middlename: entity.middleName ?? undefined,
+      phonenumber: {
+        primaryPhoneNumber: entity.phoneNumber.number,
+        primaryPhoneCallingCode: entity.phoneNumber.callingCode,
+        primaryPhoneCountryCode: entity.phoneNumber.countryCode,
+      },
+      language: (entity.preferredLanguage?.toLowerCase() as ClientTwentyCrmInput['language']) ?? undefined,
+      note: entity.note ?? undefined,
+      preferences: entity.preferences,
+    };
+  }
+
+  toDomain(persistence: ClientTwentyCrm): Client {
+    const builder = Client.builder(
+      persistence.fistname!,
+      persistence.lastname!,
+      PhoneNumber.create(
+        persistence.phonenumber!.primaryPhoneCallingCode! + persistence.phonenumber!.primaryPhoneNumber!,
+      ),
+    );
+
+    if (persistence.middlename) {
+      builder.middleName(persistence.middlename);
+    }
+
+    if (persistence.preferences) {
+      builder.preferences(persistence.preferences);
+    }
+
+    if (persistence.language) {
+      builder.preferredLanguage(persistence.language as ClientPreferredLanguage);
+    }
+
+    return builder.build();
+  }
+}

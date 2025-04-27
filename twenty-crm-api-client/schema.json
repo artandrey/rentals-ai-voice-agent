@@ -854,7 +854,13 @@
           },
           "syncStatus": {
             "type": "string",
-            "enum": ["ONGOING", "NOT_SYNCED", "ACTIVE", "FAILED_INSUFFICIENT_PERMISSIONS", "FAILED_UNKNOWN"],
+            "enum": [
+              "ONGOING",
+              "NOT_SYNCED",
+              "ACTIVE",
+              "FAILED_INSUFFICIENT_PERMISSIONS",
+              "FAILED_UNKNOWN"
+            ],
             "description": "Sync status"
           },
           "syncStage": {
@@ -880,7 +886,12 @@
           },
           "contactAutoCreationPolicy": {
             "type": "string",
-            "enum": ["AS_PARTICIPANT_AND_ORGANIZER", "AS_PARTICIPANT", "AS_ORGANIZER", "NONE"],
+            "enum": [
+              "AS_PARTICIPANT_AND_ORGANIZER",
+              "AS_PARTICIPANT",
+              "AS_ORGANIZER",
+              "NONE"
+            ],
             "description": "Automatically create records for people you participated with in an event."
           },
           "isSyncEnabled": {
@@ -923,7 +934,13 @@
           },
           "syncStatus": {
             "type": "string",
-            "enum": ["ONGOING", "NOT_SYNCED", "ACTIVE", "FAILED_INSUFFICIENT_PERMISSIONS", "FAILED_UNKNOWN"],
+            "enum": [
+              "ONGOING",
+              "NOT_SYNCED",
+              "ACTIVE",
+              "FAILED_INSUFFICIENT_PERMISSIONS",
+              "FAILED_UNKNOWN"
+            ],
             "description": "Sync status"
           },
           "syncStage": {
@@ -949,7 +966,12 @@
           },
           "contactAutoCreationPolicy": {
             "type": "string",
-            "enum": ["AS_PARTICIPANT_AND_ORGANIZER", "AS_PARTICIPANT", "AS_ORGANIZER", "NONE"],
+            "enum": [
+              "AS_PARTICIPANT_AND_ORGANIZER",
+              "AS_PARTICIPANT",
+              "AS_ORGANIZER",
+              "NONE"
+            ],
             "description": "Automatically create records for people you participated with in an event."
           },
           "isSyncEnabled": {
@@ -991,7 +1013,13 @@
           },
           "syncStatus": {
             "type": "string",
-            "enum": ["ONGOING", "NOT_SYNCED", "ACTIVE", "FAILED_INSUFFICIENT_PERMISSIONS", "FAILED_UNKNOWN"],
+            "enum": [
+              "ONGOING",
+              "NOT_SYNCED",
+              "ACTIVE",
+              "FAILED_INSUFFICIENT_PERMISSIONS",
+              "FAILED_UNKNOWN"
+            ],
             "description": "Sync status"
           },
           "syncStage": {
@@ -1017,7 +1045,12 @@
           },
           "contactAutoCreationPolicy": {
             "type": "string",
-            "enum": ["AS_PARTICIPANT_AND_ORGANIZER", "AS_PARTICIPANT", "AS_ORGANIZER", "NONE"],
+            "enum": [
+              "AS_PARTICIPANT_AND_ORGANIZER",
+              "AS_PARTICIPANT",
+              "AS_ORGANIZER",
+              "NONE"
+            ],
             "description": "Automatically create records for people you participated with in an event."
           },
           "isSyncEnabled": {
@@ -1473,7 +1506,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               }
             },
             "description": "The creator of the record"
@@ -1636,7 +1678,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               }
             },
             "description": "The creator of the record"
@@ -1799,7 +1850,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               },
               "workspaceMemberId": {
                 "type": "string",
@@ -3787,7 +3847,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               }
             },
             "description": "The creator of the record"
@@ -3823,7 +3892,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               }
             },
             "description": "The creator of the record"
@@ -3859,7 +3937,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               },
               "workspaceMemberId": {
                 "type": "string",
@@ -4164,7 +4251,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               }
             },
             "description": "The executor of the workflow"
@@ -4222,7 +4318,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               }
             },
             "description": "The executor of the workflow"
@@ -4279,7 +4384,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               },
               "workspaceMemberId": {
                 "type": "string",
@@ -4831,7 +4945,13 @@
           },
           "syncStatus": {
             "type": "string",
-            "enum": ["ONGOING", "NOT_SYNCED", "ACTIVE", "FAILED_INSUFFICIENT_PERMISSIONS", "FAILED_UNKNOWN"],
+            "enum": [
+              "ONGOING",
+              "NOT_SYNCED",
+              "ACTIVE",
+              "FAILED_INSUFFICIENT_PERMISSIONS",
+              "FAILED_UNKNOWN"
+            ],
             "description": "Sync status"
           },
           "syncStage": {
@@ -4913,7 +5033,13 @@
           },
           "syncStatus": {
             "type": "string",
-            "enum": ["ONGOING", "NOT_SYNCED", "ACTIVE", "FAILED_INSUFFICIENT_PERMISSIONS", "FAILED_UNKNOWN"],
+            "enum": [
+              "ONGOING",
+              "NOT_SYNCED",
+              "ACTIVE",
+              "FAILED_INSUFFICIENT_PERMISSIONS",
+              "FAILED_UNKNOWN"
+            ],
             "description": "Sync status"
           },
           "syncStage": {
@@ -4994,7 +5120,13 @@
           },
           "syncStatus": {
             "type": "string",
-            "enum": ["ONGOING", "NOT_SYNCED", "ACTIVE", "FAILED_INSUFFICIENT_PERMISSIONS", "FAILED_UNKNOWN"],
+            "enum": [
+              "ONGOING",
+              "NOT_SYNCED",
+              "ACTIVE",
+              "FAILED_INSUFFICIENT_PERMISSIONS",
+              "FAILED_UNKNOWN"
+            ],
             "description": "Sync status"
           },
           "syncStage": {
@@ -5421,7 +5553,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               }
             },
             "description": "The creator of the record"
@@ -5461,7 +5602,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               }
             },
             "description": "The creator of the record"
@@ -5501,7 +5651,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               },
               "workspaceMemberId": {
                 "type": "string",
@@ -5784,7 +5943,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               }
             },
             "description": "The creator of the record"
@@ -5840,7 +6008,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               }
             },
             "description": "The creator of the record"
@@ -5896,7 +6073,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               },
               "workspaceMemberId": {
                 "type": "string",
@@ -6111,7 +6297,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               }
             },
             "description": "The creator of the record"
@@ -6253,7 +6448,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               }
             },
             "description": "The creator of the record"
@@ -6395,7 +6599,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               },
               "workspaceMemberId": {
                 "type": "string",
@@ -6536,7 +6749,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               }
             },
             "description": "The creator of the record"
@@ -6591,7 +6813,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               }
             },
             "description": "The creator of the record"
@@ -6646,7 +6877,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               },
               "workspaceMemberId": {
                 "type": "string",
@@ -6911,7 +7151,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               }
             },
             "description": "The creator of the record"
@@ -6967,7 +7216,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               }
             },
             "description": "The creator of the record"
@@ -7043,7 +7301,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               },
               "workspaceMemberId": {
                 "type": "string",
@@ -7137,7 +7404,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               }
             },
             "description": "The creator of the record"
@@ -7187,6 +7463,10 @@
           },
           "note": {
             "type": "string"
+          },
+          "language": {
+            "type": "string",
+            "enum": ["UK", "EN"]
           }
         }
       },
@@ -7199,7 +7479,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               }
             },
             "description": "The creator of the record"
@@ -7249,6 +7538,10 @@
           },
           "note": {
             "type": "string"
+          },
+          "language": {
+            "type": "string",
+            "enum": ["UK", "EN"]
           }
         }
       },
@@ -7266,7 +7559,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               },
               "workspaceMemberId": {
                 "type": "string",
@@ -7338,6 +7640,10 @@
           },
           "note": {
             "type": "string"
+          },
+          "language": {
+            "type": "string",
+            "enum": ["UK", "EN"]
           },
           "timelineActivities": {
             "type": "array",
@@ -7395,7 +7701,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               }
             },
             "description": "The creator of the record"
@@ -7414,7 +7729,13 @@
           },
           "status": {
             "type": "string",
-            "enum": ["PENDING_BOOKING_CONFIRMATION", "BOOKING_CONFIRMED", "CANCELLED", "SETTLED", "COMPLETED"]
+            "enum": [
+              "PENDING_BOOKING_CONFIRMATION",
+              "BOOKING_CONFIRMED",
+              "CANCELLED",
+              "SETTLED",
+              "COMPLETED"
+            ]
           },
           "clientId": {
             "type": "string",
@@ -7439,7 +7760,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               }
             },
             "description": "The creator of the record"
@@ -7458,7 +7788,13 @@
           },
           "status": {
             "type": "string",
-            "enum": ["PENDING_BOOKING_CONFIRMATION", "BOOKING_CONFIRMED", "CANCELLED", "SETTLED", "COMPLETED"]
+            "enum": [
+              "PENDING_BOOKING_CONFIRMATION",
+              "BOOKING_CONFIRMED",
+              "CANCELLED",
+              "SETTLED",
+              "COMPLETED"
+            ]
           },
           "clientId": {
             "type": "string",
@@ -7503,7 +7839,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               },
               "workspaceMemberId": {
                 "type": "string",
@@ -7529,7 +7874,13 @@
           },
           "status": {
             "type": "string",
-            "enum": ["PENDING_BOOKING_CONFIRMATION", "BOOKING_CONFIRMED", "CANCELLED", "SETTLED", "COMPLETED"]
+            "enum": [
+              "PENDING_BOOKING_CONFIRMATION",
+              "BOOKING_CONFIRMED",
+              "CANCELLED",
+              "SETTLED",
+              "COMPLETED"
+            ]
           },
           "clientId": {
             "type": "string",
@@ -7589,7 +7940,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               }
             },
             "description": "The creator of the record"
@@ -7653,7 +8013,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               }
             },
             "description": "The creator of the record"
@@ -7737,7 +8106,16 @@
             "properties": {
               "source": {
                 "type": "string",
-                "enum": ["EMAIL", "CALENDAR", "WORKFLOW", "API", "IMPORT", "MANUAL", "SYSTEM", "WEBHOOK"]
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
               },
               "workspaceMemberId": {
                 "type": "string",

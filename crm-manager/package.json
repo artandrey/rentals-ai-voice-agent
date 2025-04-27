@@ -39,12 +39,13 @@
     "drizzle-orm": "^0.41.0",
     "nest-winston": "^1.10.2",
     "pg": "^8.14.1",
+    "phone": "^3.1.59",
     "postgres": "^3.4.5",
     "qs": "^6.14.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
-    "winston": "^3.17.0",
-    "twenty-crm-api-client": "workspace:*"
+    "twenty-crm-api-client": "workspace:*",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.6",
