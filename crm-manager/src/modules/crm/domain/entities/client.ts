@@ -4,9 +4,8 @@ import { isEnum } from 'class-validator';
 import { Entity, Nominal } from '~shared/domain/entities/entity';
 
 import { UnsupportedLanguageException } from '../exception/unsupported-language.exception';
-import { Accommodation } from './accommodation';
 
-type ClientId = Nominal<string, 'ClientId'>;
+export type ClientId = Nominal<string, 'ClientId'>;
 
 export enum ClientPreferredLanguage {
   ENGLISH = 'en',
@@ -19,7 +18,6 @@ export class Client extends Entity<ClientId> {
   private _middleName: string | null = null;
   private _phoneNumber: string;
   private _email: string;
-  private _accommodations: Accommodation[] = [];
 
   private _preferredLanguage: ClientPreferredLanguage | null = null;
   private _preferences: string[] = [];
@@ -56,10 +54,6 @@ export class Client extends Entity<ClientId> {
 
   public get preferredLanguage(): ClientPreferredLanguage | null {
     return this._preferredLanguage;
-  }
-
-  public get accommodations(): ReadonlyArray<Accommodation> {
-    return this._accommodations;
   }
 
   public get preferences(): string[] {

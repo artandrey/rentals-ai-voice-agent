@@ -1,3 +1,7 @@
+import { IAccommodationsRepository } from '~modules/crm/domain/repositories/accommodations-repository.interface';
+import { IClientRepository } from '~modules/crm/domain/repositories/clients-repository.interface';
+import { IRentalsRepository } from '~modules/crm/domain/repositories/rentals-repository.interface';
+
 export interface IDbContext {
   startTransaction(): Promise<void>;
 
@@ -6,7 +10,11 @@ export interface IDbContext {
   rollbackTransaction(): Promise<void>;
 }
 
-export interface IDbRepositories {}
+export interface IDbRepositories {
+  accommodations: IAccommodationsRepository;
+  clients: IClientRepository;
+  rentals: IRentalsRepository;
+}
 
 export interface IDbContext extends IDbRepositories {
   startTransaction(): Promise<void>;

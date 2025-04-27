@@ -1,3 +1,6 @@
+import { toBuilderMethod } from 'class-constructor';
+
+import { AggregateRoot } from '~shared/domain/aggregates/aggregate-root';
 import { Entity, Nominal } from '~shared/domain/entities/entity';
 
 import { DayDate } from '../value-objects/day-date.value';
@@ -7,17 +10,16 @@ import { Price } from '../value-objects/price.value';
 import { Accommodation } from './accommodation';
 import { Client } from './client';
 
-type RentalId = Nominal<string, 'RentalId'>;
+export type RentalId = Nominal<string, 'RentalId'>;
 
-export class Rental extends Entity<RentalId> {
+export class Rental extends AggregateRoot<RentalId> {
   private _location: Location;
   private _pricePerDay: Price;
-  private _accommodations: Accommodation[] = [];
 
-  constructor(address: Location, price: Price) {
+  constructor(location: Location, pricePerDay: Price) {
     super();
-    this._location = address;
-    this._pricePerDay = price;
+    this._location = location;
+    this._pricePerDay = pricePerDay;
   }
 
   public get location(): Location {
@@ -28,17 +30,13 @@ export class Rental extends Entity<RentalId> {
     return this._pricePerDay;
   }
 
-  public get accommodations(): ReadonlyArray<Accommodation> {
-    return this._accommodations;
-  }
-
-  public createAccommodation(client: Client, startDate: DayDate, endDate: DayDate): Accommodation {
+  public async createAccommodation(client: Client, startDate: DayDate, endDate: DayDate): Promise<Accommodation> {
     const accommodation = new Accommodation(client, this, startDate, endDate);
-    this._accommodations.push(accommodation);
+    await this._dbContext.accommodations.save(accommodation);
     return accommodation;
   }
 
-  public getFreeDaysSpansInRangeIncluding(startDate: DayDate, endDate: DayDate): DaysSpan[] {
+  public async getFreeDaysSpansInRangeIncluding(startDate: DayDate, endDate: DayDate): Promise<DaysSpan[]> {
     const searchStart = startDate.settlementTime.getTime();
     const searchEnd = endDate.evictionTime.getTime();
 
@@ -46,7 +44,9 @@ export class Rental extends Entity<RentalId> {
       return [];
     }
 
-    const occupiedIntervals = this._accommodations
+    const accommodations = await this._dbContext.accommodations.findByRentalId(this.id);
+
+    const occupiedIntervals = accommodations
       .map((acc) => ({
         start: acc.startDate.settlementTime.getTime(),
         end: acc.endDate.evictionTime.getTime(),
@@ -99,4 +99,6 @@ export class Rental extends Entity<RentalId> {
 
     return freeSpans;
   }
+
+  public static builder = toBuilderMethod(Rental).classAsOptionals();
 }

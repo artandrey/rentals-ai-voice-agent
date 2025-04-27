@@ -1,0 +1,46 @@
+import { ClientId } from '~modules/crm/domain/entities/client';
+import { RentalId } from '~modules/crm/domain/entities/rental';
+import { IClientRepository } from '~modules/crm/domain/repositories/clients-repository.interface';
+import { IRentalsRepository } from '~modules/crm/domain/repositories/rentals-repository.interface';
+import { DayDate } from '~modules/crm/domain/value-objects/day-date.value';
+import { Command } from '~shared/application/CQS/command.abstract';
+import { IUseCase } from '~shared/application/use-cases/use-case.interface';
+
+import { BookRentalDto } from '../dto/accommodation.dto';
+
+export abstract class ICreateBookingUseCase
+  extends Command<BookRentalDto, void>
+  implements IUseCase<BookRentalDto, void> {}
+
+export class CreateBookingUseCase extends ICreateBookingUseCase {
+  constructor(
+    private readonly rentalRepository: IRentalsRepository,
+    private readonly clientRepository: IClientRepository,
+  ) {
+    super();
+  }
+
+  async implementation(): Promise<void> {
+    const { rentalId, clientId, startDate, endDate } = this._input;
+
+    const rental = await this.rentalRepository.findById(rentalId as RentalId);
+
+    if (!rental) {
+      throw new Error('Rental not found');
+    }
+
+    const client = await this.clientRepository.findById(clientId as ClientId);
+
+    if (!client) {
+      throw new Error('Client not found');
+    }
+
+    rental.createAccommodation(
+      client,
+      new DayDate(startDate.year, startDate.month, startDate.day),
+      new DayDate(endDate.year, endDate.month, endDate.day),
+    );
+
+    await this.rentalRepository.save(rental);
+  }
+}

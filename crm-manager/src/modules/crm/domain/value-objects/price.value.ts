@@ -1,6 +1,6 @@
 export class Price {
   constructor(
-    public readonly amount: number,
+    public readonly amountMicros: number,
     public readonly currency: string,
   ) {}
 }

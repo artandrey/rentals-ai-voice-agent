@@ -8,4 +8,11 @@ export default defineConfig({
     path: './client',
     clean: true,
   },
+  plugins: [
+    {
+      asClass: true,
+      throwOnError: true,
+      name: '@hey-api/sdk',
+    },
+  ],
 });
