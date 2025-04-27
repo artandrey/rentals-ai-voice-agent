@@ -1,4 +1,4 @@
-import { ClientId, ClientPreferredLanguage } from '../entities/client';
+import { ClientId, ClientPreferredLanguage } from '../../domain/entities/client';
 
 export interface ClientDtoParams {
   id: ClientId;

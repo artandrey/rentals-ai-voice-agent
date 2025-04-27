@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { ClientDto } from '../dto/client.dto';
+import { ClientDto } from '../../application/dto/client.dto';
 import { ClientId, ClientPreferredLanguage } from '../entities/client';
 import { Client } from '../entities/client';
 
