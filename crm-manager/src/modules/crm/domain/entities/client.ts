@@ -59,6 +59,26 @@ export class Client extends Entity<ClientId> {
     return this._note;
   }
 
+  public setFirstName(firstName: string): void {
+    this._firstName = firstName;
+  }
+
+  public setLastName(lastName: string): void {
+    this._lastName = lastName;
+  }
+
+  public setMiddleName(middleName: string | null): void {
+    this._middleName = middleName;
+  }
+
+  public setPhoneNumber(phoneNumber: PhoneNumber): void {
+    this._phoneNumber = phoneNumber;
+  }
+
+  public setPreferences(preferences: string[]): void {
+    this._preferences = [...preferences];
+  }
+
   public addPreference(preference: string): void {
     this._preferences.push(preference);
   }
