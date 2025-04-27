@@ -13,13 +13,11 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/src/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test": "vitest run",
+    "test:dev": "vitest",
     "open-api:generate": "npm run build && node dist/src/main --api-client-and-exit",
     "api-client:generate": "npm run open-api:generate && openapi --useOptions --input ./api.json --output ./.api-client --name ApiClient",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:e2e": "vitest --config ./vitest.config.e2e.mts",
     "db:generate": "drizzle-kit generate --config=./config/drizzle.config.ts",
     "db:push": "drizzle-kit migrate --config=./config/drizzle.config.ts"
   },
@@ -54,7 +52,6 @@
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/better-sqlite3": "^7.6.13",
     "@types/express": "^5.0.1",
-    "@types/jest": "^29.5.14",
     "@types/node": "^22.14.0",
     "@types/pg": "^8.11.11",
     "@types/supertest": "^6.0.3",
@@ -64,38 +61,15 @@
     "eslint": "^9.24.0",
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-prettier": "^5.2.6",
-    "jest": "^29.7.0",
     "openapi-typescript-codegen": "^0.29.0",
     "prettier": "^3.5.3",
     "source-map-support": "^0.5.21",
     "supertest": "^7.1.0",
-    "ts-jest": "^29.3.1",
     "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.8.3"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node",
-    "moduleNameMapper": {
-      "src/(.*)": "<rootDir>/$1",
-      "^~shared/(.*)$": "<rootDir>/shared/$1",
-      "^~modules/(.*)$": "<rootDir>/modules/$1",
-      "^~lib/(.*)$": "<rootDir>/lib/$1"
-    }
+    "typescript": "^5.8.3",
+    "unplugin-swc": "^1.5.2",
+    "vitest": "^3.1.2"
   }
 }
