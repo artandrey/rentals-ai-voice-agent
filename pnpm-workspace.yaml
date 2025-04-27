@@ -1,0 +1,6 @@
+packages:
+  - 'twenty-crm-api-client'
+  - 'crm-manager'
+  - 'agent'
+  - 'call-post-processor'
+  - 'twenty-crm'

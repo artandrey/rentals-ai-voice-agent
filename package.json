@@ -1,0 +1,13 @@
+{
+  "name": "vag-microservices",
+  "version": "1.0.0",
+  "description": "Microservices workspace using pnpm",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [
+    "microservices"
+  ],
+  "author": "",
+  "license": "MIT",
+  "private": true
+}
