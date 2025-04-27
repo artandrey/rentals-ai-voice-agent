@@ -4,7 +4,7 @@ export default defineConfig({
   schema: './src/shared/infrastructure/persistence/drizzle/schema/migration-schema.ts',
   dialect: 'sqlite',
   dbCredentials: {
-    url: process.env.DB_URL,
+    url: process.env.DB_URL!,
   },
   verbose: true,
   strict: true,

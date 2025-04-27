@@ -1,4 +1,8 @@
+import { ExceptionType } from '../../mappers/app-exception/exception-type';
+
 export abstract class AppException {
+  public readonly type: ExceptionType;
+
   constructor(
     public readonly code: string,
     public readonly message: string,

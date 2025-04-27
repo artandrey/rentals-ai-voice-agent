@@ -2,6 +2,6 @@ import { ServerException } from '../server-exception/server.exception';
 
 export class UnexpectedException extends ServerException {
   constructor(error: unknown) {
-    super('UNEXPECTED', 'Unexpected server exception', error);
+    super('UNEXPECTED', 'Unexpected server exception', 'Something went wrong', error);
   }
 }

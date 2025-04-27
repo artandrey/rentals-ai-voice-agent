@@ -43,8 +43,8 @@ export abstract class DrizzleRepository<
       .from(this.tableDefinition.table)
       .where(eq(this.tableDefinition.table[this.tableDefinition.idKey], id))
       .limit(1);
-    if (!result) return null;
-    this.mapper.toDomain(result as any);
+    if (!result) throw new Error('Failed to find entity');
+    return this.mapper.toDomain(result as any);
   }
 
   public async save(entity: TEntity): Promise<Id> {
@@ -58,7 +58,7 @@ export abstract class DrizzleRepository<
       .returning({
         id: this.tableDefinition.table[this.tableDefinition.idKey],
       })) as any[];
-    if (!result) return null;
+    if (!result) throw new Error('Failed to save entity');
     return result.id;
   }
 

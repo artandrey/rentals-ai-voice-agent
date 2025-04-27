@@ -14,7 +14,7 @@ export class Application {
 
   constructor() {
     this.port = process.env.DD_PORT || 8080;
-    this.nodeEnv = process.env.NODE_ENV;
+    this.nodeEnv = process.env.NODE_ENV!;
     this.nodeArguments = FlagParser.getFlags(process.argv);
   }
   public async init() {
@@ -36,7 +36,7 @@ export class Application {
   }
 
   private async initSwaggerDoc() {
-    const config = new DocumentBuilder().setTitle(process.env.APP_NAME).setVersion('1.0').build();
+    const config = new DocumentBuilder().setTitle(process.env.APP_NAME!).setVersion('1.0').build();
     const document = SwaggerModule.createDocument(this.app, config);
     SwaggerModule.setup('api-docs', this.app, document);
 
