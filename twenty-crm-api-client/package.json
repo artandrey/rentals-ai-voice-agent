@@ -1,0 +1,31 @@
+{
+  "name": "twenty-crm-api-client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build-client": "openapi-ts",
+    "build-dist": "tsup",
+    "build": "npm run build-client && npm run build-dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/artandrey/streamlined-api-client-integration.git"
+  },
+  "devDependencies": {
+    "@hey-api/openapi-ts": "^0.61.0",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "@hey-api/client-fetch": "^0.6.0",
+    "tsup": "^8.3.5"
+  }
+}
