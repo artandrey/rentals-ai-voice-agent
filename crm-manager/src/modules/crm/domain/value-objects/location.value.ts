@@ -1,4 +1,4 @@
-export class Address {
+export class Location {
   constructor(
     public readonly street: string,
     public readonly city: string,

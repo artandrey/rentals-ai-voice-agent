@@ -1,8 +1,8 @@
 import { Entity, Nominal } from '~shared/domain/entities/entity';
 
-import { Address } from '../value-objects/address.value';
 import { DayDate } from '../value-objects/day-date.value';
 import { DaysSpan } from '../value-objects/days-span.value';
+import { Location } from '../value-objects/location.value';
 import { Price } from '../value-objects/price.value';
 import { Accommodation } from './accommodation';
 import { Client } from './client';
@@ -10,22 +10,22 @@ import { Client } from './client';
 type RentalId = Nominal<string, 'RentalId'>;
 
 export class Rental extends Entity<RentalId> {
-  private _address: Address;
-  private _price: Price;
+  private _location: Location;
+  private _pricePerDay: Price;
   private _accommodations: Accommodation[] = [];
 
-  constructor(address: Address, price: Price) {
+  constructor(address: Location, price: Price) {
     super();
-    this._address = address;
-    this._price = price;
+    this._location = address;
+    this._pricePerDay = price;
   }
 
-  public get address(): Address {
-    return this._address;
+  public get location(): Location {
+    return this._location;
   }
 
-  public get price(): Price {
-    return this._price;
+  public get pricePerDay(): Price {
+    return this._pricePerDay;
   }
 
   public get accommodations(): ReadonlyArray<Accommodation> {

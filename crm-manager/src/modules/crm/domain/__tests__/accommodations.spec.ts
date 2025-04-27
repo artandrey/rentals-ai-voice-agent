@@ -1,13 +1,13 @@
 import { Client } from '../entities/client';
 import { Rental } from '../entities/rental';
-import { Address } from '../value-objects/address.value';
 import { DayDate } from '../value-objects/day-date.value';
+import { Location } from '../value-objects/location.value';
 import { Price } from '../value-objects/price.value';
 
 describe('Rental accommodations', () => {
   describe('free days spans', () => {
     it('should correctly identify free day spans between accommodations', () => {
-      const address = new Address('Test Street', 'Test City', '123');
+      const address = new Location('Test Street', 'Test City', '123');
       const price = new Price(100, 'USD');
       const rental = new Rental(address, price);
 
@@ -34,7 +34,7 @@ describe('Rental accommodations', () => {
 
       const gapBetweenAccommodations = freeSpans.find(
         (span) => span.startDate.getTime() === endDate1.getTime() && span.endDate.getTime() === startDate2.getTime(),
-      );
+      )!;
 
       expect(gapBetweenAccommodations).toBeDefined();
       expect(gapBetweenAccommodations.startDate.getTime()).toEqual(endDate1.getTime());
@@ -42,7 +42,7 @@ describe('Rental accommodations', () => {
     });
 
     it('should return no free spans when the entire period is occupied', () => {
-      const address = new Address('Test Street', 'Test City', '123');
+      const address = new Location('Test Street', 'Test City', '123');
       const price = new Price(100, 'USD');
       const rental = new Rental(address, price);
       const client = new Client('John', 'Doe', '+1234567890', 'john.doe@example.com');

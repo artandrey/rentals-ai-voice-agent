@@ -6,7 +6,7 @@ export class DayDate {
   constructor(dateOrYear: Date | number, month?: number, day?: number) {
     if (dateOrYear instanceof Date) {
       this._date = new Date(dateOrYear.getFullYear(), dateOrYear.getMonth(), dateOrYear.getDate());
-    } else {
+    } else if (month && day) {
       this._date = new Date(dateOrYear, month - 1, day);
     }
   }
