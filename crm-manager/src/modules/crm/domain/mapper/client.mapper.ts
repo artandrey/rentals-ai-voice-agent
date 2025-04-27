@@ -7,8 +7,8 @@ import { Client } from '../entities/client';
 @Injectable()
 export class ClientMapper {
   public toDto(client: Client): ClientDto {
-    return new ClientDto({
-      id: client.id as ClientId,
+    return {
+      id: client.id,
       firstName: client.firstName,
       lastName: client.lastName,
       middleName: client.middleName,
@@ -16,6 +16,6 @@ export class ClientMapper {
       preferredLanguage: client.preferredLanguage,
       preferences: client.preferences,
       note: client.note,
-    });
+    };
   }
 }
