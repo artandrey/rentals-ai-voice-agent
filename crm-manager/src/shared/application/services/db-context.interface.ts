@@ -11,9 +11,9 @@ export interface IDbContext {
 }
 
 export interface IDbRepositories {
-  accommodations: IAccommodationsRepository;
-  clients: IClientRepository;
-  rentals: IRentalsRepository;
+  accommodationsRepository: IAccommodationsRepository;
+  clientsRepository: IClientRepository;
+  rentalsRepository: IRentalsRepository;
 }
 
 export interface IDbContext extends IDbRepositories {

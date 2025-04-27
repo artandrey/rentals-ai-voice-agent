@@ -13,23 +13,20 @@ export abstract class ICreateBookingUseCase
   implements IUseCase<BookRentalDto, void> {}
 
 export class CreateBookingUseCase extends ICreateBookingUseCase {
-  constructor(
-    private readonly rentalRepository: IRentalsRepository,
-    private readonly clientRepository: IClientRepository,
-  ) {
+  constructor() {
     super();
   }
 
   async implementation(): Promise<void> {
     const { rentalId, clientId, startDate, endDate } = this._input;
 
-    const rental = await this.rentalRepository.findById(rentalId as RentalId);
+    const rental = await this._dbContext.rentalsRepository.findById(rentalId as RentalId);
 
     if (!rental) {
       throw new Error('Rental not found');
     }
 
-    const client = await this.clientRepository.findById(clientId as ClientId);
+    const client = await this._dbContext.clientsRepository.findById(clientId as ClientId);
 
     if (!client) {
       throw new Error('Client not found');
@@ -41,6 +38,6 @@ export class CreateBookingUseCase extends ICreateBookingUseCase {
       new DayDate(endDate.year, endDate.month, endDate.day),
     );
 
-    await this.rentalRepository.save(rental);
+    await this._dbContext.rentalsRepository.save(rental);
   }
 }

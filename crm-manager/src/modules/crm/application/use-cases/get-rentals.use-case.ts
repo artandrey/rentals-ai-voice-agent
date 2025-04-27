@@ -6,11 +6,11 @@ import { IUseCase } from '~shared/application/use-cases/use-case.interface';
 export abstract class IGetRentalsQuery extends Query<void, Rental[]> implements IUseCase<void, Rental[]> {}
 
 export class GetRentalsQuery extends IGetRentalsQuery {
-  constructor(private readonly repository: IRentalsRepository) {
+  constructor() {
     super();
   }
 
   async implementation(): Promise<Rental[]> {
-    return this.repository.findAll();
+    return this._dbContext.rentalsRepository.findAll();
   }
 }

@@ -32,7 +32,7 @@ export class Rental extends AggregateRoot<RentalId> {
 
   public async createAccommodation(client: Client, startDate: DayDate, endDate: DayDate): Promise<Accommodation> {
     const accommodation = new Accommodation(client, this, startDate, endDate);
-    await this._dbContext.accommodations.save(accommodation);
+    await this._dbContext.accommodationsRepository.save(accommodation);
     return accommodation;
   }
 
@@ -44,7 +44,7 @@ export class Rental extends AggregateRoot<RentalId> {
       return [];
     }
 
-    const accommodations = await this._dbContext.accommodations.findByRentalId(this.id);
+    const accommodations = await this._dbContext.accommodationsRepository.findByRentalId(this.id);
 
     const occupiedIntervals = accommodations
       .map((acc) => ({
