@@ -21,11 +21,11 @@
     "url": "git+https://github.com/artandrey/streamlined-api-client-integration.git"
   },
   "devDependencies": {
-    "@hey-api/openapi-ts": "^0.61.0",
+    "@hey-api/openapi-ts": "^0.66.7",
     "typescript": "^5.7.2"
   },
   "dependencies": {
-    "@hey-api/client-fetch": "^0.6.0",
+    "@hey-api/client-axios": "^0.7.0",
     "tsup": "^8.3.5"
   }
 }
