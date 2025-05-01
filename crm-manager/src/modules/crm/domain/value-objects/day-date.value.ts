@@ -19,10 +19,6 @@ export class DayDate {
     return new Date(this._date.getFullYear(), this._date.getMonth(), this._date.getDate(), 12, 0, 0, 0);
   }
 
-  /**
-   * Returns the time value (milliseconds since epoch) for the start of the day (00:00:00).
-   * Useful for comparing dates without considering time components.
-   */
   public getTime(): number {
     return new Date(this._date.getFullYear(), this._date.getMonth(), this._date.getDate()).getTime();
   }
@@ -31,7 +27,6 @@ export class DayDate {
     return this.getTime() > other.getTime();
   }
 
-  // Optional: Add isBefore and isEqual for completeness
   public isBefore(other: DayDate): boolean {
     return this.getTime() < other.getTime();
   }
@@ -40,8 +35,19 @@ export class DayDate {
     return this.getTime() === other.getTime();
   }
 
-  // Optional: Helper to create from a standard Date
+  public toISODateString(): string {
+    const year = this._date.getFullYear();
+    const month = (this._date.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-indexed
+    const day = this._date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   public static fromDate(date: Date): DayDate {
     return new DayDate(date);
+  }
+
+  public static fromISODateString(dateString: string): DayDate {
+    const [year, month, day] = dateString.split('-').map(Number.parseInt);
+    return new DayDate(year, month, day);
   }
 }

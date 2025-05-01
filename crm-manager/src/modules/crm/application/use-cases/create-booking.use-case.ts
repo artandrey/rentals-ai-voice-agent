@@ -33,7 +33,7 @@ export class CreateBookingUseCase extends ICreateBookingUseCase {
     }
 
     rental.createAccommodation(
-      client,
+      client.id,
       new DayDate(startDate.year, startDate.month, startDate.day),
       new DayDate(endDate.year, endDate.month, endDate.day),
     );

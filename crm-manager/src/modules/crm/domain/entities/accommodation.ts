@@ -1,17 +1,19 @@
+import { toBuilderMethod } from 'class-constructor';
+
 import { Entity, Nominal } from '~shared/domain/entities/entity';
 
 import { DayDate } from '../value-objects/day-date.value';
-import { Client } from './client';
-import { Rental } from './rental';
+import { ClientId } from './client';
+import { RentalId } from './rental';
 
-type AccommodationId = Nominal<string, 'AccommodationId'>;
+export type AccommodationId = Nominal<string, 'AccommodationId'>;
 
 export enum AccommodationStatus {
-  PENDING_BOOKING_CONFIRMATION = 'pending_booking_confirmation',
-  BOOKING_CONFIRMED = 'booking_confirmed',
-  CANCELLED = 'cancelled',
-  SETTLED = 'settled',
-  COMPLETED = 'completed',
+  PENDING_BOOKING_CONFIRMATION = 'PENDING_BOOKING_CONFIRMATION',
+  BOOKING_CONFIRMED = 'BOOKING_CONFIRMED',
+  CANCELLED = 'CANCELLED',
+  SETTLED = 'SETTLED',
+  COMPLETED = 'COMPLETED',
 }
 
 export interface IAccommodationState {
@@ -35,29 +37,37 @@ abstract class BaseAccommodationState implements IAccommodationState {
 }
 
 export class Accommodation extends Entity<AccommodationId> {
-  private _client: Client;
-  private _rental: Rental;
+  private _clientId: ClientId;
+  private _rentalId: RentalId;
   private _endDate: DayDate;
   private _startDate: DayDate;
   private _status: AccommodationStatus = AccommodationStatus.PENDING_BOOKING_CONFIRMATION;
   private _state: IAccommodationState;
 
-  constructor(client: Client, rental: Rental, startDate: DayDate, endDate: DayDate) {
+  constructor(clientId: ClientId, rentalId: RentalId, startDate: DayDate, endDate: DayDate) {
     super();
-    this._client = client;
-    this._rental = rental;
+    this._clientId = clientId;
+    this._rentalId = rentalId;
     this._startDate = startDate;
     this._endDate = endDate;
 
-    this._state = new Accommodation._stateMap[this._status](this);
+    this._stateMap = {
+      [AccommodationStatus.PENDING_BOOKING_CONFIRMATION]: new Accommodation.PendingBookingConfirmationState(this),
+      [AccommodationStatus.BOOKING_CONFIRMED]: new Accommodation.BookingConfirmedState(this),
+      [AccommodationStatus.CANCELLED]: new Accommodation.CancelledState(this),
+      [AccommodationStatus.SETTLED]: new Accommodation.SettledState(this),
+      [AccommodationStatus.COMPLETED]: new Accommodation.CompletedState(this),
+    };
+
+    this._state = this._stateMap[this._status];
   }
 
-  public get client(): Client {
-    return this._client;
+  public get clientId(): ClientId {
+    return this._clientId;
   }
 
-  public get rental(): Rental {
-    return this._rental;
+  public get rentalId(): RentalId {
+    return this._rentalId;
   }
 
   public get endDate(): DayDate {
@@ -93,7 +103,7 @@ export class Accommodation extends Entity<AccommodationId> {
   }
 
   private _updateState(): void {
-    this._state = new Accommodation._stateMap[this._status](this);
+    this._state = this._stateMap[this._status];
   }
   static PendingBookingConfirmationState: new (accommodation: Accommodation) => IAccommodationState;
   static BookingConfirmedState: new (accommodation: Accommodation) => IAccommodationState;
@@ -199,11 +209,7 @@ export class Accommodation extends Entity<AccommodationId> {
     Accommodation.CompletedState = CompletedState;
   }
 
-  private static _stateMap: Record<AccommodationStatus, new (accommodation: Accommodation) => IAccommodationState> = {
-    [AccommodationStatus.PENDING_BOOKING_CONFIRMATION]: Accommodation.PendingBookingConfirmationState,
-    [AccommodationStatus.BOOKING_CONFIRMED]: Accommodation.BookingConfirmedState,
-    [AccommodationStatus.CANCELLED]: Accommodation.CancelledState,
-    [AccommodationStatus.SETTLED]: Accommodation.SettledState,
-    [AccommodationStatus.COMPLETED]: Accommodation.CompletedState,
-  };
+  private _stateMap: Record<AccommodationStatus, IAccommodationState>;
+
+  public static builder = toBuilderMethod(Accommodation).classAsOptionals();
 }

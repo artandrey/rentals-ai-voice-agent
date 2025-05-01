@@ -8,7 +8,7 @@ import { DaysSpan } from '../value-objects/days-span.value';
 import { Location } from '../value-objects/location.value';
 import { Price } from '../value-objects/price.value';
 import { Accommodation } from './accommodation';
-import { Client } from './client';
+import { Client, ClientId } from './client';
 
 export type RentalId = Nominal<string, 'RentalId'>;
 
@@ -30,8 +30,8 @@ export class Rental extends AggregateRoot<RentalId> {
     return this._pricePerDay;
   }
 
-  public async createAccommodation(client: Client, startDate: DayDate, endDate: DayDate): Promise<Accommodation> {
-    const accommodation = new Accommodation(client, this, startDate, endDate);
+  public async createAccommodation(clientId: ClientId, startDate: DayDate, endDate: DayDate): Promise<Accommodation> {
+    const accommodation = new Accommodation(clientId, this.id, startDate, endDate);
     await this._dbContext.accommodationsRepository.save(accommodation);
     return accommodation;
   }

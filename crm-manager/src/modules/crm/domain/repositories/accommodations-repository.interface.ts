@@ -1,8 +1,10 @@
-import { Accommodation } from '../entities/accommodation';
+import { Accommodation, AccommodationId } from '../entities/accommodation';
+import { RentalId } from '../entities/rental';
 
-export abstract class IAccommodationsRepository {
-  abstract findById(id: string): Promise<Accommodation>;
-  abstract save(accommodation: Accommodation): Promise<void>;
-  abstract delete(id: string): Promise<void>;
-  abstract findByRentalId(rentalId: string): Promise<Accommodation[]>;
+export abstract class IAccommodationRepository {
+  abstract findById(id: AccommodationId): Promise<Accommodation | null>;
+  abstract save(entity: Accommodation): Promise<AccommodationId>;
+  abstract delete(id: AccommodationId): Promise<void>;
+  abstract findAll(): Promise<Accommodation[]>;
+  abstract findByRentalId(rentalId: RentalId): Promise<Accommodation[]>;
 }
