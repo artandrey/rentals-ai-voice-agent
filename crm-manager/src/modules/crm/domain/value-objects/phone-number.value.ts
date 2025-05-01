@@ -14,7 +14,7 @@ export class PhoneNumber {
   public static create(number: string): PhoneNumber {
     const { countryCode: callingCode, countryIso2, isValid, phoneNumber } = phone(number);
     if (!isValid) {
-      throw new Error('Invalid phone number');
+      throw new Error(`Invalid phone number: ${number}`);
     }
     return new PhoneNumber(phoneNumber.replace(callingCode, ''), callingCode, countryIso2);
   }

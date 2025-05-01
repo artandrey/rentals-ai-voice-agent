@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import {
   // Use for update
-  status as AccommodationStatusTwentyCrm,
   Accommodation as AccommodationTwentyCrmInput,
   // Use for create
-  Accommodation_for_Response as AccommodationTwentyCrmResponse,
+  AccommodationForResponse as AccommodationTwentyCrmResponse,
   // Use for read
-  Accommodation_for_Update as AccommodationTwentyCrmUpdate,
+  AccommodationForUpdate as AccommodationTwentyCrmUpdate,
 } from 'twenty-crm-api-client';
 
 import { Accommodation, AccommodationId, AccommodationStatus } from '~modules/crm/domain/entities/accommodation';

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Client_for_Response as ClientTwentyCrm, Client as ClientTwentyCrmInput } from 'twenty-crm-api-client';
+import { ClientForResponse as ClientTwentyCrm, Client as ClientTwentyCrmInput } from 'twenty-crm-api-client';
 
 import { Client, ClientPreferredLanguage } from '~modules/crm/domain/entities/client';
 import { PhoneNumber } from '~modules/crm/domain/value-objects/phone-number.value';
@@ -17,7 +17,7 @@ export class ClientsTwentyCrmMapper implements IDataAccessMapper<Client, ClientT
         primaryPhoneCallingCode: entity.phoneNumber.callingCode,
         primaryPhoneCountryCode: entity.phoneNumber.countryCode,
       },
-      language: (entity.preferredLanguage?.toLowerCase() as ClientTwentyCrmInput['language']) ?? undefined,
+      language: (entity.preferredLanguage as ClientTwentyCrmInput['language']) ?? undefined,
       note: entity.note ?? undefined,
       preferences: entity.preferences,
     };

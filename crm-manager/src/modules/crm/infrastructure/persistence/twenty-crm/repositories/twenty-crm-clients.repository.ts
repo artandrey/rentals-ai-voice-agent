@@ -1,8 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Client_for_Response as ClientTwentyCrm, ClientsService } from 'twenty-crm-api-client';
+import { type client as ApiClient } from 'twenty-crm-api-client/client/client.gen';
+import { ClientForResponse as ClientTwentyCrm, ClientsService } from 'twenty-crm-api-client/client/index';
 
 import { Client, ClientId } from '~modules/crm/domain/entities/client';
 import { IClientRepository } from '~modules/crm/domain/repositories/clients-repository.interface';
+import { PhoneNumber } from '~modules/crm/domain/value-objects/phone-number.value';
 
 import { ClientsTwentyCrmMapper } from '../mappers/twenty-crm-clients.mapper';
 
@@ -10,7 +12,10 @@ import { ClientsTwentyCrmMapper } from '../mappers/twenty-crm-clients.mapper';
 export class TwentyCrmClientsRepository extends IClientRepository {
   private readonly clientsService = ClientsService;
 
-  constructor(private readonly mapper: ClientsTwentyCrmMapper) {
+  constructor(
+    private readonly mapper: ClientsTwentyCrmMapper,
+    private readonly apiClient: typeof ApiClient,
+  ) {
     super();
   }
 
@@ -20,6 +25,7 @@ export class TwentyCrmClientsRepository extends IClientRepository {
         path: {
           id,
         },
+        client: this.apiClient,
       });
 
       if (!response?.data?.client) {
@@ -49,9 +55,13 @@ export class TwentyCrmClientsRepository extends IClientRepository {
       }
       return response.data.updateClient.id as ClientId;
     } else {
-      const { data: response } = await this.clientsService.createOneClient({
+      const { data: response, error } = await this.clientsService.createOneClient({
         body: persistenceData,
       });
+
+      if (error) {
+        throw error;
+      }
 
       if (!response?.data?.createClient?.id) {
         throw new Error('Failed to create client in TwentyCRM: No ID returned');
@@ -73,10 +83,11 @@ export class TwentyCrmClientsRepository extends IClientRepository {
     }
   }
 
-  async findByPhoneNumber(phoneNumber: string): Promise<Client | null> {
+  async findByPhoneNumber(phoneNumber: PhoneNumber): Promise<Client | null> {
+    const filter = `phonenumber.primaryPhoneNumber[eq]:${phoneNumber.number},phonenumber.primaryPhoneCallingCode[eq]:${phoneNumber.callingCode}`;
     const { data: response } = await this.clientsService.findManyClients({
       query: {
-        filter: `phonenumber.primaryPhoneNumber[eq]:${phoneNumber}`,
+        filter,
         limit: 1,
       },
     });

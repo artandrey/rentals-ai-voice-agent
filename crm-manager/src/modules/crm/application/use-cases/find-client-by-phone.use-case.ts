@@ -23,7 +23,7 @@ export class FindClientByPhoneQuery extends IFindClientByPhoneQuery {
   async implementation(): Promise<ClientDto | null> {
     const { phoneNumber } = this._input;
 
-    const client = await this._dbContext.clientsRepository.findByPhoneNumber(phoneNumber);
+    const client = await this._dbContext.clientsRepository.findByPhoneNumber(PhoneNumber.create(phoneNumber));
 
     return client ? this.clientMapper.toDto(client) : null;
   }

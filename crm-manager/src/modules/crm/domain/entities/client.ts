@@ -9,8 +9,8 @@ import { PhoneNumber } from '../value-objects/phone-number.value';
 export type ClientId = Nominal<string, 'ClientId'>;
 
 export enum ClientPreferredLanguage {
-  ENGLISH = 'en',
-  UKRAINIAN = 'uk',
+  ENGLISH = 'EN',
+  UKRAINIAN = 'UK',
 }
 
 export class Client extends Entity<ClientId> {
