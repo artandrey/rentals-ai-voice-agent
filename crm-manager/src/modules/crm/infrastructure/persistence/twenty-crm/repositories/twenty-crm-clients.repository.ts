@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { type client as ApiClient } from 'twenty-crm-api-client/client/client.gen';
 import { ClientForResponse as ClientTwentyCrm, ClientsService } from 'twenty-crm-api-client/client/index';
 
@@ -27,11 +27,9 @@ export class TwentyCrmClientsRepository extends IClientRepository {
         },
         client: this.apiClient,
       });
-
       if (!response?.data?.client) {
         return null;
       }
-
       return this.mapper.toDomain(response.data.client);
     } catch (error: any) {
       if (error?.status === 404) {
@@ -43,13 +41,12 @@ export class TwentyCrmClientsRepository extends IClientRepository {
 
   async save(entity: Client): Promise<ClientId> {
     const persistenceData = this.mapper.toPersistence(entity);
-
     if (entity.id) {
       const { data: response } = await this.clientsService.updateOneClient({
         path: { id: entity.id },
         body: persistenceData,
+        client: this.apiClient,
       });
-
       if (!response?.data?.updateClient?.id) {
         throw new Error('Failed to update client in TwentyCRM: No ID returned');
       }
@@ -57,12 +54,11 @@ export class TwentyCrmClientsRepository extends IClientRepository {
     } else {
       const { data: response, error } = await this.clientsService.createOneClient({
         body: persistenceData,
+        client: this.apiClient,
       });
-
       if (error) {
         throw error;
       }
-
       if (!response?.data?.createClient?.id) {
         throw new Error('Failed to create client in TwentyCRM: No ID returned');
       }
@@ -74,6 +70,7 @@ export class TwentyCrmClientsRepository extends IClientRepository {
     try {
       await this.clientsService.deleteOneClient({
         path: { id },
+        client: this.apiClient,
       });
     } catch (error: any) {
       if (error?.status === 404) {
@@ -90,29 +87,20 @@ export class TwentyCrmClientsRepository extends IClientRepository {
         filter,
         limit: 1,
       },
+      client: this.apiClient,
     });
-
     const clients = response?.data?.clients ?? [];
-
     if (clients.length === 0) {
       return null;
     }
-
     return this.mapper.toDomain(clients[0]);
   }
 
   async findAll(): Promise<Client[]> {
-    try {
-      const { data: response } = await this.clientsService.findManyClients({
-        // Add query parameters like pagination (limit, starting_after) if needed
-        // query: { depth: 1 }
-      });
-
-      const clientsData = response?.data?.clients ?? [];
-      return clientsData.map((clientData) => this.mapper.toDomain(clientData));
-    } catch (error) {
-      console.error('Error finding all clients from TwentyCRM:', error);
-      throw error;
-    }
+    const { data: response } = await this.clientsService.findManyClients({
+      client: this.apiClient,
+    });
+    const clientsData = response?.data?.clients ?? [];
+    return clientsData.map((clientData) => this.mapper.toDomain(clientData));
   }
 }
