@@ -306,6 +306,11 @@
             "type": "string",
             "format": "uuid",
             "description": "Attachment Rental id foreign key"
+          },
+          "callId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Attachment Call id foreign key"
           }
         }
       },
@@ -374,6 +379,11 @@
             "type": "string",
             "format": "uuid",
             "description": "Attachment Rental id foreign key"
+          },
+          "callId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Attachment Call id foreign key"
           }
         }
       },
@@ -463,6 +473,11 @@
             "format": "uuid",
             "description": "Attachment Rental id foreign key"
           },
+          "callId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Attachment Call id foreign key"
+          },
           "author": {
             "description": "Attachment author"
           },
@@ -492,6 +507,9 @@
           },
           "rental": {
             "description": "Attachments Rental"
+          },
+          "call": {
+            "description": "Attachments Call"
           }
         }
       },
@@ -2211,6 +2229,11 @@
             "type": "string",
             "format": "uuid",
             "description": "Favorite Rental id foreign key"
+          },
+          "callId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Favorite Call id foreign key"
           }
         }
       },
@@ -2296,6 +2319,11 @@
             "type": "string",
             "format": "uuid",
             "description": "Favorite Rental id foreign key"
+          },
+          "callId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Favorite Call id foreign key"
           }
         }
       },
@@ -2402,6 +2430,11 @@
             "format": "uuid",
             "description": "Favorite Rental id foreign key"
           },
+          "callId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Favorite Call id foreign key"
+          },
           "forWorkspaceMember": {
             "description": "Favorite workspace member"
           },
@@ -2446,6 +2479,9 @@
           },
           "rental": {
             "description": "Favorites Rental"
+          },
+          "call": {
+            "description": "Favorites Call"
           }
         }
       },
@@ -2613,6 +2649,11 @@
             "type": "string",
             "format": "uuid",
             "description": "Timeline Activity Rental id foreign key"
+          },
+          "callId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Timeline Activity Call id foreign key"
           }
         }
       },
@@ -2711,6 +2752,11 @@
             "type": "string",
             "format": "uuid",
             "description": "Timeline Activity Rental id foreign key"
+          },
+          "callId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Timeline Activity Call id foreign key"
           }
         }
       },
@@ -2830,6 +2876,11 @@
             "format": "uuid",
             "description": "Timeline Activity Rental id foreign key"
           },
+          "callId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Timeline Activity Call id foreign key"
+          },
           "workspaceMember": {
             "description": "Event workspace member"
           },
@@ -2868,6 +2919,9 @@
           },
           "rental": {
             "description": "TimelineActivities Rental"
+          },
+          "call": {
+            "description": "TimelineActivities Call"
           }
         }
       },
@@ -5765,6 +5819,11 @@
             "type": "string",
             "format": "uuid",
             "description": "Note Target Rental id foreign key"
+          },
+          "callId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Note Target Call id foreign key"
           }
         }
       },
@@ -5811,6 +5870,11 @@
             "type": "string",
             "format": "uuid",
             "description": "Note Target Rental id foreign key"
+          },
+          "callId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Note Target Call id foreign key"
           }
         }
       },
@@ -5878,6 +5942,11 @@
             "format": "uuid",
             "description": "Note Target Rental id foreign key"
           },
+          "callId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Note Target Call id foreign key"
+          },
           "person": {
             "description": "NoteTarget person"
           },
@@ -5901,6 +5970,9 @@
           },
           "rental": {
             "description": "NoteTargets Rental"
+          },
+          "call": {
+            "description": "NoteTargets Call"
           }
         }
       },
@@ -6999,6 +7071,11 @@
             "type": "string",
             "format": "uuid",
             "description": "Task Target Rental id foreign key"
+          },
+          "callId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Task Target Call id foreign key"
           }
         }
       },
@@ -7045,6 +7122,11 @@
             "type": "string",
             "format": "uuid",
             "description": "Task Target Rental id foreign key"
+          },
+          "callId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Task Target Call id foreign key"
           }
         }
       },
@@ -7112,6 +7194,11 @@
             "format": "uuid",
             "description": "Task Target Rental id foreign key"
           },
+          "callId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Task Target Call id foreign key"
+          },
           "company": {
             "description": "TaskTarget company"
           },
@@ -7135,6 +7222,9 @@
           },
           "rental": {
             "description": "TaskTargets Rental"
+          },
+          "call": {
+            "description": "TaskTargets Call"
           }
         }
       },
@@ -7685,6 +7775,302 @@
             "items": {
               "$ref": "#/components/schemas/Accommodation for Response"
             }
+          },
+          "calls": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Call for Response"
+            }
+          }
+        }
+      },
+      "Call": {
+        "type": "object",
+        "description": null,
+        "properties": {
+          "startedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name"
+          },
+          "createdBy": {
+            "type": "object",
+            "properties": {
+              "source": {
+                "type": "string",
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
+              }
+            },
+            "description": "The creator of the record"
+          },
+          "position": {
+            "type": "number",
+            "description": "Position"
+          },
+          "callerPhoneNumber": {
+            "properties": {
+              "additionalPhones": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "primaryPhoneCountryCode": {
+                "type": "string"
+              },
+              "primaryPhoneCallingCode": {
+                "type": "string"
+              },
+              "primaryPhoneNumber": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "transcript": {
+            "type": "object"
+          },
+          "callType": {
+            "type": "string",
+            "enum": ["SETTLEMENT", "EMERGENCY", "BOOKING", "INFORMATIVE"]
+          },
+          "clientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "asociateedRentalId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Call for Update": {
+        "type": "object",
+        "description": null,
+        "properties": {
+          "startedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name"
+          },
+          "createdBy": {
+            "type": "object",
+            "properties": {
+              "source": {
+                "type": "string",
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
+              }
+            },
+            "description": "The creator of the record"
+          },
+          "position": {
+            "type": "number",
+            "description": "Position"
+          },
+          "callerPhoneNumber": {
+            "properties": {
+              "additionalPhones": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "primaryPhoneCountryCode": {
+                "type": "string"
+              },
+              "primaryPhoneCallingCode": {
+                "type": "string"
+              },
+              "primaryPhoneNumber": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "transcript": {
+            "type": "object"
+          },
+          "callType": {
+            "type": "string",
+            "enum": ["SETTLEMENT", "EMERGENCY", "BOOKING", "INFORMATIVE"]
+          },
+          "clientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "asociateedRentalId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Call for Response": {
+        "type": "object",
+        "description": null,
+        "properties": {
+          "startedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Id"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Creation date"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last time the record was changed"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Deletion date"
+          },
+          "createdBy": {
+            "type": "object",
+            "properties": {
+              "source": {
+                "type": "string",
+                "enum": [
+                  "EMAIL",
+                  "CALENDAR",
+                  "WORKFLOW",
+                  "API",
+                  "IMPORT",
+                  "MANUAL",
+                  "SYSTEM",
+                  "WEBHOOK"
+                ]
+              },
+              "workspaceMemberId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "description": "The creator of the record"
+          },
+          "position": {
+            "type": "number",
+            "description": "Position"
+          },
+          "callerPhoneNumber": {
+            "properties": {
+              "additionalPhones": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "primaryPhoneCountryCode": {
+                "type": "string"
+              },
+              "primaryPhoneCallingCode": {
+                "type": "string"
+              },
+              "primaryPhoneNumber": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "transcript": {
+            "type": "object"
+          },
+          "callType": {
+            "type": "string",
+            "enum": ["SETTLEMENT", "EMERGENCY", "BOOKING", "INFORMATIVE"]
+          },
+          "clientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "asociateedRentalId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "timelineActivities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimelineActivity for Response"
+            },
+            "description": "TimelineActivities tied to the Call"
+          },
+          "favorites": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Favorite for Response"
+            },
+            "description": "Favorites tied to the Call"
+          },
+          "taskTargets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TaskTarget for Response"
+            },
+            "description": "TaskTargets tied to the Call"
+          },
+          "noteTargets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NoteTarget for Response"
+            },
+            "description": "NoteTargets tied to the Call"
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Attachment for Response"
+            },
+            "description": "Attachments tied to the Call"
           }
         }
       },
@@ -8210,6 +8596,12 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Accommodation for Response"
+            }
+          },
+          "calls": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Call for Response"
             }
           }
         }
@@ -24500,6 +24892,417 @@
         }
       }
     },
+    "/calls": {
+      "get": {
+        "tags": ["calls"],
+        "summary": "Find Many calls",
+        "description": "**order_by**, **filter**, **limit**, **depth**, **starting_after** or **ending_before** can be provided to request your **calls**",
+        "operationId": "findManyCalls",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/orderBy"
+          },
+          {
+            "$ref": "#/components/parameters/filter"
+          },
+          {
+            "$ref": "#/components/parameters/limit"
+          },
+          {
+            "$ref": "#/components/parameters/depth"
+          },
+          {
+            "$ref": "#/components/parameters/startingAfter"
+          },
+          {
+            "$ref": "#/components/parameters/endingBefore"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "calls": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Call for Response"
+                          }
+                        }
+                      }
+                    },
+                    "pageInfo": {
+                      "type": "object",
+                      "properties": {
+                        "hasNextPage": {
+                          "type": "boolean"
+                        },
+                        "startCursor": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "endCursor": {
+                          "type": "string",
+                          "format": "uuid"
+                        }
+                      }
+                    },
+                    "totalCount": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      },
+      "post": {
+        "tags": ["calls"],
+        "summary": "Create One call",
+        "operationId": "createOneCall",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/depth"
+          }
+        ],
+        "requestBody": {
+          "description": "body",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Call"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "createCall": {
+                          "$ref": "#/components/schemas/Call for Response"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
+    },
+    "/batch/calls": {
+      "post": {
+        "tags": ["calls"],
+        "summary": "Create Many calls",
+        "operationId": "createManyCalls",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/depth"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Call"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "createCalls": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Call for Response"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
+    },
+    "/calls/{id}": {
+      "get": {
+        "tags": ["calls"],
+        "summary": "Find One call",
+        "description": "**depth** can be provided to request your **call**",
+        "operationId": "findOneCall",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idPath"
+          },
+          {
+            "$ref": "#/components/parameters/depth"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "call": {
+                          "$ref": "#/components/schemas/Call for Response"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["calls"],
+        "summary": "Delete One call",
+        "operationId": "deleteOneCall",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idPath"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "deleteCall": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "format": "uuid"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["calls"],
+        "summary": "Update One call",
+        "operationId": "UpdateOneCall",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idPath"
+          },
+          {
+            "$ref": "#/components/parameters/depth"
+          }
+        ],
+        "requestBody": {
+          "description": "body",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Call for Update"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "updateCall": {
+                          "$ref": "#/components/schemas/Call for Response"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
+    },
+    "/calls/duplicates": {
+      "post": {
+        "tags": ["calls"],
+        "summary": "Find call Duplicates",
+        "description": "**depth** can be provided to request your **call**",
+        "operationId": "findCallDuplicates",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/depth"
+          }
+        ],
+        "requestBody": {
+          "description": "body",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Call"
+                    }
+                  },
+                  "ids": {
+                    "type": "array"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "totalCount": {
+                            "type": "number"
+                          },
+                          "pageInfo": {
+                            "type": "object",
+                            "properties": {
+                              "hasNextPage": {
+                                "type": "boolean"
+                              },
+                              "startCursor": {
+                                "type": "string",
+                                "format": "uuid"
+                              },
+                              "endCursor": {
+                                "type": "string",
+                                "format": "uuid"
+                              }
+                            }
+                          },
+                          "companyDuplicates": {
+                            "type": "array",
+                            "items": {
+                              "$ref": "#/components/schemas/Call for Response"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
+    },
     "/accommodations": {
       "get": {
         "tags": ["accommodations"],
@@ -35737,6 +36540,273 @@
         }
       }
     },
+    "Create call": {
+      "post": {
+        "tags": ["call"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Twenty-Webhook-Signature",
+            "schema": {
+              "type": "string"
+            },
+            "description": "HMAC SHA256 signature of the request payload using the webhook secret. To compute the signature:\n1. Concatenate `X-Twenty-Webhook-Timestamp`, a colon (:), and the JSON string of the request payload.\n2. Compute the HMAC SHA256 hash using the shared secret as the key.\n3. Send the resulting hex digest as this header value.\nExample (Node.js):\n```javascript\nconst crypto = require(\"crypto\");\nconst timestamp = \"1735066639761\";\nconst payload = JSON.stringify({...});\nconst secret = \"your-secret\";\nconst stringToSign = `${timestamp}:${JSON.stringify(payload)}`;\nconst signature = crypto.createHmac(\"sha256\", secret)\n  .update(stringToSign)\n  .digest(\"hex\");\n```",
+            "required": false
+          },
+          {
+            "in": "header",
+            "name": "X-Twenty-Webhook-Timestamp",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Unix timestamp of when the webhook was sent. This timestamp is included in the HMAC signature generation to prevent replay attacks.",
+            "required": false
+          },
+          {
+            "in": "header",
+            "name": "X-Twenty-Webhook-Nonce",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Unique identifier for this webhook request to prevent replay attacks. Consumers should ensure this nonce is not reused.",
+            "required": false
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "targetUrl": {
+                    "type": "string",
+                    "example": "https://example.com/incomingWebhook"
+                  },
+                  "eventName": {
+                    "type": "string",
+                    "example": "call.created"
+                  },
+                  "objectMetadata": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "example": "370985db-22d8-4463-8e5f-2271d30913bd"
+                      },
+                      "nameSingular": {
+                        "type": "string",
+                        "enum": ["call"]
+                      }
+                    }
+                  },
+                  "workspaceId": {
+                    "type": "string",
+                    "example": "872cfcf1-c79f-42bc-877d-5829f06eb3f9"
+                  },
+                  "webhookId": {
+                    "type": "string",
+                    "example": "90056586-1228-4e03-a507-70140aa85c05"
+                  },
+                  "eventDate": {
+                    "type": "string",
+                    "example": "2024-02-14T11:27:01.779Z"
+                  },
+                  "record": {
+                    "$ref": "#/components/schemas/Call for Response"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        }
+      }
+    },
+    "Update call": {
+      "post": {
+        "tags": ["call"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Twenty-Webhook-Signature",
+            "schema": {
+              "type": "string"
+            },
+            "description": "HMAC SHA256 signature of the request payload using the webhook secret. To compute the signature:\n1. Concatenate `X-Twenty-Webhook-Timestamp`, a colon (:), and the JSON string of the request payload.\n2. Compute the HMAC SHA256 hash using the shared secret as the key.\n3. Send the resulting hex digest as this header value.\nExample (Node.js):\n```javascript\nconst crypto = require(\"crypto\");\nconst timestamp = \"1735066639761\";\nconst payload = JSON.stringify({...});\nconst secret = \"your-secret\";\nconst stringToSign = `${timestamp}:${JSON.stringify(payload)}`;\nconst signature = crypto.createHmac(\"sha256\", secret)\n  .update(stringToSign)\n  .digest(\"hex\");\n```",
+            "required": false
+          },
+          {
+            "in": "header",
+            "name": "X-Twenty-Webhook-Timestamp",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Unix timestamp of when the webhook was sent. This timestamp is included in the HMAC signature generation to prevent replay attacks.",
+            "required": false
+          },
+          {
+            "in": "header",
+            "name": "X-Twenty-Webhook-Nonce",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Unique identifier for this webhook request to prevent replay attacks. Consumers should ensure this nonce is not reused.",
+            "required": false
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "targetUrl": {
+                    "type": "string",
+                    "example": "https://example.com/incomingWebhook"
+                  },
+                  "eventName": {
+                    "type": "string",
+                    "example": "call.updated"
+                  },
+                  "objectMetadata": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "example": "370985db-22d8-4463-8e5f-2271d30913bd"
+                      },
+                      "nameSingular": {
+                        "type": "string",
+                        "enum": ["call"]
+                      }
+                    }
+                  },
+                  "workspaceId": {
+                    "type": "string",
+                    "example": "872cfcf1-c79f-42bc-877d-5829f06eb3f9"
+                  },
+                  "webhookId": {
+                    "type": "string",
+                    "example": "90056586-1228-4e03-a507-70140aa85c05"
+                  },
+                  "eventDate": {
+                    "type": "string",
+                    "example": "2024-02-14T11:27:01.779Z"
+                  },
+                  "record": {
+                    "$ref": "#/components/schemas/Call for Response"
+                  },
+                  "updatedFields": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        }
+      }
+    },
+    "Delete call": {
+      "post": {
+        "tags": ["call"],
+        "security": [],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Twenty-Webhook-Signature",
+            "schema": {
+              "type": "string"
+            },
+            "description": "HMAC SHA256 signature of the request payload using the webhook secret. To compute the signature:\n1. Concatenate `X-Twenty-Webhook-Timestamp`, a colon (:), and the JSON string of the request payload.\n2. Compute the HMAC SHA256 hash using the shared secret as the key.\n3. Send the resulting hex digest as this header value.\nExample (Node.js):\n```javascript\nconst crypto = require(\"crypto\");\nconst timestamp = \"1735066639761\";\nconst payload = JSON.stringify({...});\nconst secret = \"your-secret\";\nconst stringToSign = `${timestamp}:${JSON.stringify(payload)}`;\nconst signature = crypto.createHmac(\"sha256\", secret)\n  .update(stringToSign)\n  .digest(\"hex\");\n```",
+            "required": false
+          },
+          {
+            "in": "header",
+            "name": "X-Twenty-Webhook-Timestamp",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Unix timestamp of when the webhook was sent. This timestamp is included in the HMAC signature generation to prevent replay attacks.",
+            "required": false
+          },
+          {
+            "in": "header",
+            "name": "X-Twenty-Webhook-Nonce",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Unique identifier for this webhook request to prevent replay attacks. Consumers should ensure this nonce is not reused.",
+            "required": false
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "targetUrl": {
+                    "type": "string",
+                    "example": "https://example.com/incomingWebhook"
+                  },
+                  "eventName": {
+                    "type": "string",
+                    "example": "call.deleted"
+                  },
+                  "objectMetadata": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "example": "370985db-22d8-4463-8e5f-2271d30913bd"
+                      },
+                      "nameSingular": {
+                        "type": "string",
+                        "enum": ["call"]
+                      }
+                    }
+                  },
+                  "workspaceId": {
+                    "type": "string",
+                    "example": "872cfcf1-c79f-42bc-877d-5829f06eb3f9"
+                  },
+                  "webhookId": {
+                    "type": "string",
+                    "example": "90056586-1228-4e03-a507-70140aa85c05"
+                  },
+                  "eventDate": {
+                    "type": "string",
+                    "example": "2024-02-14T11:27:01.779Z"
+                  },
+                  "record": {
+                    "$ref": "#/components/schemas/Call for Response"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        }
+      }
+    },
     "Create accommodation": {
       "post": {
         "tags": ["accommodation"],
@@ -36432,6 +37502,10 @@
     {
       "name": "clients",
       "description": "Object `Clients`"
+    },
+    {
+      "name": "calls",
+      "description": "Object `Calls`"
     },
     {
       "name": "accommodations",
