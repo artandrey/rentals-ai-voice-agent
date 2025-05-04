@@ -5,13 +5,7 @@ import { ClientsTwentyCrmMapper } from '../../infrastructure/persistence/twenty-
 import { TwentyCrmClientsRepository } from '../../infrastructure/persistence/twenty-crm/repositories/twenty-crm-clients.repository';
 import { Client, ClientId, ClientPreferredLanguage } from '../entities/client';
 import { PhoneNumber } from '../value-objects/phone-number.value';
-
-// Use a valid Ukrainian mobile prefix and randomize only the last 4 digits
-function validTestPhoneNumber() {
-  const prefix = '+38050123'; // Kyivstar, always valid
-  const last4 = Math.floor(1000 + Math.random() * 9000); // 4 digits
-  return `${prefix}${last4}`;
-}
+import { validTestPhoneNumber } from './__fixtures__/value-objects';
 
 describe('TwentyCrmClientsRepository (integration)', () => {
   const mapper = new ClientsTwentyCrmMapper();

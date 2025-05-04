@@ -14,13 +14,7 @@ import { DayDate } from '../value-objects/day-date.value';
 import { Location } from '../value-objects/location.value';
 import { PhoneNumber } from '../value-objects/phone-number.value';
 import { Price } from '../value-objects/price.value';
-
-// Use a valid Ukrainian mobile prefix and randomize only the last 4 digits
-function validTestPhoneNumber() {
-  const prefix = '+38050123'; // Kyivstar, always valid
-  const last4 = Math.floor(1000 + Math.random() * 9000); // 4 digits
-  return `${prefix}${last4}`;
-}
+import { sampleLocation, samplePrice, validTestPhoneNumber } from './__fixtures__/value-objects';
 
 describe('TwentyCrmAccommodationsRepository (integration)', () => {
   const clientMapper = new ClientsTwentyCrmMapper();

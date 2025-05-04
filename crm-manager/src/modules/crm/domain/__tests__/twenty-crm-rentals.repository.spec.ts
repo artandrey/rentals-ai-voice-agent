@@ -6,15 +6,7 @@ import { TwentyCrmRentalsRepository } from '../../infrastructure/persistence/twe
 import { Rental, RentalId } from '../entities/rental';
 import { Location } from '../value-objects/location.value';
 import { Price } from '../value-objects/price.value';
-
-// Helper to generate a sample location and price
-function sampleLocation() {
-  return new Location('Test Street', 'Test City', '123');
-}
-
-function samplePrice() {
-  return new Price(100, 'USD');
-}
+import { sampleLocation, samplePrice } from './__fixtures__/value-objects';
 
 describe('TwentyCrmRentalsRepository (integration)', () => {
   const mapper = new RentalsTwentyCrmMapper();

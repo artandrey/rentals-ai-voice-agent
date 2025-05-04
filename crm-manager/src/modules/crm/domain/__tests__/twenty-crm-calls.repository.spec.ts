@@ -6,12 +6,7 @@ import { TwentyCrmCallsRepository } from '../../infrastructure/persistence/twent
 import { Call, CallId, CallType } from '../entities/call';
 import { PhoneNumber } from '../value-objects/phone-number.value';
 import { SpeakerRole, Transcript, TranscriptReplica } from '../value-objects/transcript.value';
-
-function validTestPhoneNumber() {
-  const prefix = '+38050123';
-  const last4 = Math.floor(1000 + Math.random() * 9000);
-  return `${prefix}${last4}`;
-}
+import { validTestPhoneNumber } from './__fixtures__/value-objects';
 
 describe('TwentyCrmCallsRepository (integration)', () => {
   const mapper = new TwentyCrmCallsMapper();
