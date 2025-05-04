@@ -1,3 +1,5 @@
+import { toBuilderMethod } from 'class-constructor';
+
 import { Entity, Nominal } from '~shared/domain/entities/entity';
 
 import { PhoneNumber } from '../value-objects/phone-number.value';
@@ -64,4 +66,6 @@ export class Call extends Entity<CallId> {
   complete() {
     this._completedAt = new Date();
   }
+
+  public static builder = toBuilderMethod(Call).classAsOptionals();
 }

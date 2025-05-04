@@ -40,9 +40,10 @@ describe('TwentyCrmCallsRepository (integration)', () => {
       new TranscriptReplica(SpeakerRole.CALLER, 'Hello'),
       new TranscriptReplica(SpeakerRole.AGENT, 'Hi!'),
     ]);
-    const callEntity = new Call(PhoneNumber.create(testPhone));
-    (callEntity as any)._type = CallType.BOOKING;
-    (callEntity as any)._transcript = transcript;
+    const callEntity = Call.builder(PhoneNumber.create(testPhone))
+      .type(CallType.BOOKING)
+      .transcript(transcript)
+      .build();
     const id = await repository.save(callEntity);
     expect(id).toBeDefined();
     cleanupCallId = id;
@@ -54,9 +55,10 @@ describe('TwentyCrmCallsRepository (integration)', () => {
       new TranscriptReplica(SpeakerRole.CALLER, 'Hello'),
       new TranscriptReplica(SpeakerRole.AGENT, 'Hi!'),
     ]);
-    const callEntity = new Call(PhoneNumber.create(testPhone));
-    (callEntity as any)._type = CallType.BOOKING;
-    (callEntity as any)._transcript = transcript;
+    const callEntity = Call.builder(PhoneNumber.create(testPhone))
+      .type(CallType.BOOKING)
+      .transcript(transcript)
+      .build();
     const id = await repository.save(callEntity);
     cleanupCallId = id;
     const found = await repository.findById(id);
@@ -73,8 +75,7 @@ describe('TwentyCrmCallsRepository (integration)', () => {
 
   it('should delete a call', async () => {
     const testPhone = validTestPhoneNumber();
-    const callEntity = new Call(PhoneNumber.create(testPhone));
-    (callEntity as any)._type = CallType.BOOKING;
+    const callEntity = Call.builder(PhoneNumber.create(testPhone)).type(CallType.BOOKING).build();
     const id = await repository.save(callEntity);
     await repository.delete(id);
     const found = await repository.findById(id);
