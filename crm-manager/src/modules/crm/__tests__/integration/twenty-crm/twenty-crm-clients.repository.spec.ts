@@ -1,11 +1,11 @@
 import { client } from 'twenty-crm-api-client/client/client.gen';
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
-import { ClientsTwentyCrmMapper } from '../../infrastructure/persistence/twenty-crm/mappers/twenty-crm-clients.mapper';
-import { TwentyCrmClientsRepository } from '../../infrastructure/persistence/twenty-crm/repositories/twenty-crm-clients.repository';
-import { Client, ClientId, ClientPreferredLanguage } from '../entities/client';
-import { PhoneNumber } from '../value-objects/phone-number.value';
-import { validTestPhoneNumber } from './__fixtures__/value-objects';
+import { Client, ClientId, ClientPreferredLanguage } from '../../../domain/entities/client';
+import { PhoneNumber } from '../../../domain/value-objects/phone-number.value';
+import { ClientsTwentyCrmMapper } from '../../../infrastructure/persistence/twenty-crm/mappers/twenty-crm-clients.mapper';
+import { TwentyCrmClientsRepository } from '../../../infrastructure/persistence/twenty-crm/repositories/twenty-crm-clients.repository';
+import { validTestPhoneNumber } from '../../__fixtures__/value-objects';
 
 describe('TwentyCrmClientsRepository (integration)', () => {
   const mapper = new ClientsTwentyCrmMapper();

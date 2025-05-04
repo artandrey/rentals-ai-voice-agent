@@ -1,12 +1,12 @@
 import { client } from 'twenty-crm-api-client/client/client.gen';
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { RentalsTwentyCrmMapper } from '../../infrastructure/persistence/twenty-crm/mappers/twenty-crm-rentals.mapper';
-import { TwentyCrmRentalsRepository } from '../../infrastructure/persistence/twenty-crm/repositories/twenty-crm-rentals.repository';
-import { Rental, RentalId } from '../entities/rental';
-import { Location } from '../value-objects/location.value';
-import { Price } from '../value-objects/price.value';
-import { sampleLocation, samplePrice } from './__fixtures__/value-objects';
+import { Rental, RentalId } from '../../../domain/entities/rental';
+import { Location } from '../../../domain/value-objects/location.value';
+import { Price } from '../../../domain/value-objects/price.value';
+import { RentalsTwentyCrmMapper } from '../../../infrastructure/persistence/twenty-crm/mappers/twenty-crm-rentals.mapper';
+import { TwentyCrmRentalsRepository } from '../../../infrastructure/persistence/twenty-crm/repositories/twenty-crm-rentals.repository';
+import { sampleLocation, samplePrice } from '../../__fixtures__/value-objects';
 
 describe('TwentyCrmRentalsRepository (integration)', () => {
   const mapper = new RentalsTwentyCrmMapper();

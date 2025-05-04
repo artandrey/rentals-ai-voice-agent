@@ -1,12 +1,12 @@
 import { client } from 'twenty-crm-api-client/client/client.gen';
 import { afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { TwentyCrmCallsMapper } from '../../infrastructure/persistence/twenty-crm/mappers/twenty-crm-calls.mapper';
-import { TwentyCrmCallsRepository } from '../../infrastructure/persistence/twenty-crm/repositories/twenty-crm-calls.repository';
-import { Call, CallId, CallType } from '../entities/call';
-import { PhoneNumber } from '../value-objects/phone-number.value';
-import { SpeakerRole, Transcript, TranscriptReplica } from '../value-objects/transcript.value';
-import { validTestPhoneNumber } from './__fixtures__/value-objects';
+import { Call, CallId, CallType } from '../../../domain/entities/call';
+import { PhoneNumber } from '../../../domain/value-objects/phone-number.value';
+import { SpeakerRole, Transcript, TranscriptReplica } from '../../../domain/value-objects/transcript.value';
+import { TwentyCrmCallsMapper } from '../../../infrastructure/persistence/twenty-crm/mappers/twenty-crm-calls.mapper';
+import { TwentyCrmCallsRepository } from '../../../infrastructure/persistence/twenty-crm/repositories/twenty-crm-calls.repository';
+import { validTestPhoneNumber } from '../../__fixtures__/value-objects';
 
 describe('TwentyCrmCallsRepository (integration)', () => {
   const mapper = new TwentyCrmCallsMapper();

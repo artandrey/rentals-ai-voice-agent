@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { Client } from '../entities/client';
-import { Rental } from '../entities/rental';
-import { DayDate } from '../value-objects/day-date.value';
-import { Location } from '../value-objects/location.value';
-import { PhoneNumber } from '../value-objects/phone-number.value';
-import { Price } from '../value-objects/price.value';
+import { Client } from '../../domain/entities/client';
+import { Rental } from '../../domain/entities/rental';
+import { DayDate } from '../../domain/value-objects/day-date.value';
+import { Location } from '../../domain/value-objects/location.value';
+import { PhoneNumber } from '../../domain/value-objects/phone-number.value';
+import { Price } from '../../domain/value-objects/price.value';
 
 describe('Rental accommodations', () => {
   describe('free days spans', () => {

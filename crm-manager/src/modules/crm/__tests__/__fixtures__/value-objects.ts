@@ -1,5 +1,5 @@
-import { Location } from '../../value-objects/location.value';
-import { Price } from '../../value-objects/price.value';
+import { Location } from '../../domain/value-objects/location.value';
+import { Price } from '../../domain/value-objects/price.value';
 
 export function validTestPhoneNumber() {
   const prefix = '+38050123';

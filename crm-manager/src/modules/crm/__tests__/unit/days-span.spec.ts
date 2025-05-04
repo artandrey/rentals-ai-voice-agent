@@ -1,5 +1,7 @@
-import { DayDate } from '../value-objects/day-date.value';
-import { DaysSpan } from '../value-objects/days-span.value';
+import { describe, expect, it } from 'vitest';
+
+import { DayDate } from '../../domain/value-objects/day-date.value';
+import { DaysSpan } from '../../domain/value-objects/days-span.value';
 
 describe('DaysSpan', () => {
   describe('creation', () => {
