@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Accommodation_for_Response as AccommodationTwentyCrm, AccommodationsService } from 'twenty-crm-api-client';
+import { AccommodationForResponse as AccommodationTwentyCrm, AccommodationsService } from 'twenty-crm-api-client';
+import { client as ApiClient } from 'twenty-crm-api-client/client/client.gen';
 
 import { Accommodation, AccommodationId } from '~modules/crm/domain/entities/accommodation';
 import { RentalId } from '~modules/crm/domain/entities/rental';
@@ -12,7 +13,10 @@ export class TwentyCrmAccommodationsRepository extends IAccommodationRepository 
   // Assuming AccommodationsService is static or needs instantiation if not
   private readonly accommodationsService = AccommodationsService;
 
-  constructor(private readonly mapper: TwentyCrmAccommodationsMapper) {
+  constructor(
+    private readonly mapper: TwentyCrmAccommodationsMapper,
+    private readonly apiClient: typeof ApiClient,
+  ) {
     super();
   }
 
@@ -22,6 +26,7 @@ export class TwentyCrmAccommodationsRepository extends IAccommodationRepository 
         path: {
           id: id as string, // Cast ID to string for API call
         },
+        client: this.apiClient,
         // query: { depth: 1 } // Add depth if needed for relations
       });
 
@@ -50,6 +55,7 @@ export class TwentyCrmAccommodationsRepository extends IAccommodationRepository 
         const { data: response } = await this.accommodationsService.updateOneAccommodation({
           path: { id: entity.id as string },
           body: persistenceData, // Type should match Accommodation_for_Update
+          client: this.apiClient,
         });
 
         if (!response?.data?.updateAccommodation?.id) {
@@ -60,6 +66,7 @@ export class TwentyCrmAccommodationsRepository extends IAccommodationRepository 
         // Create new accommodation
         const { data: response } = await this.accommodationsService.createOneAccommodation({
           body: persistenceData, // Type should match Accommodation
+          client: this.apiClient,
         });
 
         if (!response?.data?.createAccommodation?.id) {
@@ -78,6 +85,7 @@ export class TwentyCrmAccommodationsRepository extends IAccommodationRepository 
     try {
       await this.accommodationsService.deleteOneAccommodation({
         path: { id: id as string },
+        client: this.apiClient,
       });
     } catch (error: any) {
       // Ignore 404 errors on delete (idempotency)
@@ -94,6 +102,7 @@ export class TwentyCrmAccommodationsRepository extends IAccommodationRepository 
       const { data: response } = await this.accommodationsService.findManyAccommodations({
         // Add query parameters like pagination (limit, starting_after) or filters if needed
         // query: { depth: 1 } // Add depth if needed for relations
+        client: this.apiClient,
       });
 
       const accommodationsData = response?.data?.accommodations ?? [];
@@ -102,19 +111,25 @@ export class TwentyCrmAccommodationsRepository extends IAccommodationRepository 
       return accommodationsData.map((accommodationData) => this.mapper.toDomain(accommodationData));
     } catch (error) {
       console.error('Error finding all accommodations from TwentyCRM:', error);
-      throw error;
+      return [];
     }
   }
 
   async findByRentalId(rentalId: RentalId): Promise<Accommodation[]> {
-    const { data: response } = await this.accommodationsService.findManyAccommodations({
-      query: {
-        filter: `rentalId[eq]:${rentalId}`,
-      },
-    });
+    try {
+      const { data: response } = await this.accommodationsService.findManyAccommodations({
+        query: {
+          filter: `rentalId[eq]:${rentalId}`,
+        },
+        client: this.apiClient,
+      });
 
-    const accommodationsData = response?.data?.accommodations ?? [];
+      const accommodationsData = response?.data?.accommodations ?? [];
 
-    return accommodationsData.map((data) => this.mapper.toDomain(data));
+      return accommodationsData.map((data) => this.mapper.toDomain(data));
+    } catch (error) {
+      console.error('Error finding accommodations by rental ID from TwentyCRM:', error);
+      return [];
+    }
   }
 }
