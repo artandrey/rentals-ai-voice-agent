@@ -6,6 +6,7 @@ import { PhoneNumber } from '../../../domain/value-objects/phone-number.value';
 import { SpeakerRole, Transcript, TranscriptReplica } from '../../../domain/value-objects/transcript.value';
 import { TwentyCrmCallsMapper } from '../../../infrastructure/persistence/twenty-crm/mappers/twenty-crm-calls.mapper';
 import { TwentyCrmCallsRepository } from '../../../infrastructure/persistence/twenty-crm/repositories/twenty-crm-calls.repository';
+import { getTwentyCrmClientConfig } from '../../__fixtures__/twenty-crm-client-config';
 import { validTestPhoneNumber } from '../../__fixtures__/value-objects';
 
 describe('TwentyCrmCallsRepository (integration)', () => {
@@ -14,12 +15,7 @@ describe('TwentyCrmCallsRepository (integration)', () => {
   let cleanupCallId: CallId | undefined;
 
   beforeAll(() => {
-    client.setConfig({
-      baseURL: 'http://localhost:3000/rest',
-      headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZTA1OGFiMC01OTliLTRkZTktYmNkZS01YmJjMGMxNDNjY2EiLCJ0eXBlIjoiQVBJX0tFWSIsIndvcmtzcGFjZUlkIjoiOWUwNThhYjAtNTk5Yi00ZGU5LWJjZGUtNWJiYzBjMTQzY2NhIiwiaWF0IjoxNzQ0NDEzMTA2LCJleHAiOjQ4OTgwMTY3MDUsImp0aSI6ImUwYWI2ZmFjLTczNWYtNDg5NS1iNzFkLTEzNTExNzM1MWRhZSJ9.zdPLPrjd_EguVz32NcyHiKfdDNb7FtD67L4HoOiHevM`,
-      },
-    });
+    client.setConfig(getTwentyCrmClientConfig());
   });
 
   afterEach(async () => {

@@ -14,6 +14,7 @@ import { RentalsTwentyCrmMapper } from '../../../infrastructure/persistence/twen
 import { TwentyCrmAccommodationsRepository } from '../../../infrastructure/persistence/twenty-crm/repositories/twenty-crm-accommodations.repository';
 import { TwentyCrmClientsRepository } from '../../../infrastructure/persistence/twenty-crm/repositories/twenty-crm-clients.repository';
 import { TwentyCrmRentalsRepository } from '../../../infrastructure/persistence/twenty-crm/repositories/twenty-crm-rentals.repository';
+import { getTwentyCrmClientConfig } from '../../__fixtures__/twenty-crm-client-config';
 import { sampleLocation, samplePrice, validTestPhoneNumber } from '../../__fixtures__/value-objects';
 
 describe('TwentyCrmAccommodationsRepository (integration)', () => {
@@ -31,12 +32,7 @@ describe('TwentyCrmAccommodationsRepository (integration)', () => {
   let cleanupAccommodationId: AccommodationId | undefined;
 
   beforeAll(() => {
-    client.setConfig({
-      baseURL: 'http://localhost:3000/rest',
-      headers: {
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZTA1OGFiMC01OTliLTRkZTktYmNkZS01YmJjMGMxNDNjY2EiLCJ0eXBlIjoiQVBJX0tFWSIsIndvcmtzcGFjZUlkIjoiOWUwNThhYjAtNTk5Yi00ZGU5LWJjZGUtNWJiYzBjMTQzY2NhIiwiaWF0IjoxNzQ0NDEzMTA2LCJleHAiOjQ4OTgwMTY3MDUsImp0aSI6ImUwYWI2ZmFjLTczNWYtNDg5NS1iNzFkLTEzNTExNzM1MWRhZSJ9.zdPLPrjd_EguVz32NcyHiKfdDNb7FtD67L4HoOiHevM`,
-      },
-    });
+    client.setConfig(getTwentyCrmClientConfig());
   });
 
   afterEach(async () => {
