@@ -7,6 +7,16 @@ import {
 } from '~modules/crm/application/use-cases/find-client-by-phone.use-case';
 import { GetClientByIdQuery, IGetClientByIdQuery } from '~modules/crm/application/use-cases/get-client-by-id.use-case';
 import { GetClientsQuery, IGetClientsQuery } from '~modules/crm/application/use-cases/get-clients.use-case';
+import { GetRentalByIdQuery, IGetRentalByIdQuery } from '~modules/crm/application/use-cases/get-rental-by-id.use-case';
+import {
+  GetRentalEmergencyDetailsQuery,
+  IGetRentalEmergencyDetailsQuery,
+} from '~modules/crm/application/use-cases/get-rental-emergency-details.use-case';
+import {
+  GetRentalSettlementDetailsQuery,
+  IGetRentalSettlementDetailsQuery,
+} from '~modules/crm/application/use-cases/get-rental-settlement-details.use-case';
+import { GetRentalsQuery, IGetRentalsQuery } from '~modules/crm/application/use-cases/get-rentals.use-case';
 import {
   IUpdateClientNameUseCase,
   UpdateClientNameUseCase,
@@ -20,14 +30,16 @@ import {
   UpdateClientPreferredLanguageUseCase,
 } from '~modules/crm/application/use-cases/update-client-preferred-language.use-case';
 import { ClientMapper } from '~modules/crm/domain/mappers/client.mapper';
+import { RentalMapper } from '~modules/crm/domain/mappers/rental.mapper';
 import { ClientsController } from '~modules/crm/infrastructure/http/controllers/clients.controller';
+import { RentalsController } from '~modules/crm/infrastructure/http/controllers/rentals.controller';
 
 @Module({
   imports: [],
-  controllers: [ClientsController],
+  controllers: [ClientsController, RentalsController],
   providers: [
     ClientMapper,
-    ClientMapper,
+    RentalMapper,
     { provide: IGetClientsQuery, useClass: GetClientsQuery },
     { provide: IGetClientByIdQuery, useClass: GetClientByIdQuery },
     { provide: IFindClientByPhoneQuery, useClass: FindClientByPhoneQuery },
@@ -35,6 +47,10 @@ import { ClientsController } from '~modules/crm/infrastructure/http/controllers/
     { provide: IUpdateClientNameUseCase, useClass: UpdateClientNameUseCase },
     { provide: IUpdateClientPreferredLanguageUseCase, useClass: UpdateClientPreferredLanguageUseCase },
     { provide: IUpdateClientPreferencesUseCase, useClass: UpdateClientPreferencesUseCase },
+    { provide: IGetRentalsQuery, useClass: GetRentalsQuery },
+    { provide: IGetRentalByIdQuery, useClass: GetRentalByIdQuery },
+    { provide: IGetRentalSettlementDetailsQuery, useClass: GetRentalSettlementDetailsQuery },
+    { provide: IGetRentalEmergencyDetailsQuery, useClass: GetRentalEmergencyDetailsQuery },
   ],
 })
 export class CrmModule {}
