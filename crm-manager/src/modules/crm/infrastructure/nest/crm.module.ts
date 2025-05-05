@@ -20,7 +20,7 @@ import {
   UpdateClientPreferredLanguageUseCase,
 } from '~modules/crm/application/use-cases/update-client-preferred-language.use-case';
 import { ClientMapper } from '~modules/crm/domain/mapper/client.mapper';
-import { ClientsController } from '~shared/infrastructure/http/controllers/clients.controller';
+import { ClientsController } from '~modules/crm/infrastructure/http/controllers/clients.controller';
 
 @Module({
   imports: [],

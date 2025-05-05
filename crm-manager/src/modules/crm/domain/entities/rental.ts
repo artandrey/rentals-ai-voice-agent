@@ -3,6 +3,7 @@ import { toBuilderMethod } from 'class-constructor';
 import { AggregateRoot } from '~shared/domain/aggregates/aggregate-root';
 import { Nominal } from '~shared/domain/entities/entity';
 
+import { Amenity } from '../value-objects/amenity.value';
 import { DayDate } from '../value-objects/day-date.value';
 import { DaysSpan } from '../value-objects/days-span.value';
 import { Location } from '../value-objects/location.value';
@@ -15,11 +16,26 @@ export type RentalId = Nominal<string, 'RentalId'>;
 export class Rental extends AggregateRoot<RentalId> {
   private _location: Location;
   private _pricePerDay: Price;
+  private _description: string;
+  private _amenities: Amenity[] = [];
+  private _settlementDetails: string = '';
+  private _emergencyDetails: string = '';
 
-  constructor(location: Location, pricePerDay: Price) {
+  constructor(
+    location: Location,
+    pricePerDay: Price,
+    description: string = '',
+    amenities: Amenity[] = [],
+    settlementDetails: string = '',
+    emergencyDetails: string = '',
+  ) {
     super();
     this._location = location;
     this._pricePerDay = pricePerDay;
+    this._description = description;
+    this._amenities = [...amenities];
+    this._settlementDetails = settlementDetails;
+    this._emergencyDetails = emergencyDetails;
   }
 
   public get location(): Location {
@@ -28,6 +44,22 @@ export class Rental extends AggregateRoot<RentalId> {
 
   public get pricePerDay(): Price {
     return this._pricePerDay;
+  }
+
+  public get description(): string {
+    return this._description;
+  }
+
+  public get amenities(): Amenity[] {
+    return [...this._amenities];
+  }
+
+  public get settlementDetails(): string {
+    return this._settlementDetails;
+  }
+
+  public get emergencyDetails(): string {
+    return this._emergencyDetails;
   }
 
   public async createAccommodation(clientId: ClientId, startDate: DayDate, endDate: DayDate): Promise<Accommodation> {

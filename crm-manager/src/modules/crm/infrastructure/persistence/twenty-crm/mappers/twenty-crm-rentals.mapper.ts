@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { RentalForResponse as RentalTwentyCrm } from 'twenty-crm-api-client';
 
 import { Rental } from '~modules/crm/domain/entities/rental';
+import { Amenity } from '~modules/crm/domain/value-objects/amenity.value';
 import { Location } from '~modules/crm/domain/value-objects/location.value';
 import { Price } from '~modules/crm/domain/value-objects/price.value';
 import { IDataAccessMapper } from '~shared/domain/mappers/data-access-mapper.interface';
@@ -28,13 +29,32 @@ export class TwentyCrmRentalsMapper implements IDataAccessMapper<Rental, RentalT
     return {
       location: this.locationToPersistence(entity.location),
       pricePerDay: this.priceToPersistence(entity.pricePerDay),
+      description: entity.description,
+      settlementDetails: entity.settlementDetails,
+      emergencyDetails: entity.emergencyDetails,
     };
   }
+
   toDomain(persistence: RentalTwentyCrm): Rental {
     return Rental.builder(
       this.locationToDomain(persistence.location!),
       this.priceToDomain(persistence.pricePerDay!),
+      persistence.description ?? '',
+      this.amenitiesFromApi(persistence),
+      persistence.settlementDetails ?? '',
+      persistence.emergencyDetails ?? '',
     ).build();
+  }
+
+  amenitiesFromApi(persistence: RentalTwentyCrm): Amenity[] {
+    // Extract amenities from the API response
+    // This is placeholder logic - adjust according to where amenities will be stored in the API
+    const amenityTitles: string[] = [];
+
+    // Example: If amenities are stored in custom fields or other properties
+    // You'll need to implement the actual extraction logic based on API structure
+
+    return amenityTitles.map((title) => Amenity.create(title));
   }
 
   locationToPersistence(location: Location): ITwentyCrmLocation {
