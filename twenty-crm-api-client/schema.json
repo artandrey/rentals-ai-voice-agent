@@ -8298,6 +8298,12 @@
               "$ref": "#/components/schemas/TaskTarget for Response"
             },
             "description": "TaskTargets tied to the Accommodation"
+          },
+          "rental": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Rental for Response"
+            }
           }
         }
       },
@@ -8386,6 +8392,10 @@
             "items": {
               "type": "string"
             }
+          },
+          "accommodationsId": {
+            "type": "string",
+            "format": "uuid"
           }
         }
       },
@@ -8474,6 +8484,10 @@
             "items": {
               "type": "string"
             }
+          },
+          "accommodationsId": {
+            "type": "string",
+            "format": "uuid"
           }
         }
       },
@@ -8589,6 +8603,10 @@
             "items": {
               "type": "string"
             }
+          },
+          "accommodationsId": {
+            "type": "string",
+            "format": "uuid"
           },
           "timelineActivities": {
             "type": "array",
