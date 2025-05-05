@@ -8126,6 +8126,10 @@
           "clientId": {
             "type": "string",
             "format": "uuid"
+          },
+          "rentalId": {
+            "type": "string",
+            "format": "uuid"
           }
         }
       },
@@ -8179,6 +8183,10 @@
             ]
           },
           "clientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "rentalId": {
             "type": "string",
             "format": "uuid"
           }
@@ -8264,6 +8272,10 @@
             "type": "string",
             "format": "uuid"
           },
+          "rentalId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "timelineActivities": {
             "type": "array",
             "items": {
@@ -8299,10 +8311,10 @@
             },
             "description": "TaskTargets tied to the Accommodation"
           },
-          "rental": {
+          "accommodations": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Rental for Response"
+              "$ref": "#/components/schemas/Accommodation for Response"
             }
           }
         }
@@ -8392,10 +8404,6 @@
             "items": {
               "type": "string"
             }
-          },
-          "accommodationsId": {
-            "type": "string",
-            "format": "uuid"
           }
         }
       },
@@ -8484,10 +8492,6 @@
             "items": {
               "type": "string"
             }
-          },
-          "accommodationsId": {
-            "type": "string",
-            "format": "uuid"
           }
         }
       },
@@ -8603,10 +8607,6 @@
             "items": {
               "type": "string"
             }
-          },
-          "accommodationsId": {
-            "type": "string",
-            "format": "uuid"
           },
           "timelineActivities": {
             "type": "array",
