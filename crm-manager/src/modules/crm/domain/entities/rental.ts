@@ -1,14 +1,14 @@
 import { toBuilderMethod } from 'class-constructor';
 
 import { AggregateRoot } from '~shared/domain/aggregates/aggregate-root';
-import { Entity, Nominal } from '~shared/domain/entities/entity';
+import { Nominal } from '~shared/domain/entities/entity';
 
 import { DayDate } from '../value-objects/day-date.value';
 import { DaysSpan } from '../value-objects/days-span.value';
 import { Location } from '../value-objects/location.value';
 import { Price } from '../value-objects/price.value';
 import { Accommodation } from './accommodation';
-import { Client, ClientId } from './client';
+import { ClientId } from './client';
 
 export type RentalId = Nominal<string, 'RentalId'>;
 

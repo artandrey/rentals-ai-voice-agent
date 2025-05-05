@@ -1,5 +1,4 @@
 import { Rental } from '~modules/crm/domain/entities/rental';
-import { IRentalsRepository } from '~modules/crm/domain/repositories/rentals-repository.interface';
 import { Query } from '~shared/application/CQS/query.abstract';
 import { IUseCase } from '~shared/application/use-cases/use-case.interface';
 
