@@ -1,6 +1,12 @@
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 
-import { ClientDto, CreateClientDto } from '~modules/crm/application/dto/client.dto';
+import {
+  ClientDto,
+  CreateClientDto,
+  UpdateClientNameDto,
+  UpdateClientPreferencesDto,
+  UpdateClientPreferredLanguageDto,
+} from '~modules/crm/application/dto/client.dto';
 import { ICreateClientUseCase } from '~modules/crm/application/use-cases/create-client.use-case';
 import { IFindClientByPhoneQuery } from '~modules/crm/application/use-cases/find-client-by-phone.use-case';
 import { IGetClientByIdQuery } from '~modules/crm/application/use-cases/get-client-by-id.use-case';
@@ -8,7 +14,7 @@ import { IGetClientsQuery } from '~modules/crm/application/use-cases/get-clients
 import { IUpdateClientNameUseCase } from '~modules/crm/application/use-cases/update-client-name.use-case';
 import { IUpdateClientPreferencesUseCase } from '~modules/crm/application/use-cases/update-client-preferences.use-case';
 import { IUpdateClientPreferredLanguageUseCase } from '~modules/crm/application/use-cases/update-client-preferred-language.use-case';
-import { ClientId, ClientPreferredLanguage } from '~modules/crm/domain/entities/client';
+import { ClientId } from '~modules/crm/domain/entities/client';
 
 @Controller('clients')
 export class ClientsController {
@@ -43,31 +49,29 @@ export class ClientsController {
   }
 
   @Put(':id/name')
-  async updateClientName(
-    @Param('id') id: string,
-    @Body() body: { firstName: string; lastName: string; middleName?: string },
-  ): Promise<void> {
+  async updateClientName(@Param('id') id: string, @Body() body: UpdateClientNameDto): Promise<void> {
     await this.updateClientNameUseCase.execute({
       clientId: id as ClientId,
-      firstName: body.firstName,
-      lastName: body.lastName,
-      middleName: body.middleName,
+      updates: body,
     });
   }
 
   @Put(':id/preferred-language')
-  async updateClientPreferredLanguage(@Param('id') id: string, @Body() body: { language: string }): Promise<void> {
+  async updateClientPreferredLanguage(
+    @Param('id') id: string,
+    @Body() body: UpdateClientPreferredLanguageDto,
+  ): Promise<void> {
     await this.updateClientPreferredLanguageUseCase.execute({
       clientId: id as ClientId,
-      preferredLanguage: body.language as ClientPreferredLanguage,
+      updates: body,
     });
   }
 
   @Put(':id/preferences')
-  async updateClientPreferences(@Param('id') id: string, @Body() body: { preferences: string[] }): Promise<void> {
+  async updateClientPreferences(@Param('id') id: string, @Body() body: UpdateClientPreferencesDto): Promise<void> {
     await this.updateClientPreferencesUseCase.execute({
       clientId: id as ClientId,
-      preferences: body.preferences,
+      updates: body,
     });
   }
 }

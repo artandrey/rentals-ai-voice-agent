@@ -5,14 +5,16 @@ import { ClientMapper } from '~modules/crm/domain/mapper/client.mapper';
 import { Command } from '~shared/application/CQS/command.abstract';
 import { IUseCase } from '~shared/application/use-cases/use-case.interface';
 
-export interface UpdateClientPreferredLanguageDto {
+import { UpdateClientPreferredLanguageDto } from '../dto/client.dto';
+
+export interface UpdateClientPreferredLanguagePayload {
   clientId: ClientId;
-  preferredLanguage: ClientPreferredLanguage;
+  updates: UpdateClientPreferredLanguageDto;
 }
 
 export abstract class IUpdateClientPreferredLanguageUseCase
-  extends Command<UpdateClientPreferredLanguageDto, void>
-  implements IUseCase<UpdateClientPreferredLanguageDto, void> {}
+  extends Command<UpdateClientPreferredLanguagePayload, void>
+  implements IUseCase<UpdateClientPreferredLanguagePayload, void> {}
 
 export class UpdateClientPreferredLanguageUseCase extends IUpdateClientPreferredLanguageUseCase {
   constructor() {
@@ -20,7 +22,8 @@ export class UpdateClientPreferredLanguageUseCase extends IUpdateClientPreferred
   }
 
   async implementation(): Promise<void> {
-    const { clientId, preferredLanguage } = this._input;
+    const { clientId, updates } = this._input;
+    const { language } = updates;
 
     const client = await this._dbContext.clientsRepository.findById(clientId);
 
@@ -28,9 +31,7 @@ export class UpdateClientPreferredLanguageUseCase extends IUpdateClientPreferred
       throw new Error('Client not found');
     }
 
-    // Use the entity's method to set preferred language
-    // This method handles validation of the language value
-    client.setPreferredLanguage(preferredLanguage);
+    client.setPreferredLanguage(language);
 
     await this._dbContext.clientsRepository.save(client);
   }

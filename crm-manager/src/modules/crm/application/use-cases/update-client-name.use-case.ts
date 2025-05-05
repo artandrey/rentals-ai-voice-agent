@@ -5,16 +5,16 @@ import { ClientMapper } from '~modules/crm/domain/mapper/client.mapper';
 import { Command } from '~shared/application/CQS/command.abstract';
 import { IUseCase } from '~shared/application/use-cases/use-case.interface';
 
-export interface UpdateClientNameDto {
+import { UpdateClientNameDto } from '../dto/client.dto';
+
+export interface UpdateClientNamePayload {
   clientId: ClientId;
-  firstName: string;
-  lastName: string;
-  middleName?: string;
+  updates: UpdateClientNameDto;
 }
 
 export abstract class IUpdateClientNameUseCase
-  extends Command<UpdateClientNameDto, void>
-  implements IUseCase<UpdateClientNameDto, void> {}
+  extends Command<UpdateClientNamePayload, void>
+  implements IUseCase<UpdateClientNamePayload, void> {}
 
 export class UpdateClientNameUseCase extends IUpdateClientNameUseCase {
   constructor() {
@@ -22,7 +22,8 @@ export class UpdateClientNameUseCase extends IUpdateClientNameUseCase {
   }
 
   async implementation(): Promise<void> {
-    const { clientId, firstName, lastName, middleName } = this._input;
+    const { clientId, updates } = this._input;
+    const { firstName, lastName, middleName } = updates;
 
     const client = await this._dbContext.clientsRepository.findById(clientId);
 

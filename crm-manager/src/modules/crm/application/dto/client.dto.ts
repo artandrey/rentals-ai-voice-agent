@@ -17,3 +17,17 @@ export class ClientDto {
   preferences: string[] = [];
   note: string | null = null;
 }
+
+export class UpdateClientNameDto {
+  firstName: string;
+  lastName: string;
+  middleName?: string;
+}
+
+export class UpdateClientPreferredLanguageDto {
+  language: ClientPreferredLanguage;
+}
+
+export class UpdateClientPreferencesDto {
+  preferences: string[];
+}

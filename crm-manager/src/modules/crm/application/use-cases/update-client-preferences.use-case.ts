@@ -5,14 +5,16 @@ import { ClientMapper } from '~modules/crm/domain/mapper/client.mapper';
 import { Command } from '~shared/application/CQS/command.abstract';
 import { IUseCase } from '~shared/application/use-cases/use-case.interface';
 
-export interface UpdateClientPreferencesDto {
+import { UpdateClientPreferencesDto } from '../dto/client.dto';
+
+export interface UpdateClientPreferencesPayload {
   clientId: ClientId;
-  preferences: string[];
+  updates: UpdateClientPreferencesDto;
 }
 
 export abstract class IUpdateClientPreferencesUseCase
-  extends Command<UpdateClientPreferencesDto, void>
-  implements IUseCase<UpdateClientPreferencesDto, void> {}
+  extends Command<UpdateClientPreferencesPayload, void>
+  implements IUseCase<UpdateClientPreferencesPayload, void> {}
 
 export class UpdateClientPreferencesUseCase extends IUpdateClientPreferencesUseCase {
   constructor() {
@@ -20,7 +22,8 @@ export class UpdateClientPreferencesUseCase extends IUpdateClientPreferencesUseC
   }
 
   async implementation(): Promise<void> {
-    const { clientId, preferences } = this._input;
+    const { clientId, updates } = this._input;
+    const { preferences } = updates;
 
     const client = await this._dbContext.clientsRepository.findById(clientId);
 
@@ -28,7 +31,6 @@ export class UpdateClientPreferencesUseCase extends IUpdateClientPreferencesUseC
       throw new Error('Client not found');
     }
 
-    // Override the previous preferences with the new array using the setter
     client.setPreferences(preferences);
 
     await this._dbContext.clientsRepository.save(client);
