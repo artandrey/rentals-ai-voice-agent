@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 
-import { Rental } from '~modules/crm/domain/entities/rental';
 import { RentalMapper } from '~modules/crm/domain/mappers/rental.mapper';
 import { Query } from '~shared/application/CQS/query.abstract';
 import { IUseCase } from '~shared/application/use-cases/use-case.interface';
