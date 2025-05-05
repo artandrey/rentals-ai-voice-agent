@@ -1,0 +1,29 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_ping",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "type": "string" } }
+            }
+          }
+        },
+        "tags": ["Ping"]
+      }
+    }
+  },
+  "info": {
+    "title": "Nest starter tempalte",
+    "description": "",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": { "schemas": {} }
+}
