@@ -8375,17 +8375,17 @@
           "description": {
             "type": "string"
           },
-          "accomodation": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
           "settlementDetails": {
             "type": "string"
           },
           "emergencyDetails": {
             "type": "string"
+          },
+          "amenities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -8463,17 +8463,17 @@
           "description": {
             "type": "string"
           },
-          "accomodation": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
           "settlementDetails": {
             "type": "string"
           },
           "emergencyDetails": {
             "type": "string"
+          },
+          "amenities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -8578,17 +8578,17 @@
           "description": {
             "type": "string"
           },
-          "accomodation": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
           "settlementDetails": {
             "type": "string"
           },
           "emergencyDetails": {
             "type": "string"
+          },
+          "amenities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "timelineActivities": {
             "type": "array",
