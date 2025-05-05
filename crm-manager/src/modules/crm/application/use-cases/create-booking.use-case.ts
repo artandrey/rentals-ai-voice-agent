@@ -1,7 +1,5 @@
 import { ClientId } from '~modules/crm/domain/entities/client';
 import { RentalId } from '~modules/crm/domain/entities/rental';
-import { IClientRepository } from '~modules/crm/domain/repositories/clients-repository.interface';
-import { IRentalsRepository } from '~modules/crm/domain/repositories/rentals-repository.interface';
 import { DayDate } from '~modules/crm/domain/value-objects/day-date.value';
 import { Command } from '~shared/application/CQS/command.abstract';
 import { IUseCase } from '~shared/application/use-cases/use-case.interface';
