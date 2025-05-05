@@ -1,4 +1,5 @@
 import { IAccommodationRepository } from '~modules/crm/domain/repositories/accommodations-repository.interface';
+import { ICallsRepository } from '~modules/crm/domain/repositories/call-repository.interface';
 import { IClientRepository } from '~modules/crm/domain/repositories/clients-repository.interface';
 import { IRentalsRepository } from '~modules/crm/domain/repositories/rentals-repository.interface';
 
@@ -14,6 +15,7 @@ export interface IDbRepositories {
   accommodationsRepository: IAccommodationRepository;
   clientsRepository: IClientRepository;
   rentalsRepository: IRentalsRepository;
+  callsRepository: ICallsRepository;
 }
 
 export interface IDbContext extends IDbRepositories {

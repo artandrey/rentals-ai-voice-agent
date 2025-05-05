@@ -3,9 +3,11 @@ import { Inject, Injectable, Scope } from '@nestjs/common';
 import { CoreToken } from '~core/constants';
 import { ILogger } from '~core/logger/application/services/logger.interface';
 import { IAccommodationRepository } from '~modules/crm/domain/repositories/accommodations-repository.interface';
+import { ICallsRepository } from '~modules/crm/domain/repositories/call-repository.interface';
 import { IClientRepository } from '~modules/crm/domain/repositories/clients-repository.interface';
 import { IRentalsRepository } from '~modules/crm/domain/repositories/rentals-repository.interface';
 import { TwentyCrmAccommodationsRepository } from '~modules/crm/infrastructure/persistence/twenty-crm/repositories/twenty-crm-accommodations.repository';
+import { TwentyCrmCallsRepository } from '~modules/crm/infrastructure/persistence/twenty-crm/repositories/twenty-crm-calls.repository';
 import { TwentyCrmClientsRepository } from '~modules/crm/infrastructure/persistence/twenty-crm/repositories/twenty-crm-clients.repository';
 import { TwentyCrmRentalsRepository } from '~modules/crm/infrastructure/persistence/twenty-crm/repositories/twenty-crm-rentals.repository';
 import { IDbContext } from '~shared/application/services/db-context.interface';
@@ -38,4 +40,6 @@ export class TwentyCrmDbContext implements IDbContext {
   public rentalsRepository: IRentalsRepository;
   @Inject(TwentyCrmAccommodationsRepository)
   public accommodationsRepository: IAccommodationRepository;
+  @Inject(TwentyCrmCallsRepository)
+  public callsRepository: ICallsRepository;
 }
