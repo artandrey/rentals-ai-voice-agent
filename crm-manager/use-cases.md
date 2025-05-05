@@ -50,6 +50,65 @@ This separation allows:
 2. Clear separation between identifiers and the data to be updated
 3. Type-safe payloads that are explicit about their structure
 
+## Mappers
+
+Mappers are responsible for the transformation between domain entities and DTOs. They follow several important principles:
+
+1. **Single Responsibility**: Each mapper class is responsible for transforming one domain entity.
+2. **Dependency Injection**: Mappers should be injectable services.
+3. **Method Naming**: Mapper methods should be named with `to[TypeName]` format (e.g., `toDto`, `toCompactDto`).
+4. **Location**: Mappers are located in the `domain/mappers` directory.
+
+### Mapper Usage in Use Cases
+
+Use cases should delegate the mapping responsibility to mappers instead of containing the mapping logic directly. This approach:
+
+1. Reduces code duplication across use cases
+2. Centralizes mapping logic in dedicated classes
+3. Makes use cases more focused on business logic
+4. Improves maintainability when entity or DTO structures change
+
+```typescript
+@Injectable()
+export class GetRentalByIdQuery extends IGetRentalByIdQuery {
+  constructor(private readonly rentalMapper: RentalMapper) {
+    super();
+  }
+
+  async implementation(): Promise<CompactRentalDto> {
+    const { rentalId } = this._input;
+    const rental = await this._dbContext.rentalsRepository.findById(rentalId);
+
+    if (!rental) {
+      throw new Error('Rental not found');
+    }
+
+    return this.rentalMapper.toCompactDto(rental);
+  }
+}
+```
+
+### Specialized Mapper Methods
+
+When an entity needs to be mapped to different DTO types, create specialized mapper methods:
+
+```typescript
+@Injectable()
+export class RentalMapper {
+  public toCompactDto(rental: Rental): CompactRentalDto {
+    // Map to compact representation
+  }
+
+  public toDetailedDto(rental: Rental): DetailedRentalDto {
+    // Map to detailed representation
+  }
+
+  public toSpecificInfoDto(rental: Rental): SpecificInfoDto {
+    // Map to specific information representation
+  }
+}
+```
+
 ## Example Implementation
 
 ```typescript
