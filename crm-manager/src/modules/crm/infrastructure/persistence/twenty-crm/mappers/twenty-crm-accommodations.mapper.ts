@@ -1,16 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import {
-  // Use for update
-  Accommodation as AccommodationTwentyCrmInput,
   // Use for create
   AccommodationForResponse as AccommodationTwentyCrmResponse,
-  // Use for read
-  AccommodationForUpdate as AccommodationTwentyCrmUpdate,
 } from 'twenty-crm-api-client';
 
 import { Accommodation, AccommodationId, AccommodationStatus } from '~modules/crm/domain/entities/accommodation';
-import { Client, ClientId } from '~modules/crm/domain/entities/client';
-import { Rental, RentalId } from '~modules/crm/domain/entities/rental';
+import { ClientId } from '~modules/crm/domain/entities/client';
+import { RentalId } from '~modules/crm/domain/entities/rental';
 import { DayDate } from '~modules/crm/domain/value-objects/day-date.value';
 import { IDataAccessMapper } from '~shared/domain/mappers/data-access-mapper.interface';
 

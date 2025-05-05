@@ -3,13 +3,13 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { Client, ClientId, ClientPreferredLanguage } from '../../../domain/entities/client';
 import { PhoneNumber } from '../../../domain/value-objects/phone-number.value';
-import { ClientsTwentyCrmMapper } from '../../../infrastructure/persistence/twenty-crm/mappers/twenty-crm-clients.mapper';
+import { TwentyCrmClientsMapper } from '../../../infrastructure/persistence/twenty-crm/mappers/twenty-crm-clients.mapper';
 import { TwentyCrmClientsRepository } from '../../../infrastructure/persistence/twenty-crm/repositories/twenty-crm-clients.repository';
 import { getTwentyCrmClientConfig } from '../../__fixtures__/twenty-crm-client-config';
 import { validTestPhoneNumber } from '../../__fixtures__/value-objects';
 
 describe('TwentyCrmClientsRepository (integration)', () => {
-  const mapper = new ClientsTwentyCrmMapper();
+  const mapper = new TwentyCrmClientsMapper();
   const repository = new TwentyCrmClientsRepository(mapper, client);
   let cleanupClientId: ClientId | undefined;
 

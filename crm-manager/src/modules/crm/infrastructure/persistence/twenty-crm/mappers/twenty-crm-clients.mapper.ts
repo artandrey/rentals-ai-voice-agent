@@ -6,7 +6,7 @@ import { PhoneNumber } from '~modules/crm/domain/value-objects/phone-number.valu
 import { IDataAccessMapper } from '~shared/domain/mappers/data-access-mapper.interface';
 
 @Injectable()
-export class ClientsTwentyCrmMapper implements IDataAccessMapper<Client, ClientTwentyCrm> {
+export class TwentyCrmClientsMapper implements IDataAccessMapper<Client, ClientTwentyCrm> {
   toPersistence(entity: Client): ClientTwentyCrmInput {
     return {
       fistname: entity.firstName,

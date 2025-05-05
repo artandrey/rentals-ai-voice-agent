@@ -6,14 +6,14 @@ import { Rental, RentalId } from '~modules/crm/domain/entities/rental';
 import { IRentalsRepository } from '~modules/crm/domain/repositories/rentals-repository.interface';
 import { TWENTY_CRM_CLIENT } from '~shared/infrastructure/persistence/constants';
 
-import { RentalsTwentyCrmMapper } from '../mappers/twenty-crm-rentals.mapper';
+import { TwentyCrmRentalsMapper } from '../mappers/twenty-crm-rentals.mapper';
 
 @Injectable()
 export class TwentyCrmRentalsRepository extends IRentalsRepository {
   private readonly rentalsService = RentalsService;
 
   constructor(
-    private readonly mapper: RentalsTwentyCrmMapper,
+    private readonly mapper: TwentyCrmRentalsMapper,
     @Inject(TWENTY_CRM_CLIENT) private readonly apiClient: typeof ApiClient,
   ) {
     super();

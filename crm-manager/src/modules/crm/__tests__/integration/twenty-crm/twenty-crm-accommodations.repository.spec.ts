@@ -9,8 +9,8 @@ import { Location } from '../../../domain/value-objects/location.value';
 import { PhoneNumber } from '../../../domain/value-objects/phone-number.value';
 import { Price } from '../../../domain/value-objects/price.value';
 import { TwentyCrmAccommodationsMapper } from '../../../infrastructure/persistence/twenty-crm/mappers/twenty-crm-accommodations.mapper';
-import { ClientsTwentyCrmMapper } from '../../../infrastructure/persistence/twenty-crm/mappers/twenty-crm-clients.mapper';
-import { RentalsTwentyCrmMapper } from '../../../infrastructure/persistence/twenty-crm/mappers/twenty-crm-rentals.mapper';
+import { TwentyCrmClientsMapper } from '../../../infrastructure/persistence/twenty-crm/mappers/twenty-crm-clients.mapper';
+import { TwentyCrmRentalsMapper } from '../../../infrastructure/persistence/twenty-crm/mappers/twenty-crm-rentals.mapper';
 import { TwentyCrmAccommodationsRepository } from '../../../infrastructure/persistence/twenty-crm/repositories/twenty-crm-accommodations.repository';
 import { TwentyCrmClientsRepository } from '../../../infrastructure/persistence/twenty-crm/repositories/twenty-crm-clients.repository';
 import { TwentyCrmRentalsRepository } from '../../../infrastructure/persistence/twenty-crm/repositories/twenty-crm-rentals.repository';
@@ -18,10 +18,10 @@ import { getTwentyCrmClientConfig } from '../../__fixtures__/twenty-crm-client-c
 import { sampleLocation, samplePrice, validTestPhoneNumber } from '../../__fixtures__/value-objects';
 
 describe('TwentyCrmAccommodationsRepository (integration)', () => {
-  const clientMapper = new ClientsTwentyCrmMapper();
+  const clientMapper = new TwentyCrmClientsMapper();
   const clientRepo = new TwentyCrmClientsRepository(clientMapper, client);
 
-  const rentalMapper = new RentalsTwentyCrmMapper();
+  const rentalMapper = new TwentyCrmRentalsMapper();
   const rentalRepo = new TwentyCrmRentalsRepository(rentalMapper, client);
 
   const mapper = new TwentyCrmAccommodationsMapper();

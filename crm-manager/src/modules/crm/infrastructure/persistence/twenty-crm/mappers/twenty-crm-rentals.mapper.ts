@@ -23,7 +23,7 @@ export interface ITwentyCrmPrice {
 }
 
 @Injectable()
-export class RentalsTwentyCrmMapper implements IDataAccessMapper<Rental, RentalTwentyCrm> {
+export class TwentyCrmRentalsMapper implements IDataAccessMapper<Rental, RentalTwentyCrm> {
   toPersistence(entity: Rental): RentalTwentyCrm {
     return {
       location: this.locationToPersistence(entity.location),

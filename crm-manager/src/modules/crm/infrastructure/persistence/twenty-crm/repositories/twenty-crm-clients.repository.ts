@@ -7,14 +7,14 @@ import { IClientRepository } from '~modules/crm/domain/repositories/clients-repo
 import { PhoneNumber } from '~modules/crm/domain/value-objects/phone-number.value';
 import { TWENTY_CRM_CLIENT } from '~shared/infrastructure/persistence/constants';
 
-import { ClientsTwentyCrmMapper } from '../mappers/twenty-crm-clients.mapper';
+import { TwentyCrmClientsMapper } from '../mappers/twenty-crm-clients.mapper';
 
 @Injectable()
 export class TwentyCrmClientsRepository extends IClientRepository {
   private readonly clientsService = ClientsService;
 
   constructor(
-    private readonly mapper: ClientsTwentyCrmMapper,
+    private readonly mapper: TwentyCrmClientsMapper,
     @Inject(TWENTY_CRM_CLIENT) private readonly apiClient: typeof ApiClient,
   ) {
     super();

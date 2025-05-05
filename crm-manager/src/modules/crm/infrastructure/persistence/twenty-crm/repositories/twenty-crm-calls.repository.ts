@@ -3,12 +3,13 @@ import { CallsService } from 'twenty-crm-api-client';
 import { client as ApiClient } from 'twenty-crm-api-client/client/client.gen';
 
 import { Call, CallId } from '~modules/crm/domain/entities/call';
+import { ICallsRepository } from '~modules/crm/domain/repositories/call-repository.interface';
 import { TWENTY_CRM_CLIENT } from '~shared/infrastructure/persistence/constants';
 
 import { TwentyCrmCallsMapper } from '../mappers/twenty-crm-calls.mapper';
 
 @Injectable()
-export class TwentyCrmCallsRepository {
+export class TwentyCrmCallsRepository implements ICallsRepository {
   private readonly callsService = CallsService;
 
   constructor(
