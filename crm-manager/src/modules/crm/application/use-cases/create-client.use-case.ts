@@ -1,19 +1,12 @@
 import { Inject } from '@nestjs/common';
 
-import { ClientDto } from '~modules/crm/application/dto/client.dto';
+import { ClientDto, CreateClientDto } from '~modules/crm/application/dto/client.dto';
 import { ClientId } from '~modules/crm/domain/entities/client';
 import { Client } from '~modules/crm/domain/entities/client';
 import { ClientMapper } from '~modules/crm/domain/mapper/client.mapper';
 import { PhoneNumber } from '~modules/crm/domain/value-objects/phone-number.value';
 import { Command } from '~shared/application/CQS/command.abstract';
 import { IUseCase } from '~shared/application/use-cases/use-case.interface';
-
-export interface CreateClientDto {
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  middleName?: string;
-}
 
 export abstract class ICreateClientUseCase
   extends Command<CreateClientDto, ClientDto>
