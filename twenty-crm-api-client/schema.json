@@ -8126,10 +8126,6 @@
           "clientId": {
             "type": "string",
             "format": "uuid"
-          },
-          "rentalId": {
-            "type": "string",
-            "format": "uuid"
           }
         }
       },
@@ -8183,10 +8179,6 @@
             ]
           },
           "clientId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "rentalId": {
             "type": "string",
             "format": "uuid"
           }
@@ -8269,10 +8261,6 @@
             ]
           },
           "clientId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "rentalId": {
             "type": "string",
             "format": "uuid"
           },
@@ -8383,6 +8371,21 @@
                 "type": "string"
               }
             }
+          },
+          "description": {
+            "type": "string"
+          },
+          "accomodation": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "settlementDetails": {
+            "type": "string"
+          },
+          "emergencyDetails": {
+            "type": "string"
           }
         }
       },
@@ -8456,6 +8459,21 @@
                 "type": "string"
               }
             }
+          },
+          "description": {
+            "type": "string"
+          },
+          "accomodation": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "settlementDetails": {
+            "type": "string"
+          },
+          "emergencyDetails": {
+            "type": "string"
           }
         }
       },
@@ -8557,6 +8575,21 @@
               }
             }
           },
+          "description": {
+            "type": "string"
+          },
+          "accomodation": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "settlementDetails": {
+            "type": "string"
+          },
+          "emergencyDetails": {
+            "type": "string"
+          },
           "timelineActivities": {
             "type": "array",
             "items": {
@@ -8591,12 +8624,6 @@
               "$ref": "#/components/schemas/Attachment for Response"
             },
             "description": "Attachments tied to the Rental"
-          },
-          "accomodations": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Accommodation for Response"
-            }
           },
           "calls": {
             "type": "array",
