@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { type client as ApiClient } from 'twenty-crm-api-client/client/client.gen';
-import { ClientForResponse as ClientTwentyCrm, ClientsService } from 'twenty-crm-api-client/client/index';
+import { ClientsService } from 'twenty-crm-api-client/client/index';
 
 import { Client, ClientId } from '~modules/crm/domain/entities/client';
 import { IClientRepository } from '~modules/crm/domain/repositories/clients-repository.interface';
 import { PhoneNumber } from '~modules/crm/domain/value-objects/phone-number.value';
+import { TWENTY_CRM_CLIENT } from '~shared/infrastructure/persistence/constants';
 
 import { ClientsTwentyCrmMapper } from '../mappers/twenty-crm-clients.mapper';
 
@@ -14,7 +15,7 @@ export class TwentyCrmClientsRepository extends IClientRepository {
 
   constructor(
     private readonly mapper: ClientsTwentyCrmMapper,
-    private readonly apiClient: typeof ApiClient,
+    @Inject(TWENTY_CRM_CLIENT) private readonly apiClient: typeof ApiClient,
   ) {
     super();
   }

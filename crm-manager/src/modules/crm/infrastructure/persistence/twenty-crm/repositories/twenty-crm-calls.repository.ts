@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CallsService } from 'twenty-crm-api-client';
 import { client as ApiClient } from 'twenty-crm-api-client/client/client.gen';
 
 import { Call, CallId } from '~modules/crm/domain/entities/call';
-import { IDataAccessMapper } from '~shared/domain/mappers/data-access-mapper.interface';
+import { TWENTY_CRM_CLIENT } from '~shared/infrastructure/persistence/constants';
 
 import { TwentyCrmCallsMapper } from '../mappers/twenty-crm-calls.mapper';
 
@@ -13,7 +13,7 @@ export class TwentyCrmCallsRepository {
 
   constructor(
     private readonly mapper: TwentyCrmCallsMapper,
-    private readonly apiClient: typeof ApiClient,
+    @Inject(TWENTY_CRM_CLIENT) private readonly apiClient: typeof ApiClient,
   ) {}
 
   async findById(id: CallId): Promise<Call | null> {

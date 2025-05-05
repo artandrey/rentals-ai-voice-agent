@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { RentalsService } from 'twenty-crm-api-client';
 import { client as ApiClient } from 'twenty-crm-api-client/client/client.gen';
 
 import { Rental, RentalId } from '~modules/crm/domain/entities/rental';
 import { IRentalsRepository } from '~modules/crm/domain/repositories/rentals-repository.interface';
+import { TWENTY_CRM_CLIENT } from '~shared/infrastructure/persistence/constants';
 
 import { RentalsTwentyCrmMapper } from '../mappers/twenty-crm-rentals.mapper';
 
@@ -13,7 +14,7 @@ export class TwentyCrmRentalsRepository extends IRentalsRepository {
 
   constructor(
     private readonly mapper: RentalsTwentyCrmMapper,
-    private readonly apiClient: typeof ApiClient,
+    @Inject(TWENTY_CRM_CLIENT) private readonly apiClient: typeof ApiClient,
   ) {
     super();
   }

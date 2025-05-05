@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { AccommodationForResponse as AccommodationTwentyCrm, AccommodationsService } from 'twenty-crm-api-client';
+import { Inject, Injectable } from '@nestjs/common';
+import { AccommodationsService } from 'twenty-crm-api-client';
 import { client as ApiClient } from 'twenty-crm-api-client/client/client.gen';
 
 import { Accommodation, AccommodationId } from '~modules/crm/domain/entities/accommodation';
 import { RentalId } from '~modules/crm/domain/entities/rental';
 import { IAccommodationRepository } from '~modules/crm/domain/repositories/accommodations-repository.interface';
+import { TWENTY_CRM_CLIENT } from '~shared/infrastructure/persistence/constants';
 
 import { TwentyCrmAccommodationsMapper } from '../mappers/twenty-crm-accommodations.mapper';
 
@@ -14,7 +15,7 @@ export class TwentyCrmAccommodationsRepository extends IAccommodationRepository 
 
   constructor(
     private readonly mapper: TwentyCrmAccommodationsMapper,
-    private readonly apiClient: typeof ApiClient,
+    @Inject(TWENTY_CRM_CLIENT) private readonly apiClient: typeof ApiClient,
   ) {
     super();
   }

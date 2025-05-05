@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Rental_for_Response as RentalTwentyCrm } from 'twenty-crm-api-client';
+import { RentalForResponse as RentalTwentyCrm } from 'twenty-crm-api-client';
 
 import { Rental } from '~modules/crm/domain/entities/rental';
 import { Location } from '~modules/crm/domain/value-objects/location.value';

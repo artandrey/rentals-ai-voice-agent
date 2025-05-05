@@ -8,7 +8,7 @@ import { EventDispatcher } from './application/events/event-dispatcher/implement
 import { AppConfigModel } from './application/models/app-config.model';
 import { BaseToken } from './constants';
 import { EventEmitterEventPublisher } from './infrastructure/events/publishers/event-emitter/event-emitter.event-publisher';
-import { DatabaseModule } from './infrastructure/persistence/database.module';
+import { PersistenceModule } from './infrastructure/nest/persistence.module';
 import { validateConfig } from './infrastructure/util/validate-config';
 
 @Global()
@@ -22,7 +22,7 @@ import { validateConfig } from './infrastructure/util/validate-config';
       ignoreEnvFile: false,
       envFilePath: ['./config/.env', './config/.env.local'],
     }),
-    DatabaseModule,
+    PersistenceModule,
   ],
   providers: [
     { provide: BaseToken.APP_CONFIG, useClass: ConfigService },

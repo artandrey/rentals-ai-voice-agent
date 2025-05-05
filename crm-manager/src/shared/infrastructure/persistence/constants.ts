@@ -1,0 +1,1 @@
+export const TWENTY_CRM_CLIENT = 'TWENTY_CRM_CLIENT';
