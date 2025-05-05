@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 
 import { ClientId } from '~modules/crm/domain/entities/client';
-import { ClientMapper } from '~modules/crm/domain/mapper/client.mapper';
+import { ClientMapper } from '~modules/crm/domain/mappers/client.mapper';
 import { Command } from '~shared/application/CQS/command.abstract';
 import { IUseCase } from '~shared/application/use-cases/use-case.interface';
 

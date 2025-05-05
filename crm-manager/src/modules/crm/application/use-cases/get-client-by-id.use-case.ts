@@ -2,7 +2,7 @@ import { Inject } from '@nestjs/common';
 
 import { ClientDto } from '~modules/crm/application/dto/client.dto';
 import { ClientId } from '~modules/crm/domain/entities/client';
-import { ClientMapper } from '~modules/crm/domain/mapper/client.mapper';
+import { ClientMapper } from '~modules/crm/domain/mappers/client.mapper';
 import { Query } from '~shared/application/CQS/query.abstract';
 import { IUseCase } from '~shared/application/use-cases/use-case.interface';
 

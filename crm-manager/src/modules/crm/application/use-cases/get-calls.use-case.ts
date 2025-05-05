@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { Call } from '~modules/crm/domain/entities/call';
-import { CallMapper } from '~modules/crm/domain/mapper/call.mapper';
+import { CallMapper } from '~modules/crm/domain/mappers/call.mapper';
 import { Query } from '~shared/application/CQS/query.abstract';
 import { IUseCase } from '~shared/application/use-cases/use-case.interface';
 
