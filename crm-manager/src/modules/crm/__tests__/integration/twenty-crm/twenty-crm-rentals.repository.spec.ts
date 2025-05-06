@@ -40,6 +40,7 @@ describe('TwentyCrmRentalsRepository (integration)', () => {
 
     const found = await repository.findById(id);
     expect(found).not.toBeNull();
+    expect(found?.id).toBe(id);
     expect(found?.location).toBeDefined();
     expect(found?.pricePerDay).toBeDefined();
     expect(found?.pricePerDay.amountMicros).toBe(samplePrice().amountMicros);
@@ -48,6 +49,13 @@ describe('TwentyCrmRentalsRepository (integration)', () => {
   it('should return all rentals (findAll)', async () => {
     const all = await repository.findAll();
     expect(Array.isArray(all)).toBe(true);
+
+    // Verify that each rental has an ID
+    if (all.length > 0) {
+      all.forEach((rental) => {
+        expect(rental.id).toBeDefined();
+      });
+    }
   });
 
   it('should delete a rental', async () => {

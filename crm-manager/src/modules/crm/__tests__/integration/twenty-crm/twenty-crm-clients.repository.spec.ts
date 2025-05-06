@@ -45,6 +45,7 @@ describe('TwentyCrmClientsRepository (integration)', () => {
     cleanupClientId = id;
     const found = await repository.findById(id);
     expect(found).not.toBeNull();
+    expect(found?.id).toBe(id);
     expect(found?.firstName).toBe('Test');
     expect(found?.phoneNumber.fullNumber).toContain(testPhone.replace('+', ''));
   });
@@ -60,12 +61,19 @@ describe('TwentyCrmClientsRepository (integration)', () => {
 
     const found = await repository.findByPhoneNumber(PhoneNumber.create(testPhone));
     expect(found).not.toBeNull();
+    expect(found?.id).toBe(id);
     expect(found?.firstName).toBe('Test');
   });
 
   it('should return all clients (findAll)', async () => {
     const all = await repository.findAll();
     expect(Array.isArray(all)).toBe(true);
+
+    if (all.length > 0) {
+      all.forEach((client) => {
+        expect(client.id).toBeDefined();
+      });
+    }
   });
 
   it('should delete a client', async () => {

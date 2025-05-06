@@ -96,6 +96,7 @@ describe('TwentyCrmAccommodationsRepository (integration)', () => {
 
     const found = await repository.findById(id);
     expect(found).not.toBeNull();
+    expect(found?.id).toBe(id);
     expect(found?.clientId).toBe(clientId);
     expect(found?.rentalId).toBe(rentalId);
     expect(found?.startDate).toBeDefined();
@@ -127,11 +128,23 @@ describe('TwentyCrmAccommodationsRepository (integration)', () => {
     expect(Array.isArray(foundList)).toBe(true);
     expect(foundList.length).toBeGreaterThan(0);
     expect(foundList[0].id).toBe(id);
+
+    // Verify each accommodation has an ID
+    foundList.forEach((accommodation) => {
+      expect(accommodation.id).toBeDefined();
+    });
   });
 
   it('should return all accommodations (findAll)', async () => {
     const all = await repository.findAll();
     expect(Array.isArray(all)).toBe(true);
+
+    // Verify that each accommodation has an ID
+    if (all.length > 0) {
+      all.forEach((accommodation) => {
+        expect(accommodation.id).toBeDefined();
+      });
+    }
   });
 
   it('should delete an accommodation', async () => {

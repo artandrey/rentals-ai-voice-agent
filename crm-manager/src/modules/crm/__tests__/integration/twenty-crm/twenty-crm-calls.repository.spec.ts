@@ -54,6 +54,7 @@ describe('TwentyCrmCallsRepository (integration)', () => {
     cleanupCallId = id;
     const found = await repository.findById(id);
     expect(found).not.toBeNull();
+    expect(found?.id).toBe(id);
     expect(found?.callerPhoneNumber.fullNumber).toContain(testPhone.replace('+', ''));
     expect(found?.type).toBe(CallType.BOOKING);
     expect(found?.transcript).toBeDefined();
@@ -62,6 +63,13 @@ describe('TwentyCrmCallsRepository (integration)', () => {
   it('should return all calls (findAll)', async () => {
     const all = await repository.findAll();
     expect(Array.isArray(all)).toBe(true);
+
+    // Verify that each call has an ID
+    if (all.length > 0) {
+      all.forEach((call) => {
+        expect(call.id).toBeDefined();
+      });
+    }
   });
 
   it('should delete a call', async () => {
