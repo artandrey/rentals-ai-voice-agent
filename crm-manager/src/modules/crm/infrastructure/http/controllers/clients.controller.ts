@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Put } from '@nestjs/common';
 
 import {
   ClientDto,
@@ -15,6 +15,8 @@ import { IUpdateClientPreferencesUseCase } from '~modules/crm/application/use-ca
 import { IUpdateClientPreferredLanguageUseCase } from '~modules/crm/application/use-cases/update-client-preferred-language.use-case';
 import { ClientId } from '~modules/crm/domain/entities/client';
 
+import { PhoneValidationPipe } from '../pipes/phone-validation.pipe';
+
 @Controller('clients')
 export class ClientsController {
   constructor(
@@ -27,12 +29,12 @@ export class ClientsController {
   ) {}
 
   @Get(':id')
-  async getClientById(@Param('id') id: string): Promise<ClientDto | null> {
+  async getClientById(@Param('id', ParseUUIDPipe) id: string): Promise<ClientDto | null> {
     return this.getClientByIdQuery.execute({ clientId: id as ClientId });
   }
 
   @Get('phone/:phoneNumber')
-  async findClientByPhone(@Param('phoneNumber') phoneNumber: string): Promise<ClientDto | null> {
+  async findClientByPhone(@Param('phoneNumber', PhoneValidationPipe) phoneNumber: string): Promise<ClientDto | null> {
     return this.findClientByPhoneQuery.execute({ phoneNumber });
   }
 
@@ -42,7 +44,7 @@ export class ClientsController {
   }
 
   @Put(':id/name')
-  async updateClientName(@Param('id') id: string, @Body() body: UpdateClientNameDto): Promise<void> {
+  async updateClientName(@Param('id', ParseUUIDPipe) id: string, @Body() body: UpdateClientNameDto): Promise<void> {
     await this.updateClientNameUseCase.execute({
       clientId: id as ClientId,
       updates: body,
@@ -51,7 +53,7 @@ export class ClientsController {
 
   @Put(':id/preferred-language')
   async updateClientPreferredLanguage(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() body: UpdateClientPreferredLanguageDto,
   ): Promise<void> {
     await this.updateClientPreferredLanguageUseCase.execute({
@@ -61,7 +63,10 @@ export class ClientsController {
   }
 
   @Put(':id/preferences')
-  async updateClientPreferences(@Param('id') id: string, @Body() body: UpdateClientPreferencesDto): Promise<void> {
+  async updateClientPreferences(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() body: UpdateClientPreferencesDto,
+  ): Promise<void> {
     await this.updateClientPreferencesUseCase.execute({
       clientId: id as ClientId,
       updates: body,

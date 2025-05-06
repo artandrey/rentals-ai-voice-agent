@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 
 import {
   CompactRentalDto,
@@ -35,7 +35,7 @@ export class RentalsController {
   }
 
   @Get(':id')
-  async getRentalById(@Param('id') id: string): Promise<CompactRentalDto> {
+  async getRentalById(@Param('id', ParseUUIDPipe) id: string): Promise<CompactRentalDto> {
     const payload: GetRentalByIdPayload = {
       rentalId: id as RentalId,
     };
@@ -44,7 +44,7 @@ export class RentalsController {
   }
 
   @Get(':id/settlement-details')
-  async getRentalSettlementDetails(@Param('id') id: string): Promise<RentalSettlementDetailsDto> {
+  async getRentalSettlementDetails(@Param('id', ParseUUIDPipe) id: string): Promise<RentalSettlementDetailsDto> {
     const payload: GetRentalSettlementDetailsPayload = {
       rentalId: id as RentalId,
     };
@@ -53,7 +53,7 @@ export class RentalsController {
   }
 
   @Get(':id/emergency-details')
-  async getRentalEmergencyDetails(@Param('id') id: string): Promise<RentalEmergencyDetailsDto> {
+  async getRentalEmergencyDetails(@Param('id', ParseUUIDPipe) id: string): Promise<RentalEmergencyDetailsDto> {
     const payload: GetRentalEmergencyDetailsPayload = {
       rentalId: id as RentalId,
     };
