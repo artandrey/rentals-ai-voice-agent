@@ -1,5 +1,5 @@
 import { client } from 'twenty-crm-api-client/client/client.gen';
-import { afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { Client, ClientId, ClientPreferredLanguage } from '../../../domain/entities/client';
 import { PhoneNumber } from '../../../domain/value-objects/phone-number.value';
@@ -78,5 +78,21 @@ describe('TwentyCrmClientsRepository (integration)', () => {
     await repository.delete(id);
     const found = await repository.findById(id);
     expect(found).toBeNull();
+  });
+
+  it('should handle 404 errors when finding a client by ID', async () => {
+    const nonExistentId = 'non-existent-id' as ClientId;
+    const found = await repository.findById(nonExistentId);
+    expect(found).toBeNull();
+  });
+
+  it('should handle 404 errors when deleting a non-existent client', async () => {
+    const nonExistentId = 'non-existent-id' as ClientId;
+    await expect(repository.delete(nonExistentId)).resolves.not.toThrow();
+  });
+
+  it('should throw errors for failed create operations', async () => {
+    const invalidClient = {} as any;
+    await expect(repository.save(invalidClient)).rejects.toThrow();
   });
 });

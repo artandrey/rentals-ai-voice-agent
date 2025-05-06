@@ -48,10 +48,13 @@ export class TwentyCrmCallsRepository implements ICallsRepository {
       }
       return response.data.updateCall.id as CallId;
     } else {
-      const { data: response } = await this.callsService.createOneCall({
+      const { data: response, error } = await this.callsService.createOneCall({
         body: persistenceData,
         client: this.apiClient,
       });
+      if (error) {
+        throw error;
+      }
       if (!response?.data?.createCall?.id) {
         throw new Error('Failed to create call in TwentyCRM: No ID returned');
       }

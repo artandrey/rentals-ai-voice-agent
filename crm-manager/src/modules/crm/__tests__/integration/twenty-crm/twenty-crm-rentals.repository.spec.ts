@@ -1,5 +1,5 @@
 import { client } from 'twenty-crm-api-client/client/client.gen';
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { Rental, RentalId } from '../../../domain/entities/rental';
 import { Location } from '../../../domain/value-objects/location.value';
@@ -57,5 +57,23 @@ describe('TwentyCrmRentalsRepository (integration)', () => {
     await repository.delete(id);
     const found = await repository.findById(id);
     expect(found).toBeNull();
+  });
+
+  it('should handle 404 errors when finding a rental by ID', async () => {
+    const nonExistentId = 'non-existent-id' as RentalId;
+    const found = await repository.findById(nonExistentId);
+    expect(found).toBeNull();
+  });
+
+  it('should handle 404 errors when deleting a non-existent rental', async () => {
+    const nonExistentId = 'non-existent-id' as RentalId;
+    // This should not throw an error
+    await expect(repository.delete(nonExistentId)).resolves.not.toThrow();
+  });
+
+  it('should throw errors for failed create operations', async () => {
+    // Create a rental with invalid data
+    const invalidRental = {} as any;
+    await expect(repository.save(invalidRental)).rejects.toThrow();
   });
 });

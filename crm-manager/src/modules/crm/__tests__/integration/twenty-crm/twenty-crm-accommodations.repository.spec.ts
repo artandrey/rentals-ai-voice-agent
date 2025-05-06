@@ -1,5 +1,5 @@
 import { client } from 'twenty-crm-api-client/client/client.gen';
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { Accommodation, AccommodationId } from '../../../domain/entities/accommodation';
 import { Client, ClientId, ClientPreferredLanguage } from '../../../domain/entities/client';
@@ -157,5 +157,58 @@ describe('TwentyCrmAccommodationsRepository (integration)', () => {
     await repository.delete(id);
     const found = await repository.findById(id);
     expect(found).toBeNull();
+  });
+
+  it('should handle 404 errors when finding an accommodation by ID', async () => {
+    const nonExistentId = 'non-existent-id' as AccommodationId;
+    const found = await repository.findById(nonExistentId);
+    expect(found).toBeNull();
+  });
+
+  it('should handle 404 errors when deleting a non-existent accommodation', async () => {
+    const nonExistentId = 'non-existent-id' as AccommodationId;
+    // This should not throw an error
+    await expect(repository.delete(nonExistentId)).resolves.not.toThrow();
+  });
+
+  it('should throw errors for failed create operations', async () => {
+    // Create an accommodation with invalid data
+    const invalidAccommodation = {} as any;
+    await expect(repository.save(invalidAccommodation)).rejects.toThrow();
+  });
+
+  it('should throw a specific error for failures during update operations', async () => {
+    // Create a valid accommodation first
+    const testPhone = validTestPhoneNumber();
+    const clientEntity = Client.builder('Test', 'User', PhoneNumber.create(testPhone))
+      .preferredLanguage(ClientPreferredLanguage.ENGLISH)
+      .note('Integration test accommodation client')
+      .build();
+    const clientId = await clientRepo.save(clientEntity);
+    cleanupClientId = clientId;
+
+    const address = new Location('Test Street', 'Test City', '123');
+    const price = new Price(100, 'USD');
+    const rentalEntity = Rental.builder(address, price).build();
+    const rentalId = await rentalRepo.save(rentalEntity);
+    cleanupRentalId = rentalId;
+
+    const startDate = new DayDate(2025, 2, 20);
+    const endDate = new DayDate(2025, 2, 21);
+    const accommodationEntity = Accommodation.builder(clientId, rentalId, startDate, endDate).build();
+
+    // Mock the API client to throw an error during update
+    const originalUpdateMethod = repository['accommodationsService'].updateOneAccommodation;
+    repository['accommodationsService'].updateOneAccommodation = vi.fn().mockRejectedValue(new Error('Update failed'));
+
+    // Create an accommodation with an invalid ID for update
+    const invalidEntity = Accommodation.builder(clientId, rentalId, startDate, endDate).build();
+    (invalidEntity as any).id = 'invalid-id';
+
+    // Expect the save operation to throw an error
+    await expect(repository.save(invalidEntity)).rejects.toThrow('Update failed');
+
+    // Restore the original method
+    repository['accommodationsService'].updateOneAccommodation = originalUpdateMethod;
   });
 });

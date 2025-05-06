@@ -90,6 +90,7 @@ export class TwentyCrmClientsRepository extends IClientRepository {
       },
       client: this.apiClient,
     });
+
     const clients = response?.data?.clients ?? [];
     if (clients.length === 0) {
       return null;
