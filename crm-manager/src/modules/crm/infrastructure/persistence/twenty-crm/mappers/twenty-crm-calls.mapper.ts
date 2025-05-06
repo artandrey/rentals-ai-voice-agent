@@ -50,16 +50,40 @@ export class TwentyCrmCallsMapper implements IDataAccessMapper<Call, CallForResp
     const phone = phoneObj
       ? PhoneNumber.create(`${phoneObj.primaryPhoneCallingCode ?? ''}${phoneObj.primaryPhoneNumber ?? ''}`)
       : PhoneNumber.create('');
-    const call = new Call(phone);
-    (call as any).id = persistence.id as CallId;
-    if (persistence.callType) (call as any)._type = persistence.callType as CallType;
-    if (persistence.clientId) (call as any)._clientId = persistence.clientId as ClientId;
-    if (persistence.asociateedRentalId) (call as any)._associatedRentalId = persistence.asociateedRentalId as RentalId;
-    if (persistence.startedAt) (call as any)._startedAt = new Date(persistence.startedAt);
-    if (persistence.completedAt) (call as any)._completedAt = new Date(persistence.completedAt);
-    if (persistence.transcript) {
-      (call as any)._transcript = objectToTranscript(persistence.transcript);
+
+    const builder = Call.builder(phone);
+
+    if (persistence.id) {
+      builder.id(persistence.id as CallId);
     }
-    return call;
+
+    if (persistence.callType) {
+      builder.type(persistence.callType as CallType);
+    }
+
+    if (persistence.clientId) {
+      builder.clientId(persistence.clientId as ClientId);
+    }
+
+    if (persistence.asociateedRentalId) {
+      builder.associatedRentalId(persistence.asociateedRentalId as RentalId);
+    }
+
+    if (persistence.startedAt) {
+      builder.startedAt(new Date(persistence.startedAt));
+    }
+
+    if (persistence.completedAt) {
+      builder.completedAt(new Date(persistence.completedAt));
+    }
+
+    if (persistence.transcript) {
+      const transcript = objectToTranscript(persistence.transcript);
+      if (transcript) {
+        builder.transcript(transcript);
+      }
+    }
+
+    return builder.build();
   }
 }

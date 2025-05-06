@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ClientForResponse as ClientTwentyCrm, Client as ClientTwentyCrmInput } from 'twenty-crm-api-client';
 
-import { Client, ClientPreferredLanguage } from '~modules/crm/domain/entities/client';
+import { Client, ClientId, ClientPreferredLanguage } from '~modules/crm/domain/entities/client';
 import { PhoneNumber } from '~modules/crm/domain/value-objects/phone-number.value';
 import { IDataAccessMapper } from '~shared/domain/mappers/data-access-mapper.interface';
 
@@ -32,6 +32,10 @@ export class TwentyCrmClientsMapper implements IDataAccessMapper<Client, ClientT
       ),
     );
 
+    if (persistence.id) {
+      builder.id(persistence.id as ClientId);
+    }
+
     if (persistence.middlename) {
       builder.middleName(persistence.middlename);
     }
@@ -42,6 +46,10 @@ export class TwentyCrmClientsMapper implements IDataAccessMapper<Client, ClientT
 
     if (persistence.language) {
       builder.preferredLanguage(persistence.language as ClientPreferredLanguage);
+    }
+
+    if (persistence.note) {
+      builder.note(persistence.note);
     }
 
     return builder.build();

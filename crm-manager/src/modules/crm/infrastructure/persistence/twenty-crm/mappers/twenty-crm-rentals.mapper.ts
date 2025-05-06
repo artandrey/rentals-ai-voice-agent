@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { RentalForResponse as RentalTwentyCrm } from 'twenty-crm-api-client';
 
-import { Rental } from '~modules/crm/domain/entities/rental';
+import { Rental, RentalId } from '~modules/crm/domain/entities/rental';
 import { Amenity } from '~modules/crm/domain/value-objects/amenity.value';
 import { Location } from '~modules/crm/domain/value-objects/location.value';
 import { Price } from '~modules/crm/domain/value-objects/price.value';
@@ -36,14 +36,20 @@ export class TwentyCrmRentalsMapper implements IDataAccessMapper<Rental, RentalT
   }
 
   toDomain(persistence: RentalTwentyCrm): Rental {
-    return Rental.builder(
+    const builder = Rental.builder(
       this.locationToDomain(persistence.location!),
       this.priceToDomain(persistence.pricePerDay!),
       persistence.description ?? '',
       this.amenitiesFromApi(persistence),
       persistence.settlementDetails ?? '',
       persistence.emergencyDetails ?? '',
-    ).build();
+    );
+
+    if (persistence.id) {
+      builder.id(persistence.id as RentalId);
+    }
+
+    return builder.build();
   }
 
   amenitiesFromApi(persistence: RentalTwentyCrm): Amenity[] {
