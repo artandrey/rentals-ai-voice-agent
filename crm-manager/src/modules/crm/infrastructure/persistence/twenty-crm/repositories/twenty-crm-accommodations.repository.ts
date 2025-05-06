@@ -53,10 +53,13 @@ export class TwentyCrmAccommodationsRepository extends IAccommodationRepository 
       }
       return response.data.updateAccommodation.id as AccommodationId;
     } else {
-      const { data: response } = await this.accommodationsService.createOneAccommodation({
+      const { data: response, error } = await this.accommodationsService.createOneAccommodation({
         body: persistenceData,
         client: this.apiClient,
       });
+      if (error) {
+        throw error;
+      }
       if (!response?.data?.createAccommodation?.id) {
         throw new Error('Failed to create accommodation in TwentyCRM: No ID returned');
       }
