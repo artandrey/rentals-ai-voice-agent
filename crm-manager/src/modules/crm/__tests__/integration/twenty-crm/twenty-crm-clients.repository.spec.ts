@@ -66,7 +66,6 @@ describe('TwentyCrmClientsRepository (integration)', () => {
   it('should return all clients (findAll)', async () => {
     const all = await repository.findAll();
     expect(Array.isArray(all)).toBe(true);
-    // Do not assert all.length > 0, as CRM may be empty
   });
 
   it('should delete a client', async () => {
@@ -79,6 +78,5 @@ describe('TwentyCrmClientsRepository (integration)', () => {
     await repository.delete(id);
     const found = await repository.findById(id);
     expect(found).toBeNull();
-    // No need to set cleanupClientId, already deleted
   });
 });
