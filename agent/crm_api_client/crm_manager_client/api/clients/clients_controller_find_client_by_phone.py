@@ -5,7 +5,7 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.clients_controller_find_client_by_phone_response_200 import ClientsControllerFindClientByPhoneResponse200
+from ...models.client_dto import ClientDto
 from ...types import Response
 
 
@@ -20,11 +20,9 @@ def _get_kwargs(
     return _kwargs
 
 
-def _parse_response(
-    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[ClientsControllerFindClientByPhoneResponse200]:
+def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[ClientDto]:
     if response.status_code == 200:
-        response_200 = ClientsControllerFindClientByPhoneResponse200.from_dict(response.json())
+        response_200 = ClientDto.from_dict(response.json())
 
         return response_200
     if client.raise_on_unexpected_status:
@@ -33,9 +31,7 @@ def _parse_response(
         return None
 
 
-def _build_response(
-    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[ClientsControllerFindClientByPhoneResponse200]:
+def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[ClientDto]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -48,7 +44,7 @@ def sync_detailed(
     phone_number: str,
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Response[ClientsControllerFindClientByPhoneResponse200]:
+) -> Response[ClientDto]:
     """
     Args:
         phone_number (str):
@@ -58,7 +54,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[ClientsControllerFindClientByPhoneResponse200]
+        Response[ClientDto]
     """
 
     kwargs = _get_kwargs(
@@ -76,7 +72,7 @@ def sync(
     phone_number: str,
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Optional[ClientsControllerFindClientByPhoneResponse200]:
+) -> Optional[ClientDto]:
     """
     Args:
         phone_number (str):
@@ -86,7 +82,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        ClientsControllerFindClientByPhoneResponse200
+        ClientDto
     """
 
     return sync_detailed(
@@ -99,7 +95,7 @@ async def asyncio_detailed(
     phone_number: str,
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Response[ClientsControllerFindClientByPhoneResponse200]:
+) -> Response[ClientDto]:
     """
     Args:
         phone_number (str):
@@ -109,7 +105,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[ClientsControllerFindClientByPhoneResponse200]
+        Response[ClientDto]
     """
 
     kwargs = _get_kwargs(
@@ -125,7 +121,7 @@ async def asyncio(
     phone_number: str,
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Optional[ClientsControllerFindClientByPhoneResponse200]:
+) -> Optional[ClientDto]:
     """
     Args:
         phone_number (str):
@@ -135,7 +131,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        ClientsControllerFindClientByPhoneResponse200
+        ClientDto
     """
 
     return (

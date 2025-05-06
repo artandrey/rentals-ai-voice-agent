@@ -4,11 +4,11 @@ from typing import Any, TypeVar
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-T = TypeVar("T", bound="ClientsControllerGetClientByIdResponse200")
+T = TypeVar("T", bound="AvailableDateSpansDtoRentalId")
 
 
 @_attrs_define
-class ClientsControllerGetClientByIdResponse200:
+class AvailableDateSpansDtoRentalId:
     """ """
 
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
@@ -22,10 +22,10 @@ class ClientsControllerGetClientByIdResponse200:
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
         d = dict(src_dict)
-        clients_controller_get_client_by_id_response_200 = cls()
+        available_date_spans_dto_rental_id = cls()
 
-        clients_controller_get_client_by_id_response_200.additional_properties = d
-        return clients_controller_get_client_by_id_response_200
+        available_date_spans_dto_rental_id.additional_properties = d
+        return available_date_spans_dto_rental_id
 
     @property
     def additional_keys(self) -> list[str]:

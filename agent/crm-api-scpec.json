@@ -16,49 +16,6 @@
         "tags": ["Ping"]
       }
     },
-    "/clients": {
-      "get": {
-        "operationId": "ClientsController_getClients",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/ClientDto" }
-                }
-              }
-            }
-          }
-        },
-        "tags": ["Clients"]
-      },
-      "post": {
-        "operationId": "ClientsController_createClient",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/CreateClientDto" }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/ClientDto" }
-              }
-            }
-          }
-        },
-        "tags": ["Clients"]
-      }
-    },
     "/clients/{id}": {
       "get": {
         "operationId": "ClientsController_getClientById",
@@ -74,7 +31,9 @@
           "200": {
             "description": "",
             "content": {
-              "application/json": { "schema": { "type": "object" } }
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ClientDto" }
+              }
             }
           }
         },
@@ -96,7 +55,34 @@
           "200": {
             "description": "",
             "content": {
-              "application/json": { "schema": { "type": "object" } }
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ClientDto" }
+              }
+            }
+          }
+        },
+        "tags": ["Clients"]
+      }
+    },
+    "/clients": {
+      "post": {
+        "operationId": "ClientsController_createClient",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateClientDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ClientDto" }
+              }
             }
           }
         },
@@ -271,6 +257,44 @@
         },
         "tags": ["Rentals"]
       }
+    },
+    "/rentals/{id}/available-dates": {
+      "get": {
+        "operationId": "RentalsController_getRentalAvailableDateSpans",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "startDate",
+            "required": true,
+            "in": "query",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "endDate",
+            "required": true,
+            "in": "query",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AvailableDateSpansDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Rentals"]
+      }
     }
   },
   "info": {
@@ -318,9 +342,9 @@
       "CreateClientDto": {
         "type": "object",
         "properties": {
-          "firstName": { "type": "string" },
-          "lastName": { "type": "string" },
-          "phoneNumber": { "type": "string" },
+          "firstName": { "type": "string", "minLength": 1 },
+          "lastName": { "type": "string", "minLength": 1 },
+          "phoneNumber": { "type": "string", "pattern": "/^\\+\\d+$/" },
           "middleName": { "type": "string" }
         },
         "required": ["firstName", "lastName", "phoneNumber"]
@@ -328,8 +352,8 @@
       "UpdateClientNameDto": {
         "type": "object",
         "properties": {
-          "firstName": { "type": "string" },
-          "lastName": { "type": "string" },
+          "firstName": { "type": "string", "minLength": 1 },
+          "lastName": { "type": "string", "minLength": 1 },
           "middleName": { "type": "string" }
         },
         "required": ["firstName", "lastName"]
@@ -374,6 +398,26 @@
         "type": "object",
         "properties": { "emergencyDetails": { "type": "string" } },
         "required": ["emergencyDetails"]
+      },
+      "DaysSpanDto": {
+        "type": "object",
+        "properties": {
+          "startDate": { "type": "string" },
+          "endDate": { "type": "string" },
+          "daysCount": { "type": "number" }
+        },
+        "required": ["startDate", "endDate", "daysCount"]
+      },
+      "AvailableDateSpansDto": {
+        "type": "object",
+        "properties": {
+          "rentalId": { "type": "object" },
+          "availableSpans": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/DaysSpanDto" }
+          }
+        },
+        "required": ["rentalId", "availableSpans"]
       }
     }
   }
