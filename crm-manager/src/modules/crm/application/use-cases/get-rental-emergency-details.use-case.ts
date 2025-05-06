@@ -1,6 +1,7 @@
 import { Injectable, Scope } from '@nestjs/common';
 
 import { RentalId } from '~modules/crm/domain/entities/rental';
+import { RentalNotFoundException } from '~modules/crm/domain/exception/rental-not-found.exception';
 import { RentalMapper } from '~modules/crm/domain/mappers/rental.mapper';
 import { Query } from '~shared/application/CQS/query.abstract';
 import { IUseCase } from '~shared/application/use-cases/use-case.interface';
@@ -26,7 +27,7 @@ export class GetRentalEmergencyDetailsQuery extends IGetRentalEmergencyDetailsQu
     const rental = await this._dbContext.rentalsRepository.findById(rentalId);
 
     if (!rental) {
-      throw new Error('Rental not found');
+      throw new RentalNotFoundException(rentalId);
     }
 
     return this.rentalMapper.toEmergencyDetailsDto(rental);

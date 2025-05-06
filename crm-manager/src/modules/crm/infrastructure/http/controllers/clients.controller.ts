@@ -29,12 +29,12 @@ export class ClientsController {
   ) {}
 
   @Get(':id')
-  async getClientById(@Param('id', ParseUUIDPipe) id: string): Promise<ClientDto | null> {
+  async getClientById(@Param('id', ParseUUIDPipe) id: string): Promise<ClientDto> {
     return this.getClientByIdQuery.execute({ clientId: id as ClientId });
   }
 
   @Get('phone/:phoneNumber')
-  async findClientByPhone(@Param('phoneNumber', PhoneValidationPipe) phoneNumber: string): Promise<ClientDto | null> {
+  async findClientByPhone(@Param('phoneNumber', PhoneValidationPipe) phoneNumber: string): Promise<ClientDto> {
     return this.findClientByPhoneQuery.execute({ phoneNumber });
   }
 
