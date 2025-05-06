@@ -6,7 +6,6 @@ import {
   IFindClientByPhoneQuery,
 } from '~modules/crm/application/use-cases/find-client-by-phone.use-case';
 import { GetClientByIdQuery, IGetClientByIdQuery } from '~modules/crm/application/use-cases/get-client-by-id.use-case';
-import { GetClientsQuery, IGetClientsQuery } from '~modules/crm/application/use-cases/get-clients.use-case';
 import { GetRentalByIdQuery, IGetRentalByIdQuery } from '~modules/crm/application/use-cases/get-rental-by-id.use-case';
 import {
   GetRentalEmergencyDetailsQuery,
@@ -40,7 +39,6 @@ import { RentalsController } from '~modules/crm/infrastructure/http/controllers/
   providers: [
     ClientMapper,
     RentalMapper,
-    { provide: IGetClientsQuery, useClass: GetClientsQuery },
     { provide: IGetClientByIdQuery, useClass: GetClientByIdQuery },
     { provide: IFindClientByPhoneQuery, useClass: FindClientByPhoneQuery },
     { provide: ICreateClientUseCase, useClass: CreateClientUseCase },

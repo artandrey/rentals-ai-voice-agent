@@ -10,7 +10,6 @@ import {
 import { ICreateClientUseCase } from '~modules/crm/application/use-cases/create-client.use-case';
 import { IFindClientByPhoneQuery } from '~modules/crm/application/use-cases/find-client-by-phone.use-case';
 import { IGetClientByIdQuery } from '~modules/crm/application/use-cases/get-client-by-id.use-case';
-import { IGetClientsQuery } from '~modules/crm/application/use-cases/get-clients.use-case';
 import { IUpdateClientNameUseCase } from '~modules/crm/application/use-cases/update-client-name.use-case';
 import { IUpdateClientPreferencesUseCase } from '~modules/crm/application/use-cases/update-client-preferences.use-case';
 import { IUpdateClientPreferredLanguageUseCase } from '~modules/crm/application/use-cases/update-client-preferred-language.use-case';
@@ -19,7 +18,6 @@ import { ClientId } from '~modules/crm/domain/entities/client';
 @Controller('clients')
 export class ClientsController {
   constructor(
-    private readonly getClientsQuery: IGetClientsQuery,
     private readonly getClientByIdQuery: IGetClientByIdQuery,
     private readonly findClientByPhoneQuery: IFindClientByPhoneQuery,
     private readonly createClientUseCase: ICreateClientUseCase,
@@ -27,11 +25,6 @@ export class ClientsController {
     private readonly updateClientPreferredLanguageUseCase: IUpdateClientPreferredLanguageUseCase,
     private readonly updateClientPreferencesUseCase: IUpdateClientPreferencesUseCase,
   ) {}
-
-  @Get()
-  async getClients(): Promise<ClientDto[]> {
-    return this.getClientsQuery.execute();
-  }
 
   @Get(':id')
   async getClientById(@Param('id') id: string): Promise<ClientDto | null> {
