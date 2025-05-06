@@ -1914,6 +1914,22 @@ websocket = ["fastapi (>=0.115.6,<0.116.0)", "websockets (>=13.1,<14.0)"]
 whisper = ["faster-whisper (>=1.1.1,<1.2.0)"]
 
 [[package]]
+name = "pipecat-ai-flows"
+version = "0.0.16"
+description = "Conversation Flow management for Pipecat AI applications"
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "pipecat_ai_flows-0.0.16-py3-none-any.whl", hash = "sha256:cd01b58ca9692beb3ce0e4c22217d9a3991ef9c3270e7981936aa68842585987"},
+    {file = "pipecat_ai_flows-0.0.16.tar.gz", hash = "sha256:ca6e600bb404da7607e20a3e01225c3fecbb84b5302071b4b3cba22311eefdf2"},
+]
+
+[package.dependencies]
+loguru = ">=0.7.2,<0.8.0"
+pipecat-ai = ">=0.0.61"
+
+[[package]]
 name = "platformdirs"
 version = "4.3.7"
 description = "A small Python package for determining appropriate platform-specific dirs, e.g. a `user data dir`."
@@ -3173,4 +3189,4 @@ propcache = ">=0.2.1"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "b9f70e9b0d59ed55d270a042cace1ba2cbde7033b186a58b23543f3367023716"
+content-hash = "d4824cc469ca734466298c5c9830d4c17adfe6099147922f0f7d0d9a3316370d"
