@@ -310,7 +310,7 @@
       "ClientDto": {
         "type": "object",
         "properties": {
-          "id": { "type": "object" },
+          "id": { "type": "string" },
           "firstName": { "type": "string" },
           "lastName": { "type": "string" },
           "middleName": { "type": "string", "nullable": true, "default": null },
@@ -411,7 +411,7 @@
       "AvailableDateSpansDto": {
         "type": "object",
         "properties": {
-          "rentalId": { "type": "object" },
+          "rentalId": { "type": "string" },
           "availableSpans": {
             "type": "array",
             "items": { "$ref": "#/components/schemas/DaysSpanDto" }

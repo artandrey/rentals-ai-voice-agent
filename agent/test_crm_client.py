@@ -12,5 +12,5 @@ if not CRM_MANAGER_URL:
     raise ValueError("CRM_MANAGER_URL environment variable is not set.")
 
 with Client(base_url=CRM_MANAGER_URL) as client:
-    result2 = clients_controller_find_client_by_phone.sync(client=client, phone_number="+380111111111")
+    result2 = clients_controller_find_client_by_phone.sync(client=client, phone_number="+380991111111")
     print(f"Ping result: {result2}") 

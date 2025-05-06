@@ -1,14 +1,10 @@
 from collections.abc import Mapping
-from typing import TYPE_CHECKING, Any, TypeVar, Union, cast
+from typing import Any, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
 from ..models.client_dto_preferred_language import ClientDtoPreferredLanguage
-
-if TYPE_CHECKING:
-    from ..models.client_dto_id import ClientDtoId
-
 
 T = TypeVar("T", bound="ClientDto")
 
@@ -17,7 +13,7 @@ T = TypeVar("T", bound="ClientDto")
 class ClientDto:
     """
     Attributes:
-        id (ClientDtoId):
+        id (str):
         first_name (str):
         last_name (str):
         middle_name (Union[None, str]):
@@ -27,7 +23,7 @@ class ClientDto:
         note (Union[None, str]):
     """
 
-    id: "ClientDtoId"
+    id: str
     first_name: str
     last_name: str
     middle_name: Union[None, str]
@@ -38,7 +34,7 @@ class ClientDto:
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        id = self.id.to_dict()
+        id = self.id
 
         first_name = self.first_name
 
@@ -75,10 +71,8 @@ class ClientDto:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
-        from ..models.client_dto_id import ClientDtoId
-
         d = dict(src_dict)
-        id = ClientDtoId.from_dict(d.pop("id"))
+        id = d.pop("id")
 
         first_name = d.pop("firstName")
 

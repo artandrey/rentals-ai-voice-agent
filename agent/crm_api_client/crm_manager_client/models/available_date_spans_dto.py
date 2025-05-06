@@ -5,7 +5,6 @@ from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
 if TYPE_CHECKING:
-    from ..models.available_date_spans_dto_rental_id import AvailableDateSpansDtoRentalId
     from ..models.days_span_dto import DaysSpanDto
 
 
@@ -16,16 +15,16 @@ T = TypeVar("T", bound="AvailableDateSpansDto")
 class AvailableDateSpansDto:
     """
     Attributes:
-        rental_id (AvailableDateSpansDtoRentalId):
+        rental_id (str):
         available_spans (list['DaysSpanDto']):
     """
 
-    rental_id: "AvailableDateSpansDtoRentalId"
+    rental_id: str
     available_spans: list["DaysSpanDto"]
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        rental_id = self.rental_id.to_dict()
+        rental_id = self.rental_id
 
         available_spans = []
         for available_spans_item_data in self.available_spans:
@@ -45,11 +44,10 @@ class AvailableDateSpansDto:
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
-        from ..models.available_date_spans_dto_rental_id import AvailableDateSpansDtoRentalId
         from ..models.days_span_dto import DaysSpanDto
 
         d = dict(src_dict)
-        rental_id = AvailableDateSpansDtoRentalId.from_dict(d.pop("rentalId"))
+        rental_id = d.pop("rentalId")
 
         available_spans = []
         _available_spans = d.pop("availableSpans")

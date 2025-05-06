@@ -1,6 +1,6 @@
 import { IsEnum, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, Matches, MinLength } from 'class-validator';
 
-import { ClientId, ClientPreferredLanguage } from '../../domain/entities/client';
+import { ClientPreferredLanguage } from '../../domain/entities/client';
 
 export class CreateClientDto {
   @IsString()
@@ -25,7 +25,7 @@ export class CreateClientDto {
 }
 
 export class ClientDto {
-  id: ClientId;
+  id: string;
   firstName: string;
   lastName: string;
   middleName: string | null = null;

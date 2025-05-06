@@ -65,6 +65,6 @@ export class DaysSpanDto {
 }
 
 export class AvailableDateSpansDto {
-  rentalId: RentalId;
+  rentalId: string;
   availableSpans: DaysSpanDto[];
 }

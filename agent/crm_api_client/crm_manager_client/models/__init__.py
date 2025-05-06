@@ -2,9 +2,7 @@
 
 from .amenity import Amenity
 from .available_date_spans_dto import AvailableDateSpansDto
-from .available_date_spans_dto_rental_id import AvailableDateSpansDtoRentalId
 from .client_dto import ClientDto
-from .client_dto_id import ClientDtoId
 from .client_dto_preferred_language import ClientDtoPreferredLanguage
 from .compact_rental_dto import CompactRentalDto
 from .compact_rental_dto_id import CompactRentalDtoId
@@ -22,9 +20,7 @@ from .update_client_preferred_language_dto_language import UpdateClientPreferred
 __all__ = (
     "Amenity",
     "AvailableDateSpansDto",
-    "AvailableDateSpansDtoRentalId",
     "ClientDto",
-    "ClientDtoId",
     "ClientDtoPreferredLanguage",
     "CompactRentalDto",
     "CompactRentalDtoId",
