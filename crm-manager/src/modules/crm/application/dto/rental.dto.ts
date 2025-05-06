@@ -57,3 +57,14 @@ export class RentalEmergencyDetailsDto {
   @IsNotEmpty()
   emergencyDetails: string;
 }
+
+export class DaysSpanDto {
+  startDate: string;
+  endDate: string;
+  daysCount: number;
+}
+
+export class AvailableDateSpansDto {
+  rentalId: RentalId;
+  availableSpans: DaysSpanDto[];
+}

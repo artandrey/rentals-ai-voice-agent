@@ -1,10 +1,15 @@
-import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 
 import {
+  AvailableDateSpansDto,
   CompactRentalDto,
   RentalEmergencyDetailsDto,
   RentalSettlementDetailsDto,
 } from '~modules/crm/application/dto/rental.dto';
+import {
+  GetRentalAvailableDateSpansPayload,
+  IGetRentalAvailableDateSpansQuery,
+} from '~modules/crm/application/use-cases/get-rental-available-date-spans.use-case';
 import {
   GetRentalByIdPayload,
   IGetRentalByIdQuery,
@@ -20,6 +25,8 @@ import {
 import { IGetRentalsQuery } from '~modules/crm/application/use-cases/get-rentals.use-case';
 import { RentalId } from '~modules/crm/domain/entities/rental';
 
+import { DateValidationPipe } from '../pipes/date-validation.pipe';
+
 @Controller('rentals')
 export class RentalsController {
   constructor(
@@ -27,6 +34,7 @@ export class RentalsController {
     private readonly getRentalByIdQuery: IGetRentalByIdQuery,
     private readonly getRentalSettlementDetailsQuery: IGetRentalSettlementDetailsQuery,
     private readonly getRentalEmergencyDetailsQuery: IGetRentalEmergencyDetailsQuery,
+    private readonly getRentalAvailableDateSpansQuery: IGetRentalAvailableDateSpansQuery,
   ) {}
 
   @Get()
@@ -59,5 +67,20 @@ export class RentalsController {
     };
 
     return this.getRentalEmergencyDetailsQuery.execute(payload);
+  }
+
+  @Get(':id/available-dates')
+  async getRentalAvailableDateSpans(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Query('startDate', DateValidationPipe) startDate: string,
+    @Query('endDate', DateValidationPipe) endDate: string,
+  ): Promise<AvailableDateSpansDto> {
+    const payload: GetRentalAvailableDateSpansPayload = {
+      rentalId: id as RentalId,
+      startDate,
+      endDate,
+    };
+
+    return this.getRentalAvailableDateSpansQuery.execute(payload);
   }
 }
