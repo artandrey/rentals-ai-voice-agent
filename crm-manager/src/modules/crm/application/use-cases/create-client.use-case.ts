@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable, Scope } from '@nestjs/common';
 
 import { ClientDto, CreateClientDto } from '~modules/crm/application/dto/client.dto';
 import { ClientId } from '~modules/crm/domain/entities/client';
@@ -12,6 +12,7 @@ export abstract class ICreateClientUseCase
   extends Command<CreateClientDto, ClientDto>
   implements IUseCase<CreateClientDto, ClientDto> {}
 
+@Injectable({ scope: Scope.REQUEST })
 export class CreateClientUseCase extends ICreateClientUseCase {
   constructor(private readonly clientMapper: ClientMapper) {
     super();

@@ -1,7 +1,6 @@
-import { Inject } from '@nestjs/common';
+import { Injectable, Scope } from '@nestjs/common';
 
 import { ClientId } from '~modules/crm/domain/entities/client';
-import { ClientMapper } from '~modules/crm/domain/mappers/client.mapper';
 import { Command } from '~shared/application/CQS/command.abstract';
 import { IUseCase } from '~shared/application/use-cases/use-case.interface';
 
@@ -16,6 +15,7 @@ export abstract class IUpdateClientPreferencesUseCase
   extends Command<UpdateClientPreferencesPayload, void>
   implements IUseCase<UpdateClientPreferencesPayload, void> {}
 
+@Injectable({ scope: Scope.REQUEST })
 export class UpdateClientPreferencesUseCase extends IUpdateClientPreferencesUseCase {
   constructor() {
     super();

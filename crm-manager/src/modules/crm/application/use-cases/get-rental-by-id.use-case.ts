@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Scope } from '@nestjs/common';
 
 import { RentalId } from '~modules/crm/domain/entities/rental';
 import { RentalMapper } from '~modules/crm/domain/mappers/rental.mapper';
@@ -15,7 +15,7 @@ export abstract class IGetRentalByIdQuery
   extends Query<GetRentalByIdPayload, CompactRentalDto>
   implements IUseCase<GetRentalByIdPayload, CompactRentalDto> {}
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class GetRentalByIdQuery extends IGetRentalByIdQuery {
   constructor(private readonly rentalMapper: RentalMapper) {
     super();

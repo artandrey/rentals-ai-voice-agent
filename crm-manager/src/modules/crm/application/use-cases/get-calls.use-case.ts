@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Scope } from '@nestjs/common';
 
 import { Call } from '~modules/crm/domain/entities/call';
 import { CallMapper } from '~modules/crm/domain/mappers/call.mapper';
@@ -9,7 +9,7 @@ import { CallDto } from '../dto/call.dto';
 
 export abstract class IGetCallsQuery extends Query<void, CallDto[]> implements IUseCase<void, CallDto[]> {}
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class GetCallsQuery extends IGetCallsQuery {
   constructor(private readonly callMapper: CallMapper) {
     super();

@@ -1,3 +1,5 @@
+import { Injectable, Scope } from '@nestjs/common';
+
 import { ClientDto } from '~modules/crm/application/dto/client.dto';
 import { ClientMapper } from '~modules/crm/domain/mappers/client.mapper';
 import { PhoneNumber } from '~modules/crm/domain/value-objects/phone-number.value';
@@ -12,6 +14,7 @@ export abstract class IFindClientByPhoneQuery
   extends Query<FindClientByPhoneDto, ClientDto | null>
   implements IUseCase<FindClientByPhoneDto, ClientDto | null> {}
 
+@Injectable({ scope: Scope.REQUEST })
 export class FindClientByPhoneQuery extends IFindClientByPhoneQuery {
   constructor(private readonly clientMapper: ClientMapper) {
     super();

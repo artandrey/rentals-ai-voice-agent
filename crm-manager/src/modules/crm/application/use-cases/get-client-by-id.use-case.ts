@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable, Scope } from '@nestjs/common';
 
 import { ClientDto } from '~modules/crm/application/dto/client.dto';
 import { ClientId } from '~modules/crm/domain/entities/client';
@@ -14,6 +14,7 @@ export abstract class IGetClientByIdQuery
   extends Query<GetClientByIdDto, ClientDto | null>
   implements IUseCase<GetClientByIdDto, ClientDto | null> {}
 
+@Injectable({ scope: Scope.REQUEST })
 export class GetClientByIdQuery extends IGetClientByIdQuery {
   constructor(private readonly clientMapper: ClientMapper) {
     super();

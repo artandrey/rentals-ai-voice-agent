@@ -1,3 +1,5 @@
+import { Injectable, Scope } from '@nestjs/common';
+
 import { ClientId } from '~modules/crm/domain/entities/client';
 import { RentalId } from '~modules/crm/domain/entities/rental';
 import { DayDate } from '~modules/crm/domain/value-objects/day-date.value';
@@ -10,6 +12,7 @@ export abstract class ICreateBookingUseCase
   extends Command<BookRentalDto, void>
   implements IUseCase<BookRentalDto, void> {}
 
+@Injectable({ scope: Scope.REQUEST })
 export class CreateBookingUseCase extends ICreateBookingUseCase {
   constructor() {
     super();
