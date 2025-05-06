@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 from uuid import UUID, uuid4
 
 from crm_api_client.crm_manager_client.api.clients import (
@@ -11,6 +11,12 @@ from crm_api_client.crm_manager_client.api.clients import (
     clients_controller_update_client_preferences,
     clients_controller_update_client_preferred_language
 )
+from crm_api_client.crm_manager_client.api.rentals import (
+    rentals_controller_get_rentals,
+    rentals_controller_get_rental_by_id,
+    rentals_controller_get_rental_emergency_details,
+    rentals_controller_get_rental_settlement_details
+)
 from crm_api_client.crm_manager_client.client import Client
 from crm_api_client.crm_manager_client.models.client_dto import ClientDto
 from crm_api_client.crm_manager_client.models.create_client_dto import CreateClientDto
@@ -18,6 +24,9 @@ from crm_api_client.crm_manager_client.models.update_client_name_dto import Upda
 from crm_api_client.crm_manager_client.models.update_client_preferences_dto import UpdateClientPreferencesDto
 from crm_api_client.crm_manager_client.models.update_client_preferred_language_dto import UpdateClientPreferredLanguageDto
 from crm_api_client.crm_manager_client.models.update_client_preferred_language_dto_language import UpdateClientPreferredLanguageDtoLanguage
+from crm_api_client.crm_manager_client.models.compact_rental_dto import CompactRentalDto
+from crm_api_client.crm_manager_client.models.rental_emergency_details_dto import RentalEmergencyDetailsDto
+from crm_api_client.crm_manager_client.models.rental_settlement_details_dto import RentalSettlementDetailsDto
 
 
 class Language(str, Enum):
@@ -250,4 +259,138 @@ class CallSession:
             return None
         except Exception as e:
             print(f"Error updating client language: {e}")
-            return None 
+            return None
+            
+    async def get_available_rentals(self, crm_client: Client) -> Optional[List[CompactRentalDto]]:
+        """
+        Retrieve all available rentals.
+        
+        Args:
+            crm_client: CRM API client instance
+            
+        Returns:
+            List of CompactRentalDto objects if successful, None otherwise
+        """
+        try:
+            response = await rentals_controller_get_rentals.asyncio(
+                client=crm_client
+            )
+            
+            if hasattr(response, 'parsed'):
+                return response.parsed
+            return None
+        except Exception as e:
+            print(f"Error getting available rentals: {e}")
+            return None
+    
+    async def get_rental_details(self, crm_client: Client, rental_id: str) -> Optional[CompactRentalDto]:
+        """
+        Retrieve detailed information about a specific rental.
+        
+        Args:
+            crm_client: CRM API client instance
+            rental_id: ID of the rental to retrieve
+            
+        Returns:
+            CompactRentalDto object if successful, None otherwise
+        """
+        try:
+            response = await rentals_controller_get_rental_by_id.asyncio(
+                client=crm_client,
+                id=rental_id
+            )
+            
+            if hasattr(response, 'parsed'):
+                return response.parsed
+            return None
+        except Exception as e:
+            print(f"Error getting rental details: {e}")
+            return None
+    
+    async def get_rental_emergency_details(self, crm_client: Client, rental_id: str) -> Optional[RentalEmergencyDetailsDto]:
+        """
+        Retrieve emergency details about a specific rental.
+        
+        Args:
+            crm_client: CRM API client instance
+            rental_id: ID of the rental to retrieve emergency details for
+            
+        Returns:
+            RentalEmergencyDetailsDto object if successful, None otherwise
+        """
+        try:
+            response = await rentals_controller_get_rental_emergency_details.asyncio(
+                client=crm_client,
+                id=rental_id
+            )
+            
+            if hasattr(response, 'parsed'):
+                return response.parsed
+            return None
+        except Exception as e:
+            print(f"Error getting rental emergency details: {e}")
+            return None
+    
+    async def get_rental_settlement_details(self, crm_client: Client, rental_id: str) -> Optional[RentalSettlementDetailsDto]:
+        """
+        Retrieve settlement details about a specific rental.
+        
+        Args:
+            crm_client: CRM API client instance
+            rental_id: ID of the rental to retrieve settlement details for
+            
+        Returns:
+            RentalSettlementDetailsDto object if successful, None otherwise
+        """
+        try:
+            response = await rentals_controller_get_rental_settlement_details.asyncio(
+                client=crm_client,
+                id=rental_id
+            )
+            
+            if hasattr(response, 'parsed'):
+                return response.parsed
+            return None
+        except Exception as e:
+            print(f"Error getting rental settlement details: {e}")
+            return None
+            
+    async def book_rental(self, crm_client: Client, rental_id: str) -> Dict[str, Any]:
+        """
+        Book a rental for the client.
+        
+        Note: This is a placeholder method since the actual booking API endpoint
+        is not available in the provided API client. In a real implementation,
+        you would call the appropriate endpoint to create a booking.
+        
+        Args:
+            crm_client: CRM API client instance
+            rental_id: ID of the rental to book
+            
+        Returns:
+            A dictionary with booking status information
+        """
+        if not self.client_id:
+            return {
+                "success": False,
+                "message": "Client must be identified before booking"
+            }
+            
+        # Get rental details to verify it exists
+        rental = await self.get_rental_details(crm_client, rental_id)
+        if not rental:
+            return {
+                "success": False,
+                "message": f"Rental with ID {rental_id} not found"
+            }
+            
+        # In a real implementation, you would call the booking creation endpoint here
+        # Since we don't have that endpoint, we'll return a simulated success response
+        return {
+            "success": True,
+            "message": "Booking request processed",
+            "booking_id": str(uuid4()),  # Generate a fake booking ID
+            "rental_id": rental_id,
+            "client_id": self.client_id,
+            "status": "pending_confirmation"
+        } 
