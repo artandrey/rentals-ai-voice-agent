@@ -49,7 +49,6 @@ async def main(input_device: int, output_device: int):
             output_device_index=output_device,
         )
     )
-
     stt = DeepgramSTTService(api_key=os.getenv("DEEPGRAM_API_KEY"), live_options=LiveOptions(language="en", model="nova-2", smart_format=True))
 
     tl = TranscriptionLogger()

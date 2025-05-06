@@ -15,15 +15,366 @@
         },
         "tags": ["Ping"]
       }
+    },
+    "/clients": {
+      "get": {
+        "operationId": "ClientsController_getClients",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/ClientDto" }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Clients"]
+      },
+      "post": {
+        "operationId": "ClientsController_createClient",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateClientDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ClientDto" }
+              }
+            }
+          }
+        },
+        "tags": ["Clients"]
+      }
+    },
+    "/clients/{id}": {
+      "get": {
+        "operationId": "ClientsController_getClientById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "type": "object" } }
+            }
+          }
+        },
+        "tags": ["Clients"]
+      }
+    },
+    "/clients/phone/{phoneNumber}": {
+      "get": {
+        "operationId": "ClientsController_findClientByPhone",
+        "parameters": [
+          {
+            "name": "phoneNumber",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "type": "object" } }
+            }
+          }
+        },
+        "tags": ["Clients"]
+      }
+    },
+    "/clients/{id}/name": {
+      "put": {
+        "operationId": "ClientsController_updateClientName",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UpdateClientNameDto" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "" } },
+        "tags": ["Clients"]
+      }
+    },
+    "/clients/{id}/preferred-language": {
+      "put": {
+        "operationId": "ClientsController_updateClientPreferredLanguage",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateClientPreferredLanguageDto"
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "" } },
+        "tags": ["Clients"]
+      }
+    },
+    "/clients/{id}/preferences": {
+      "put": {
+        "operationId": "ClientsController_updateClientPreferences",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateClientPreferencesDto"
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "" } },
+        "tags": ["Clients"]
+      }
+    },
+    "/rentals": {
+      "get": {
+        "operationId": "RentalsController_getRentals",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/CompactRentalDto" }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Rentals"]
+      }
+    },
+    "/rentals/{id}": {
+      "get": {
+        "operationId": "RentalsController_getRentalById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CompactRentalDto" }
+              }
+            }
+          }
+        },
+        "tags": ["Rentals"]
+      }
+    },
+    "/rentals/{id}/settlement-details": {
+      "get": {
+        "operationId": "RentalsController_getRentalSettlementDetails",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RentalSettlementDetailsDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Rentals"]
+      }
+    },
+    "/rentals/{id}/emergency-details": {
+      "get": {
+        "operationId": "RentalsController_getRentalEmergencyDetails",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RentalEmergencyDetailsDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Rentals"]
+      }
     }
   },
   "info": {
-    "title": "Nest starter tempalte",
+    "title": "CRM manager",
     "description": "",
     "version": "1.0",
     "contact": {}
   },
   "tags": [],
   "servers": [],
-  "components": { "schemas": {} }
+  "components": {
+    "schemas": {
+      "ClientDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "object" },
+          "firstName": { "type": "string" },
+          "lastName": { "type": "string" },
+          "middleName": { "type": "string", "nullable": true, "default": null },
+          "phoneNumber": { "type": "string" },
+          "preferredLanguage": {
+            "nullable": true,
+            "default": null,
+            "enum": ["EN", "UK"],
+            "type": "string"
+          },
+          "preferences": {
+            "default": [],
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "note": { "type": "string", "nullable": true, "default": null }
+        },
+        "required": [
+          "id",
+          "firstName",
+          "lastName",
+          "middleName",
+          "phoneNumber",
+          "preferredLanguage",
+          "preferences",
+          "note"
+        ]
+      },
+      "CreateClientDto": {
+        "type": "object",
+        "properties": {
+          "firstName": { "type": "string" },
+          "lastName": { "type": "string" },
+          "phoneNumber": { "type": "string" },
+          "middleName": { "type": "string" }
+        },
+        "required": ["firstName", "lastName", "phoneNumber"]
+      },
+      "UpdateClientNameDto": {
+        "type": "object",
+        "properties": {
+          "firstName": { "type": "string" },
+          "lastName": { "type": "string" },
+          "middleName": { "type": "string" }
+        },
+        "required": ["firstName", "lastName"]
+      },
+      "UpdateClientPreferredLanguageDto": {
+        "type": "object",
+        "properties": {
+          "language": { "type": "string", "enum": ["EN", "UK"] }
+        },
+        "required": ["language"]
+      },
+      "UpdateClientPreferencesDto": {
+        "type": "object",
+        "properties": {
+          "preferences": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["preferences"]
+      },
+      "Price": { "type": "object", "properties": {} },
+      "Location": { "type": "object", "properties": {} },
+      "Amenity": { "type": "object", "properties": {} },
+      "CompactRentalDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "object" },
+          "price": { "$ref": "#/components/schemas/Price" },
+          "description": { "type": "string" },
+          "location": { "$ref": "#/components/schemas/Location" },
+          "amenities": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Amenity" }
+          }
+        },
+        "required": ["id", "price", "description", "location", "amenities"]
+      },
+      "RentalSettlementDetailsDto": {
+        "type": "object",
+        "properties": { "settlementDetails": { "type": "string" } },
+        "required": ["settlementDetails"]
+      },
+      "RentalEmergencyDetailsDto": {
+        "type": "object",
+        "properties": { "emergencyDetails": { "type": "string" } },
+        "required": ["emergencyDetails"]
+      }
+    }
+  }
 }

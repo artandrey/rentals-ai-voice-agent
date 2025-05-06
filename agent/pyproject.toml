@@ -24,3 +24,6 @@ build-backend = "poetry.core.masonry.api"
 
 
 
+[tool.poetry.group.dev.dependencies]
+openapi-python-client = "^0.24.3"
+
