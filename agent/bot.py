@@ -7,6 +7,7 @@ from uuid import uuid4
 
 from dotenv import load_dotenv
 from loguru import logger
+from crm_api_client.crm_manager_client.api.clients import clients_controller_get_current_accommodation
 from crm_api_client.crm_manager_client.models.create_client_dto import CreateClientDto
 from crm_api_client.crm_manager_client.models.client_dto import ClientDto
 from domain.conversation_context import ConversationContext
@@ -106,6 +107,13 @@ def create_client_initial_flow(context: ConversationContext):
                 "content": """Start by greeting the user with message. Use introduction message:
                 "Welcome to AI Assistant Rentals. I am your personal assistant. I can help you with booking, settlement and emergencies"
                 """
+            },
+            {
+                "role": "system",
+                "content": f"""
+                Client accommodation is: {context.get_client_accommodation()}
+                In case he has no accommodation, you should ask him to book one.
+                """
             }
         ],
         "functions": [initial_collect_full_name_schema]
@@ -159,11 +167,18 @@ async def main(input_device: int, output_device: int):
     phone_number="+380991111112"
 
     flow_manager.state['context'] = ConversationContext(
-        phone_number=phone_number
+        phone_number=phone_number,
     )
     client_info = await search_client_by_phone_number(phone_number)
     if client_info is not None:
         flow_manager.state['context'].set_client(client_info)
+        client_accommodation = await clients_controller_get_current_accommodation.asyncio(
+            client=crm_client,
+            id=client_info.id
+        )
+        flow_manager.state['context'].set_client_accommodation(client_accommodation)
+    
+        
 
     await flow_manager.initialize()
 
