@@ -30,7 +30,7 @@ export class ClientDto {
   lastName: string;
   middleName: string | null = null;
   phoneNumber: string;
-  preferredLanguage: ClientPreferredLanguage | null = null;
+  preferredLanguage: string | null = null;
   preferences: string[] = [];
   note: string | null = null;
 }
