@@ -162,6 +162,32 @@
         "tags": ["Clients"]
       }
     },
+    "/clients/{id}/current-accommodation": {
+      "get": {
+        "operationId": "ClientsController_getCurrentAccommodation",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientAccommodationDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Clients"]
+      }
+    },
     "/rentals": {
       "get": {
         "operationId": "RentalsController_getRentals",
@@ -316,8 +342,9 @@
           "middleName": { "type": "string", "nullable": true, "default": null },
           "phoneNumber": { "type": "string" },
           "preferredLanguage": {
+            "type": "string",
             "nullable": true,
-            "type": "string"
+            "default": null
           },
           "preferences": {
             "default": [],
@@ -370,6 +397,15 @@
         },
         "required": ["preferences"]
       },
+      "DateDayDto": {
+        "type": "object",
+        "properties": {
+          "year": { "type": "number", "minimum": 1900, "maximum": 2100 },
+          "month": { "type": "number", "minimum": 1, "maximum": 12 },
+          "day": { "type": "number", "minimum": 1, "maximum": 31 }
+        },
+        "required": ["year", "month", "day"]
+      },
       "Price": { "type": "object", "properties": {} },
       "Location": { "type": "object", "properties": {} },
       "Amenity": { "type": "object", "properties": {} },
@@ -386,6 +422,27 @@
           }
         },
         "required": ["id", "price", "description", "location", "amenities"]
+      },
+      "ClientAccommodationDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "clientId": { "type": "string" },
+          "rentalId": { "type": "string" },
+          "startDate": { "$ref": "#/components/schemas/DateDayDto" },
+          "endDate": { "$ref": "#/components/schemas/DateDayDto" },
+          "status": { "type": "string" },
+          "rental": { "$ref": "#/components/schemas/CompactRentalDto" }
+        },
+        "required": [
+          "id",
+          "clientId",
+          "rentalId",
+          "startDate",
+          "endDate",
+          "status",
+          "rental"
+        ]
       },
       "RentalSettlementDetailsDto": {
         "type": "object",
