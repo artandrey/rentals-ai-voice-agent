@@ -21,13 +21,13 @@ export class CreateClientUseCase extends ICreateClientUseCase {
   async implementation(): Promise<ClientDto> {
     const { firstName, lastName, phoneNumber, middleName } = this._input;
 
-    const client = new Client(firstName, lastName, PhoneNumber.create(phoneNumber));
+    const clientBuilder = Client.builder(firstName, lastName, PhoneNumber.create(phoneNumber));
 
     if (middleName) {
-      client.setMiddleName(middleName);
+      clientBuilder.middleName(middleName);
     }
 
-    const clientId = await this._dbContext.clientsRepository.save(client);
+    const clientId = await this._dbContext.clientsRepository.save(clientBuilder.build());
 
     const savedClient = await this._dbContext.clientsRepository.findById(clientId);
 
