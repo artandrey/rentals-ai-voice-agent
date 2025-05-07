@@ -224,4 +224,44 @@ describe('TwentyCrmAccommodationsRepository (integration)', () => {
     // Restore the original method
     repository['accommodationsService'].updateOneAccommodation = originalUpdateMethod;
   });
+
+  it('should find the most recent accommodation by client id', async () => {
+    const testPhone = validTestPhoneNumber();
+    const clientEntity = Client.builder('Test', 'User', PhoneNumber.create(testPhone))
+      .preferredLanguage(ClientPreferredLanguage.ENGLISH)
+      .note('Integration test accommodation client')
+      .build();
+    const clientId = await clientRepo.save(clientEntity);
+    cleanupClientId = clientId;
+
+    const address = new Location('Test Street', 'Test City', '123');
+    const price = new Price(100, 'USD');
+    const rentalEntity = Rental.builder(address, price).build();
+    const rentalId = await rentalRepo.save(rentalEntity);
+    cleanupRentalId = rentalId;
+
+    // Create two accommodations with different start dates
+    const startDate1 = new DayDate(2025, 2, 20);
+    const endDate1 = new DayDate(2025, 2, 21);
+    const accommodationEntity1 = Accommodation.builder(clientId, rentalId, startDate1, endDate1).build();
+    await repository.save(accommodationEntity1);
+
+    const startDate2 = new DayDate(2025, 2, 22);
+    const endDate2 = new DayDate(2025, 2, 23);
+    const accommodationEntity2 = Accommodation.builder(clientId, rentalId, startDate2, endDate2).build();
+    const id2 = await repository.save(accommodationEntity2);
+    cleanupAccommodationId = id2;
+
+    const found = await repository.findMostRecentByClientId(clientId);
+    expect(found).not.toBeNull();
+
+    expect(found?.startDate.isEqual(startDate2)).toBe(true);
+    expect(found?.endDate.isEqual(endDate2)).toBe(true);
+  });
+
+  it('should return null if no accommodations exist for client', async () => {
+    const nonExistentClientId = 'non-existent-client-id';
+    const found = await repository.findMostRecentByClientId(nonExistentClientId);
+    expect(found).toBeNull();
+  });
 });

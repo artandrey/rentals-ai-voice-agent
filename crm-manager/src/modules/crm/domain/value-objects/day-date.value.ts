@@ -32,7 +32,7 @@ export class DayDate {
   }
 
   public isEqual(other: DayDate): boolean {
-    return this.getTime() === other.getTime();
+    return this.toISODateString() === other.toISODateString();
   }
 
   public toISODateString(): string {
@@ -47,7 +47,8 @@ export class DayDate {
   }
 
   public static fromISODateString(dateString: string): DayDate {
-    const [year, month, day] = dateString.split('-').map(Number.parseInt);
+    const [year, month, day] = dateString.split('T')[0].split('-').map(Number);
+
     return new DayDate(year, month, day);
   }
 
@@ -58,7 +59,7 @@ export class DayDate {
     if (!regex.test(dateString)) return false;
 
     try {
-      const [year, month, day] = dateString.split('-').map(Number.parseInt);
+      const [year, month, day] = dateString.split('-').map(Number);
 
       // Validate month (1-12)
       if (month < 1 || month > 12) return false;

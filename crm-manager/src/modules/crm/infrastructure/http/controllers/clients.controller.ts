@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Put } from '@nestjs/common';
 
+import { ClientAccommodationDto } from '~modules/crm/application/dto/accommodation.dto';
 import {
   ClientDto,
   CreateClientDto,
@@ -10,6 +11,7 @@ import {
 import { ICreateClientUseCase } from '~modules/crm/application/use-cases/create-client.use-case';
 import { IFindClientByPhoneQuery } from '~modules/crm/application/use-cases/find-client-by-phone.use-case';
 import { IGetClientByIdQuery } from '~modules/crm/application/use-cases/get-client-by-id.use-case';
+import { IGetCurrentClientAccommodationQuery } from '~modules/crm/application/use-cases/get-current-client-accommodation.use-case';
 import { IUpdateClientNameUseCase } from '~modules/crm/application/use-cases/update-client-name.use-case';
 import { IUpdateClientPreferencesUseCase } from '~modules/crm/application/use-cases/update-client-preferences.use-case';
 import { IUpdateClientPreferredLanguageUseCase } from '~modules/crm/application/use-cases/update-client-preferred-language.use-case';
@@ -26,6 +28,7 @@ export class ClientsController {
     private readonly updateClientNameUseCase: IUpdateClientNameUseCase,
     private readonly updateClientPreferredLanguageUseCase: IUpdateClientPreferredLanguageUseCase,
     private readonly updateClientPreferencesUseCase: IUpdateClientPreferencesUseCase,
+    private readonly getCurrentClientAccommodationQuery: IGetCurrentClientAccommodationQuery,
   ) {}
 
   @Get(':id')
@@ -71,5 +74,10 @@ export class ClientsController {
       clientId: id as ClientId,
       updates: body,
     });
+  }
+
+  @Get(':id/current-accommodation')
+  async getCurrentAccommodation(@Param('id', ParseUUIDPipe) id: string): Promise<ClientAccommodationDto> {
+    return this.getCurrentClientAccommodationQuery.execute({ clientId: id });
   }
 }

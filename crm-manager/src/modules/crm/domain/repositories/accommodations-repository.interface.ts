@@ -7,4 +7,5 @@ export abstract class IAccommodationRepository {
   abstract delete(id: AccommodationId): Promise<void>;
   abstract findAll(): Promise<Accommodation[]>;
   abstract findByRentalId(rentalId: RentalId): Promise<Accommodation[]>;
+  abstract findMostRecentByClientId(clientId: string): Promise<Accommodation | null>;
 }

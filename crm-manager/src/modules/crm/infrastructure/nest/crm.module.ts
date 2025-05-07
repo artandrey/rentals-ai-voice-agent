@@ -7,6 +7,10 @@ import {
 } from '~modules/crm/application/use-cases/find-client-by-phone.use-case';
 import { GetClientByIdQuery, IGetClientByIdQuery } from '~modules/crm/application/use-cases/get-client-by-id.use-case';
 import {
+  GetCurrentClientAccommodationQuery,
+  IGetCurrentClientAccommodationQuery,
+} from '~modules/crm/application/use-cases/get-current-client-accommodation.use-case';
+import {
   GetRentalAvailableDateSpansQuery,
   IGetRentalAvailableDateSpansQuery,
 } from '~modules/crm/application/use-cases/get-rental-available-date-spans.use-case';
@@ -54,6 +58,7 @@ import { RentalsController } from '~modules/crm/infrastructure/http/controllers/
     { provide: IGetRentalSettlementDetailsQuery, useClass: GetRentalSettlementDetailsQuery },
     { provide: IGetRentalEmergencyDetailsQuery, useClass: GetRentalEmergencyDetailsQuery },
     { provide: IGetRentalAvailableDateSpansQuery, useClass: GetRentalAvailableDateSpansQuery },
+    { provide: IGetCurrentClientAccommodationQuery, useClass: GetCurrentClientAccommodationQuery },
   ],
 })
 export class CrmModule {}

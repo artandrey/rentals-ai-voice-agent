@@ -99,4 +99,17 @@ export class TwentyCrmAccommodationsRepository extends IAccommodationRepository 
     const accommodationsData = response?.data?.accommodations ?? [];
     return accommodationsData.map((data) => this.mapper.toDomain(data));
   }
+
+  async findMostRecentByClientId(clientId: string): Promise<Accommodation | null> {
+    const { data: response } = await this.accommodationsService.findManyAccommodations({
+      query: {
+        filter: `clientId[eq]:${clientId}`,
+        limit: 1,
+      },
+      client: this.apiClient,
+    });
+    const accommodationsData = response?.data?.accommodations ?? [];
+    if (accommodationsData.length === 0) return null;
+    return this.mapper.toDomain(accommodationsData[0]);
+  }
 }
