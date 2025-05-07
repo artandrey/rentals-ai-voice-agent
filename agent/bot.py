@@ -7,7 +7,10 @@ from uuid import uuid4
 
 from dotenv import load_dotenv
 from loguru import logger
-from crm_api_client.crm_manager_client.api.clients import clients_controller_find_client_by_phone
+from crm_api_client.crm_manager_client.models.create_client_dto import CreateClientDto
+from crm_api_client.crm_manager_client.models.client_dto import ClientDto
+from domain.conversation_context import ConversationContext
+from crm_api_client.crm_manager_client.api.clients import clients_controller_find_client_by_phone, clients_controller_create_client
 
 from select_audio_device import AudioDevice, run_device_selector
 
@@ -27,24 +30,31 @@ from pipecat_flows import FlowManager, FlowsFunctionSchema, FlowArgs
 load_dotenv(override=True)
 
 
-async def collect_full_name_handler(args: FlowArgs, flow_manager: FlowManager):
+async def initial_collect_full_name_handler(args: FlowArgs, flow_manager: FlowManager):
     """Handler for collecting user's full name."""
     first_name = args.get("first_name")
     last_name = args.get("last_name")
     middle_name = args.get("middle_name", "")
     logger.info(f"Collected full name: {first_name} {last_name} {middle_name}")
-    flow_manager.state.first_name = first_name
-    flow_manager.state.last_name = last_name
-    flow_manager.state.middle_name = middle_name
+
+    created_client = await clients_controller_create_client.asyncio(
+        client=crm_client,
+        body=CreateClientDto(
+            first_name=first_name,
+            last_name=last_name,
+            middle_name=middle_name,
+            phone_number=flow_manager.state['context'].get_phone_number()
+        )
+    )
+    flow_manager.state['context'].set_client(created_client)
     return {"status": "success", "first_name": first_name, "last_name": last_name, "middle_name": middle_name}
 
-collect_full_name_schema = FlowsFunctionSchema(
-    name="collect_full_name",
+initial_collect_full_name_schema = FlowsFunctionSchema(
+    name="initial_collect_full_name",
     description="Record user's full name",
     properties={"first_name": {"type": "string"}, "last_name": {"type": "string"}, "middle_name": {"type": "string"}},
     required=["first_name", "last_name"],
-    handler=collect_full_name_handler,
-    transition_to="next_step"
+    handler=initial_collect_full_name_handler,
 )
 
 from crm_api_client.crm_manager_client.client import Client
@@ -56,7 +66,7 @@ async def search_client_by_phone_number(phone_number: str):
         client=crm_client, 
         phone_number=phone_number
     )
-    print(result.id)
+
     return result
 
 
@@ -78,9 +88,11 @@ def create_unknown_client_initial_flow():
                     """
                 }
             ],
-            "functions": [collect_full_name_schema]
+            "functions": [initial_collect_full_name_schema]
     }
     return flow_config
+
+
 
 
 
@@ -127,18 +139,23 @@ async def main(input_device: int, output_device: int):
         context_aggregator=context_aggregator,
         tts=tts,
     )
+    phone_number="+380991111112"
 
-    client_info = await search_client_by_phone_number("+380991111111")
-    logger.info(f"Found client: {client_info}")
+    flow_manager.state['context'] = ConversationContext(
+        phone_number=phone_number
+    )
+    client_info = await search_client_by_phone_number(phone_number)
+    if client_info is not None:
+        flow_manager.state['context'].set_client(client_info)
 
     await flow_manager.initialize()
 
-    # Call the API after initializing the flow but before starting the pipeline
    
   
 
+    if flow_manager.state['context'].get_client() is None:
+        await flow_manager.set_node("initial", create_unknown_client_initial_flow())
 
-    await flow_manager.set_node("initial", create_unknown_client_initial_flow())
 
     runner = PipelineRunner(handle_sigint=False if sys.platform == "win32" else True)
 

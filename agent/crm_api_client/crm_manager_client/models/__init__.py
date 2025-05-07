@@ -3,7 +3,6 @@
 from .amenity import Amenity
 from .available_date_spans_dto import AvailableDateSpansDto
 from .client_dto import ClientDto
-from .client_dto_preferred_language import ClientDtoPreferredLanguage
 from .compact_rental_dto import CompactRentalDto
 from .compact_rental_dto_id import CompactRentalDtoId
 from .create_client_dto import CreateClientDto
@@ -21,7 +20,6 @@ __all__ = (
     "Amenity",
     "AvailableDateSpansDto",
     "ClientDto",
-    "ClientDtoPreferredLanguage",
     "CompactRentalDto",
     "CompactRentalDtoId",
     "CreateClientDto",

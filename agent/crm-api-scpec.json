@@ -317,8 +317,6 @@
           "phoneNumber": { "type": "string" },
           "preferredLanguage": {
             "nullable": true,
-            "default": null,
-            "enum": ["EN", "UK"],
             "type": "string"
           },
           "preferences": {

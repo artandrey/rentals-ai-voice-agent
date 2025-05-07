@@ -4,8 +4,6 @@ from typing import Any, TypeVar, Union, cast
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-from ..models.client_dto_preferred_language import ClientDtoPreferredLanguage
-
 T = TypeVar("T", bound="ClientDto")
 
 
@@ -18,7 +16,7 @@ class ClientDto:
         last_name (str):
         middle_name (Union[None, str]):
         phone_number (str):
-        preferred_language (ClientDtoPreferredLanguage):
+        preferred_language (Union[None, str]):
         preferences (list[str]):
         note (Union[None, str]):
     """
@@ -28,7 +26,7 @@ class ClientDto:
     last_name: str
     middle_name: Union[None, str]
     phone_number: str
-    preferred_language: ClientDtoPreferredLanguage
+    preferred_language: Union[None, str]
     preferences: list[str]
     note: Union[None, str]
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
@@ -45,7 +43,8 @@ class ClientDto:
 
         phone_number = self.phone_number
 
-        preferred_language = self.preferred_language.value
+        preferred_language: Union[None, str]
+        preferred_language = self.preferred_language
 
         preferences = self.preferences
 
@@ -87,7 +86,12 @@ class ClientDto:
 
         phone_number = d.pop("phoneNumber")
 
-        preferred_language = ClientDtoPreferredLanguage(d.pop("preferredLanguage"))
+        def _parse_preferred_language(data: object) -> Union[None, str]:
+            if data is None:
+                return data
+            return cast(Union[None, str], data)
+
+        preferred_language = _parse_preferred_language(d.pop("preferredLanguage"))
 
         preferences = cast(list[str], d.pop("preferences"))
 
