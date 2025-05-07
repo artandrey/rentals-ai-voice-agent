@@ -5,7 +5,6 @@ from .available_date_spans_dto import AvailableDateSpansDto
 from .client_accommodation_dto import ClientAccommodationDto
 from .client_dto import ClientDto
 from .compact_rental_dto import CompactRentalDto
-from .compact_rental_dto_id import CompactRentalDtoId
 from .create_client_dto import CreateClientDto
 from .date_day_dto import DateDayDto
 from .days_span_dto import DaysSpanDto
@@ -24,7 +23,6 @@ __all__ = (
     "ClientAccommodationDto",
     "ClientDto",
     "CompactRentalDto",
-    "CompactRentalDtoId",
     "CreateClientDto",
     "DateDayDto",
     "DaysSpanDto",

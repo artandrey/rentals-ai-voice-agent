@@ -412,7 +412,7 @@
       "CompactRentalDto": {
         "type": "object",
         "properties": {
-          "id": { "type": "object" },
+          "id": { "type": "string" },
           "price": { "$ref": "#/components/schemas/Price" },
           "description": { "type": "string" },
           "location": { "$ref": "#/components/schemas/Location" },

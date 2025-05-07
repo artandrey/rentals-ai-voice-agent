@@ -6,7 +6,6 @@ from attrs import field as _attrs_field
 
 if TYPE_CHECKING:
     from ..models.amenity import Amenity
-    from ..models.compact_rental_dto_id import CompactRentalDtoId
     from ..models.location import Location
     from ..models.price import Price
 
@@ -18,14 +17,14 @@ T = TypeVar("T", bound="CompactRentalDto")
 class CompactRentalDto:
     """
     Attributes:
-        id (CompactRentalDtoId):
+        id (str):
         price (Price):
         description (str):
         location (Location):
         amenities (list['Amenity']):
     """
 
-    id: "CompactRentalDtoId"
+    id: str
     price: "Price"
     description: str
     location: "Location"
@@ -33,7 +32,7 @@ class CompactRentalDto:
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        id = self.id.to_dict()
+        id = self.id
 
         price = self.price.to_dict()
 
@@ -63,12 +62,11 @@ class CompactRentalDto:
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
         from ..models.amenity import Amenity
-        from ..models.compact_rental_dto_id import CompactRentalDtoId
         from ..models.location import Location
         from ..models.price import Price
 
         d = dict(src_dict)
-        id = CompactRentalDtoId.from_dict(d.pop("id"))
+        id = d.pop("id")
 
         price = Price.from_dict(d.pop("price"))
 
