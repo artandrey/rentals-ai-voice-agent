@@ -51,7 +51,7 @@ async def initial_collect_full_name_handler(args: FlowArgs, flow_manager: FlowMa
 
 initial_collect_full_name_schema = FlowsFunctionSchema(
     name="initial_collect_full_name",
-    description="Record user's full name",
+    description="Record user's full name with middle name. Call this function only once you have collected all parameters. Do not call it twice.",
     properties={"first_name": {"type": "string"}, "last_name": {"type": "string"}, "middle_name": {"type": "string"}},
     required=["first_name", "last_name"],
     handler=initial_collect_full_name_handler,
@@ -92,8 +92,25 @@ def create_unknown_client_initial_flow():
     }
     return flow_config
 
-
-
+def create_client_initial_flow(context: ConversationContext):
+    flow_config = {
+        "role_messages": [
+            {
+                "role": "system",
+                "content": "You are a helpful assistant. Your responses will be converted to audio."
+            }
+        ],
+        "task_messages": [
+            {
+                "role": "system",
+                "content": """Start by greeting the user with message. Use introduction message:
+                "Welcome to AI Assistant Rentals. I am your personal assistant. I can help you with booking, settlement and emergencies"
+                """
+            }
+        ],
+        "functions": [initial_collect_full_name_schema]
+    }
+    return flow_config
 
 
 logger.remove(0)
