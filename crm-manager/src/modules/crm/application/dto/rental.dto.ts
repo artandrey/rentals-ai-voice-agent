@@ -34,7 +34,7 @@ export class PriceDto {
 }
 
 export class CompactRentalDto {
-  id: RentalId;
+  id: string;
   price: Price;
   description: string;
   location: Location;
