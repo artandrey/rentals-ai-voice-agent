@@ -33,11 +33,6 @@ export class PriceDto {
   amountDecimal: number;
 }
 
-export class RentalDto {
-  location: LocationDto;
-  pricePerDay: PriceDto;
-}
-
 export class CompactRentalDto {
   id: RentalId;
   price: Price;
