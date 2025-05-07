@@ -32,6 +32,7 @@ export class TwentyCrmRentalsMapper implements IDataAccessMapper<Rental, RentalT
       description: entity.description,
       settlementDetails: entity.settlementDetails,
       emergencyDetails: entity.emergencyDetails,
+      amenities: entity.amenities.map((amenity) => amenity.title),
     };
   }
 
@@ -53,13 +54,7 @@ export class TwentyCrmRentalsMapper implements IDataAccessMapper<Rental, RentalT
   }
 
   amenitiesFromApi(persistence: RentalTwentyCrm): Amenity[] {
-    // Extract amenities from the API response
-    // This is placeholder logic - adjust according to where amenities will be stored in the API
-    const amenityTitles: string[] = [];
-
-    // Example: If amenities are stored in custom fields or other properties
-    // You'll need to implement the actual extraction logic based on API structure
-
+    const amenityTitles: string[] = persistence.amenities ?? [];
     return amenityTitles.map((title) => Amenity.create(title));
   }
 
