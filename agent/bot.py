@@ -12,7 +12,7 @@ from crm_api_client.crm_manager_client.models.create_client_dto import CreateCli
 from crm_api_client.crm_manager_client.models.client_dto import ClientDto
 from domain.conversation_context import ConversationContext
 from crm_api_client.crm_manager_client.api.clients import clients_controller_find_client_by_phone, clients_controller_create_client
-from crm_api_client.crm_manager_client.api.rentals import rentals_controller_get_rentals
+from crm_api_client.crm_manager_client.api.rentals import rentals_controller_get_rentals, rentals_controller_get_rental_by_id, rentals_controller_get_rental_available_date_spans
 from select_audio_device import AudioDevice, run_device_selector
 
 from pipecat.frames.frames import Frame, TranscriptionFrame
@@ -95,10 +95,92 @@ def create_unknown_client_initial_flow():
     return flow_config
 
 
+async def get_additional_rental_details(rental_id: str):
+    rental_details = await rentals_controller_get_rental_by_id.asyncio(
+        client=crm_client,
+        id=rental_id
+    )
+    return rental_details
+
+
+async def get_rental_availability_handler(args: FlowArgs, flow_manager: FlowManager):
+    """Handler for getting rental availability."""
+    rental_id = args.get("rental_id")
+    start_date = args.get("start_date")
+    end_date = args.get("end_date")
+    
+    # Validate date formats and values
+    from datetime import datetime
+    current_date = datetime.now().date()
+    
+    # Date format validation function
+    def is_valid_date_format(date_str):
+        try:
+            datetime.strptime(date_str, "%d-%m-%Y")
+            return True
+        except ValueError:
+            return False
+    
+    # Perform validations
+    if not is_valid_date_format(start_date):
+        logger.error(f"Invalid start_date format: {start_date}")
+        return {"status": "error", "message": f"Invalid start date format. Please use DD-MM-YYYY format."}
+    
+    if not is_valid_date_format(end_date):
+        logger.error(f"Invalid end_date format: {end_date}")
+        return {"status": "error", "message": f"Invalid end date format. Please use DD-MM-YYYY format."}
+    
+    # Convert strings to date objects for comparison
+    start_date_obj = datetime.strptime(start_date, "%d-%m-%Y").date()
+    end_date_obj = datetime.strptime(end_date, "%d-%m-%Y").date()
+    
+    # Check if dates are in the past
+    if start_date_obj < current_date:
+        logger.error(f"Start date {start_date} is in the past")
+        return {"status": "error", "message": f"Start date cannot be in the past. Today is {current_date.strftime('%d-%m-%Y')}."}
+    
+    # Check if end date is before start date
+    if end_date_obj < start_date_obj:
+        logger.error(f"End date {end_date} is before start date {start_date}")
+        return {"status": "error", "message": "End date cannot be before start date."}
+    
+    logger.info(f"Getting availability for rental ID: {rental_id}, start_date: {start_date}, end_date: {end_date}")
+    try:
+        availability_spans = await rentals_controller_get_rental_available_date_spans.asyncio(
+            client=crm_client,
+            id=rental_id,
+            start_date=start_date,
+            end_date=end_date
+        )
+        # The API might return a complex object. We need to format it or decide what to return.
+        # For now, returning the raw response. This might need adjustment based on actual API response structure.
+        logger.info(f"Availability spans: {availability_spans}")
+        return {"status": "success", "rental_id": rental_id, "availability": availability_spans}
+    except Exception as e:
+        logger.error(f"Error getting rental availability: {e}")
+        return {"status": "error", "message": str(e)}
+
+get_rental_availability_schema = FlowsFunctionSchema(
+    name="get_rental_availability",
+    description="Get available date spans for a specific rental property. Call this function after the user has selected a rental and wants to know its availability. The dates must be in DD-MM-YYYY format.",
+    properties={
+        "rental_id": {"type": "string", "description": "The ID of the rental property to check availability for."},
+        "start_date": {"type": "string", "description": "The start date in DD-MM-YYYY format."},
+        "end_date": {"type": "string", "description": "The end date in DD-MM-YYYY format."}
+    },
+    required=["rental_id", "start_date", "end_date"],
+    handler=get_rental_availability_handler,
+)
+
+
 async def create_booking_flow():
     rentals_list = await rentals_controller_get_rentals.asyncio(
         client=crm_client,
     )
+    # Get current date in DD-MM-YYYY format for the system prompt
+    from datetime import datetime
+    current_date = datetime.now().strftime("%d-%m-%Y")
+    
     flow_config = {
         "role_messages": [
             {
@@ -109,16 +191,25 @@ async def create_booking_flow():
         "task_messages": [
             {
                 "role": "system",
-                "content": """Your goal is to help the client book accommodation.
+                "content": f"""Your goal is to help the client book accommodation.
                 You are able to retrieve information about available rentals and book them.
-                1. Retrieve information about available rentals in <rentals> section and present it to client.
-                    1.1. You should present single rental at a time.
+                Today's date is {current_date}.
+                Follow these steps:
+                1. Present available rentals to the client one by one from the <rentals> section.
                     Example:
-                    - Would you like to book "Comfortable apartment on the Black Avenue"
-                    - No, could you suggest me another one?
-                    - Sure, probably you would like to book "Luxury suite in the center of the city"
-                2. If client agrees, search for availability of selected accommodation.
-                    2.1. You should search for availability of selected accommodation in range of dates.
+                    - User: "I'm looking for a place to stay."
+                    - Assistant: "Okay, I can help with that. Would you like to consider the 'Comfortable apartment on the Black Avenue'?"
+                    - User: "No, could you suggest another one?"
+                    - Assistant: "Sure, how about the 'Luxury suite in the center of the city'?"
+                2. Once the client expresses interest in a specific rental, ask them for their desired check-in and check-out dates in DD-MM-YYYY format.
+                3. Use the `get_rental_availability` function to fetch available date spans. Provide the `rental_id` of the selected rental along with the `start_date` and `end_date` parameters in DD-MM-YYYY format.
+                   IMPORTANT DATE VALIDATIONS:
+                   - Ensure dates are in the correct DD-MM-YYYY format
+                   - Check that the start_date is not in the past (today is {current_date})
+                   - Verify that the end_date is after the start_date
+                   - If validation fails, the function will return an error message - inform the client and ask for new dates
+                4. Inform the client about the availability.
+                5. (Future step, not yet implemented) If the client confirms a date and wants to book, you would proceed to booking. For now, just confirm you've noted their interest and the available dates.
                 """
             },
             {
@@ -127,10 +218,17 @@ async def create_booking_flow():
                 <rentals>
                 {rentals_list}
                 </rentals>
+                When calling `get_rental_availability`, ensure you use the correct `rental_id` from the list above for the rental the user is interested in.
+                Always use DD-MM-YYYY format for dates.
+                Remember these validation rules:
+                1. Dates must be in DD-MM-YYYY format
+                2. Start date must not be before today ({current_date})
+                3. End date must be after start date
+                If the user provides dates that don't meet these criteria, explain the issue and ask for new dates.
                 """
             }
         ],
-        "functions": []
+        "functions": [get_rental_availability_schema]
     }
     return flow_config
 
@@ -164,7 +262,7 @@ def create_client_initial_flow(context: ConversationContext):
                 "content": """Start by greeting the user with message calling him by name. Use introduction message:
                 "Welcome to AI Assistant Rentals. I am your personal assistant. I can help you with booking, settlement and emergencies"
                 Account for note and preferences.
-                After you have understood client's intent, call route_client_to_intent function with intent as argument.
+                After you have understood client's intent: do not respond to customer and immediately call route_client_to_intent function with intent as argument.
                 """
             },
             {
