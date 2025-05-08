@@ -33,6 +33,8 @@ export class GetRentalAvailableDateSpansQuery extends IGetRentalAvailableDateSpa
       throw new RentalNotFoundException(rentalId);
     }
 
+    rental._setContext(this._dbContext);
+
     const startDayDate = DayDate.fromISODateString(startDate);
     const endDayDate = DayDate.fromISODateString(endDate);
 
