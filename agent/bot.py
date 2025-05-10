@@ -347,6 +347,21 @@ async def create_settlement_success_end_node(context: ConversationContext) -> No
         "post_actions": [{"type": "end_conversation"}],
     }
 
+async def get_settlement_details_handler(args: FlowArgs, flow_manager: FlowManager):
+    settlement_details = await rentals_controller_get_rental_settlement_details.asyncio(
+        client=crm_client,
+        id=flow_manager.state['context'].get_client_accommodation().rental_id
+    )
+    print(settlement_details)
+    return {"status": "success", "settlement_details": settlement_details}
+
+get_settlement_details_schema = FlowsFunctionSchema(
+    name="get_settlement_details",
+    description="Get settlement details for the accommodation.",
+    properties={},
+    required=[],
+    handler=get_settlement_details_handler,
+)
 async def settlement_success_conclude_call_handler(args: FlowArgs, flow_manager: FlowManager):
     node_config = await create_settlement_success_end_node(flow_manager.state['context'])
     await flow_manager.set_node("settlement_success_final", node_config)
@@ -376,6 +391,7 @@ async def create_settlement_flow(context: ConversationContext) -> dict:
             "task_messages": [
                 {
                     "role": "system",
+                    # Need to be rewritten to be actual prompt
                     "content": f"Hello {client_name}. You've indicated you'd like to settle in. I've checked the details for your accommodation. You need to inform the user clearly that settlement cannot proceed right now due to the following reason: '{denial_reason}'. After explaining this, you should inform caller that you are unable to help him and ending the call."
                 }
             ],
@@ -383,7 +399,27 @@ async def create_settlement_flow(context: ConversationContext) -> dict:
             "post_actions": [{"type": "end_conversation"}],
         }
         return flow_config
-
+    
+    flow_config = {
+        "role_messages": [
+            {
+                "role": "system",
+                "content": voice_instructions
+            }   
+        ],
+        "task_messages": [
+            {
+                "role": "system",
+                "content": f"""
+                Client: {context.get_client().first_name} {context.get_client().last_name}
+                Accommodation: {context.get_client_accommodation()}
+                Call `get_settlement_details` function to get settlement details for the accommodation.
+                """
+            }   
+        ],
+        "functions": [get_settlement_details_schema],
+    }
+    return flow_config
   
     
 
