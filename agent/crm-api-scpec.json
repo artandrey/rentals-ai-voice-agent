@@ -334,7 +334,16 @@
             }
           }
         },
-        "responses": { "201": { "description": "" } },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/BookingResultDto" }
+              }
+            }
+          }
+        },
         "tags": ["Accommodations"]
       }
     },
@@ -514,6 +523,17 @@
           "endDate": { "$ref": "#/components/schemas/DateDayDto" }
         },
         "required": ["rentalId", "clientId", "startDate", "endDate"]
+      },
+      "BookingResultDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "clientId": { "type": "string" },
+          "rentalId": { "type": "string" },
+          "startDate": { "type": "string" },
+          "endDate": { "type": "string" }
+        },
+        "required": ["id", "clientId", "rentalId", "startDate", "endDate"]
       }
     }
   }

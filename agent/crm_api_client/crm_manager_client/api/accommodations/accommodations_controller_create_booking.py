@@ -6,6 +6,7 @@ import httpx
 from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.book_rental_dto import BookRentalDto
+from ...models.booking_result_dto import BookingResultDto
 from ...types import Response
 
 
@@ -29,16 +30,22 @@ def _get_kwargs(
     return _kwargs
 
 
-def _parse_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Optional[Any]:
+def _parse_response(
+    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
+) -> Optional[BookingResultDto]:
     if response.status_code == 201:
-        return None
+        response_201 = BookingResultDto.from_dict(response.json())
+
+        return response_201
     if client.raise_on_unexpected_status:
         raise errors.UnexpectedStatus(response.status_code, response.content)
     else:
         return None
 
 
-def _build_response(*, client: Union[AuthenticatedClient, Client], response: httpx.Response) -> Response[Any]:
+def _build_response(
+    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
+) -> Response[BookingResultDto]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -51,7 +58,7 @@ def sync_detailed(
     *,
     client: Union[AuthenticatedClient, Client],
     body: BookRentalDto,
-) -> Response[Any]:
+) -> Response[BookingResultDto]:
     """
     Args:
         body (BookRentalDto):
@@ -61,7 +68,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Any]
+        Response[BookingResultDto]
     """
 
     kwargs = _get_kwargs(
@@ -75,11 +82,11 @@ def sync_detailed(
     return _build_response(client=client, response=response)
 
 
-async def asyncio_detailed(
+def sync(
     *,
     client: Union[AuthenticatedClient, Client],
     body: BookRentalDto,
-) -> Response[Any]:
+) -> Optional[BookingResultDto]:
     """
     Args:
         body (BookRentalDto):
@@ -89,7 +96,30 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Any]
+        BookingResultDto
+    """
+
+    return sync_detailed(
+        client=client,
+        body=body,
+    ).parsed
+
+
+async def asyncio_detailed(
+    *,
+    client: Union[AuthenticatedClient, Client],
+    body: BookRentalDto,
+) -> Response[BookingResultDto]:
+    """
+    Args:
+        body (BookRentalDto):
+
+    Raises:
+        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        httpx.TimeoutException: If the request takes longer than Client.timeout.
+
+    Returns:
+        Response[BookingResultDto]
     """
 
     kwargs = _get_kwargs(
@@ -99,3 +129,28 @@ async def asyncio_detailed(
     response = await client.get_async_httpx_client().request(**kwargs)
 
     return _build_response(client=client, response=response)
+
+
+async def asyncio(
+    *,
+    client: Union[AuthenticatedClient, Client],
+    body: BookRentalDto,
+) -> Optional[BookingResultDto]:
+    """
+    Args:
+        body (BookRentalDto):
+
+    Raises:
+        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        httpx.TimeoutException: If the request takes longer than Client.timeout.
+
+    Returns:
+        BookingResultDto
+    """
+
+    return (
+        await asyncio_detailed(
+            client=client,
+            body=body,
+        )
+    ).parsed

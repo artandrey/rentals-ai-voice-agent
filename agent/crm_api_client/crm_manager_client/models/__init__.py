@@ -3,6 +3,7 @@
 from .amenity import Amenity
 from .available_date_spans_dto import AvailableDateSpansDto
 from .book_rental_dto import BookRentalDto
+from .booking_result_dto import BookingResultDto
 from .client_accommodation_dto import ClientAccommodationDto
 from .client_dto import ClientDto
 from .compact_rental_dto import CompactRentalDto
@@ -21,6 +22,7 @@ from .update_client_preferred_language_dto_language import UpdateClientPreferred
 __all__ = (
     "Amenity",
     "AvailableDateSpansDto",
+    "BookingResultDto",
     "BookRentalDto",
     "ClientAccommodationDto",
     "ClientDto",
