@@ -197,6 +197,7 @@ async def confirm_settlement_handler(args: FlowArgs, flow_manager: FlowManager):
         client=crm_client,
         id=accommodation_id
     )
+    print(response)
     if response.status_code < 200 or response.status_code >= 300:
         return {"status": "error", "message": response.content}
     return {"status": "success", "accommodation_id": accommodation_id}
@@ -222,6 +223,7 @@ async def create_booking_handler(args: FlowArgs, flow_manager: FlowManager):
             client_id=flow_manager.state['context'].get_client().id
         )
     )
+    print(response)
     if response.status_code < 200 or response.status_code >= 300:
         return {"status": "error", "message": response.content}
     return {"status": "success", "rental_id": rental_id, "start_date": start_date, "end_date": end_date}
