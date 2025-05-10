@@ -187,6 +187,8 @@ confirm_settlement_schema = FlowsFunctionSchema(
     name="confirm_settlement",
     description="Confirm settlement of the accommodation.",
     properties={"accommodation_id": {"type": "string", "description": "The ID of the accommodation to confirm settlement for."}},
+    handler=confirm_settlement_handler,
+    required=[]
 )
 
 async def create_booking_handler(args: FlowArgs, flow_manager: FlowManager):
@@ -208,6 +210,8 @@ create_booking_schema = FlowsFunctionSchema(
     name="create_booking",
     description="Create a booking for the client.",
     properties={"rental_id": {"type": "string", "description": "The ID of the rental to book."}, "start_date": {"type": "string", "description": "The start date in DD-MM-YYYY format."}, "end_date": {"type": "string", "description": "The end date in DD-MM-YYYY format."}},
+    required=["rental_id", "start_date", "end_date"],
+    handler=create_booking_handler,
 )
 
 async def create_booking_flow():
@@ -315,12 +319,13 @@ async def create_booking_end_node(context: ConversationContext) -> NodeConfig:
     }
 
 async def booking_end_quote_handler(args: FlowArgs, flow_manager: FlowManager):
-    flow_manager.set_node("booking_end_quote", create_booking_end_node())
+    flow_manager.set_node("booking_end_quote", create_booking_end_node(context=flow_manager.state['context']))
 
 booking_end_quote_schema = FlowsFunctionSchema(
     name="booking_end_quote",
     description="Ends the current process or conversation related to booking. Call this when the user indicates they are finished or the booking task is complete.",
     properties={},
+    required=[],
     handler=booking_end_quote_handler,
 )
 
