@@ -323,11 +323,153 @@ async def create_booking_flow():
     return flow_config
 
 
+# Functions and Schemas for Concluding Settlement Call
+async def create_settlement_denial_end_node(context: ConversationContext, denial_reason: str) -> NodeConfig:
+    """Creates a node to inform the user why settlement is denied and end the call."""
+    return {
+        "role_messages": [
+            {
+                "role": "system",
+                "content": voice_instructions
+            }
+        ],
+        "task_messages": [
+            {
+                "role": "system",
+                "content": f"I understand you were looking to settle in. However, I'm unable to proceed with the settlement at this moment because {denial_reason} Please contact our support if you believe this is an error or have further questions. Thank you for calling AI Rentals. Goodbye."
+            }
+        ],
+        "functions": [],
+        "post_actions": [{"type": "end_conversation"}],
+    }
+
+async def settlement_denial_conclude_call_handler(args: FlowArgs, flow_manager: FlowManager):
+    denial_reason = flow_manager.state.get('current_settlement_denial_reason', "of an unspecified issue.")
+    node_config = await create_settlement_denial_end_node(flow_manager.state['context'], denial_reason)
+    await flow_manager.set_node("settlement_denial_final", node_config)
+    return {"status": "success"}
+
+settlement_denial_conclude_call_schema = FlowsFunctionSchema(
+    name="settlement_denial_conclude_call",
+    description="Inform the user that settlement cannot proceed (reason previously stated by assistant) and end the call.",
+    properties={},
+    required=[],
+    handler=settlement_denial_conclude_call_handler,
+)
+
+async def create_settlement_success_end_node(context: ConversationContext) -> NodeConfig:
+    """Creates a node to confirm successful settlement and end the call."""
+    # Potentially fetch updated accommodation details if necessary
+    client_name = context.get_client().first_name if context.get_client() else "valued customer"
+    return {
+        "role_messages": [
+            {
+                "role": "system",
+                "content": voice_instructions
+            }
+        ],
+        "task_messages": [
+            {
+                "role": "system",
+                "content": f"Great news, {client_name}! Your settlement has been successfully confirmed. We hope you have a wonderful stay at AI Rentals. If you need anything else, feel free to reach out. Goodbye!"
+            }
+        ],
+        "functions": [],
+        "post_actions": [{"type": "end_conversation"}],
+    }
+
+async def settlement_success_conclude_call_handler(args: FlowArgs, flow_manager: FlowManager):
+    node_config = await create_settlement_success_end_node(flow_manager.state['context'])
+    await flow_manager.set_node("settlement_success_final", node_config)
+    return {"status": "success"}
+
+settlement_success_conclude_call_schema = FlowsFunctionSchema(
+    name="settlement_success_conclude_call",
+    description="Confirm successful settlement with the user and then end the call.",
+    properties={},
+    required=[],
+    handler=settlement_success_conclude_call_handler,
+)
+
+# Settlement Flow
+async def create_settlement_flow(context: ConversationContext, flow_manager: FlowManager) -> dict:
+    settlement_check = context.check_is_allowed_to_settle()
+    client_name = context.get_client().first_name if context.get_client() else "there"
+
+    if not settlement_check["success"]:
+        denial_reason = settlement_check["message"]
+        flow_manager.state['current_settlement_denial_reason'] = denial_reason # For the handler
+        flow_config = {
+            "role_messages": [
+                {
+                    "role": "system",
+                    "content": voice_instructions
+                }
+            ],
+            "task_messages": [
+                {
+                    "role": "system",
+                    "content": f"Hello {client_name}. You've indicated you'd like to settle in. I've checked the details for your accommodation. You need to inform the user clearly that settlement cannot proceed right now due to the following reason: '{denial_reason}'. After explaining this, you must call the `settlement_denial_conclude_call` function to politely end the conversation."
+                }
+            ],
+            "functions": [settlement_denial_conclude_call_schema]
+        }
+    else:
+        # User is eligible for settlement
+        accommodation_id = context.get_client_accommodation().id if context.get_client_accommodation() else None
+        if not accommodation_id:
+            # This case should ideally be caught by check_is_allowed_to_settle, but as a fallback:
+            flow_manager.state['current_settlement_denial_reason'] = "Your accommodation ID could not be found."
+            flow_config = {
+                "role_messages": [
+                    {
+                        "role": "system",
+                        "content": voice_instructions
+                    }
+                ],
+                "task_messages": [
+                    {
+                        "role": "system",
+                        "content": f"Hello {client_name}. There seems to be an issue locating your accommodation ID, so I cannot proceed with settlement. Please contact support. You must now call the `settlement_denial_conclude_call` function to end the conversation."
+                    }
+                ],
+                "functions": [settlement_denial_conclude_call_schema]
+            }
+            return flow_config
+
+        flow_config = {
+            "role_messages": [
+                {
+                    "role": "system",
+                    "content": voice_instructions
+                }
+            ],
+            "task_messages": [
+                {
+                    "role": "system",
+                    "content": f"Hello {client_name}. I see you'd like to settle in. Good news, you are eligible for settlement for your current accommodation! Would you like me to confirm your settlement now? If the user agrees, call the `confirm_settlement` function with accommodation_id '{accommodation_id}'. If `confirm_settlement` is successful, you must then call `settlement_success_conclude_call` to inform the user and end the call. If `confirm_settlement` fails, explain the error message you receive and then call `settlement_denial_conclude_call`."
+                }
+            ],
+            "functions": [confirm_settlement_schema, settlement_success_conclude_call_schema, settlement_denial_conclude_call_schema]
+        }
+    return flow_config
+
 async def route_client_to_intent_handler(args: FlowArgs, flow_manager: FlowManager):
     intent = args.get("intent")
     logger.info(f"Routing client to intent: {intent}")
     if intent == "booking":
         await flow_manager.set_node("booking",  await create_booking_flow())
+    elif intent == "settlement":
+        # Pass flow_manager to create_settlement_flow as it needs to set state
+        settlement_flow_config = await create_settlement_flow(flow_manager.state['context'], flow_manager)
+        await flow_manager.set_node("settlement", settlement_flow_config)
+    # Add other intents here like "info-or-emergency"
+    # else:
+    #     # Fallback or error handling if intent is not recognized
+    #     # For now, just return success without routing if intent is unknown
+    #     logger.warning(f"Unknown intent: {intent}. No specific flow to route to.")
+    #     return {"status": "success", "intent": intent, "message": "Intent not fully handled."}
+
     return {"status": "success", "intent": intent}
 
 route_client_to_intent_schema = FlowsFunctionSchema(
