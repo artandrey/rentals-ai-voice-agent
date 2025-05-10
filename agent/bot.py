@@ -13,7 +13,7 @@ from crm_api_client.crm_manager_client.models.create_client_dto import CreateCli
 from crm_api_client.crm_manager_client.models.client_dto import ClientDto
 from domain.conversation_context import ConversationContext
 from crm_api_client.crm_manager_client.api.clients import clients_controller_find_client_by_phone, clients_controller_create_client
-from crm_api_client.crm_manager_client.api.rentals import rentals_controller_get_rentals, rentals_controller_get_rental_by_id, rentals_controller_get_rental_available_date_spans
+from crm_api_client.crm_manager_client.api.rentals import rentals_controller_get_rentals, rentals_controller_get_rental_by_id, rentals_controller_get_rental_available_date_spans, rentals_controller_get_rental_emergency_details, rentals_controller_get_rental_settlement_details
 from crm_api_client.crm_manager_client.api.accommodations import accommodations_controller_confirm_settlement, accommodations_controller_create_booking
 from select_audio_device import AudioDevice, run_device_selector
 
@@ -30,6 +30,7 @@ from pipecat.services.openai.llm import OpenAILLMService
 from pipecat.services.openai.llm import OpenAILLMContext
 from pipecat.pipeline.task import PipelineParams
 from pipecat_flows import FlowManager, FlowsFunctionSchema, FlowArgs, NodeConfig
+from crm_api_client.crm_manager_client.models.date_day_dto import DateDayDto
 load_dotenv(override=True)
 
 voice_instructions = """
@@ -199,7 +200,14 @@ async def confirm_settlement_handler(args: FlowArgs, flow_manager: FlowManager):
     )
     print(response)
     if response.status_code < 200 or response.status_code >= 300:
-        return {"status": "error", "message": response.content}
+        message = response.content.decode("utf-8") if isinstance(response.content, bytes) else str(response.content)
+        try:
+            import json
+            error_json = json.loads(message)
+            message = error_json.get("message", message)
+        except Exception:
+            pass
+        return {"status": "error", "message": message}
     return {"status": "success", "accommodation_id": accommodation_id}
 
 confirm_settlement_schema = FlowsFunctionSchema(
@@ -212,8 +220,16 @@ confirm_settlement_schema = FlowsFunctionSchema(
 
 async def create_booking_handler(args: FlowArgs, flow_manager: FlowManager):
     rental_id = args.get("rental_id")
-    start_date = args.get("start_date")
-    end_date = args.get("end_date")
+    start_date_str = args.get("start_date")
+    end_date_str = args.get("end_date")
+
+    def parse_ddmmyyyy(date_str):
+        day, month, year = map(int, date_str.split("-"))
+        return DateDayDto(year=year, month=month, day=day)
+
+    start_date = parse_ddmmyyyy(start_date_str)
+    end_date = parse_ddmmyyyy(end_date_str)
+
     response = await accommodations_controller_create_booking.asyncio_detailed(
         client=crm_client,
         body=BookRentalDto(
@@ -225,8 +241,15 @@ async def create_booking_handler(args: FlowArgs, flow_manager: FlowManager):
     )
     print(response)
     if response.status_code < 200 or response.status_code >= 300:
-        return {"status": "error", "message": response.content}
-    return {"status": "success", "rental_id": rental_id, "start_date": start_date, "end_date": end_date}
+        message = response.content.decode("utf-8") if isinstance(response.content, bytes) else str(response.content)
+        try:
+            import json
+            error_json = json.loads(message)
+            message = error_json.get("message", message)
+        except Exception:
+            pass
+        return {"status": "error", "message": message}
+    return {"status": "success", "rental_id": rental_id, "start_date": start_date_str, "end_date": end_date_str}
 
 create_booking_schema = FlowsFunctionSchema(
     name="create_booking",
@@ -309,7 +332,7 @@ async def route_client_to_intent_handler(args: FlowArgs, flow_manager: FlowManag
 
 route_client_to_intent_schema = FlowsFunctionSchema(
     name="route_client_to_intent",
-    description="Route client to intent handler. Client may have such intents: booking, settlement, info-or-emergency. Call this function only once you understand client's intent.",
+    description="Route client to intent handler. Client may have such intents: booking, settlement, info-or-emergency. Call this function only once you understand client's intent. After calling this function you should not handle clients intent, cause client is routed to the intent handler. Say: Let me proceed with this.",
     properties={"intent": {"type": "string"}},
     required=["intent"],
     handler=route_client_to_intent_handler,
