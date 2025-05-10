@@ -32,8 +32,20 @@ from pipecat.pipeline.task import PipelineParams
 from pipecat_flows import FlowManager, FlowsFunctionSchema, FlowArgs, NodeConfig
 load_dotenv(override=True)
 
-
-
+voice_instructions = """
+You are a helpful assistant in a call center. You are talking to a client.
+Organization is called "AI Rentals".
+<voice_instructions>
+Aural Primacy: Construct all communications exclusively for auditory delivery. Envision the entire exchange as a spoken dialogue, where information is conveyed and received solely through the medium of sound.
+Purely Verbal Rendition: Since the interaction is entirely verbal, all output must be translatable into pure sound. Eliminate any reliance on visual cues, textual embellishments (like asterisks or bullet points not meant to be spoken as "asterisk" or "bullet point"), or symbolic representations that are not naturally vocalized in conversation.
+Phonetic Accessibility: Prioritize vocabulary and sentence structures that ensure effortless articulation and clear phonetic reception. Select words that are commonly understood and phonetically straightforward to minimize auditory processing load and maximize comprehension.
+Dynamic Conversational Flow: Emulate the natural cadence and rhythm of human speech. Integrate authentic prosodic variations (changes in pitch, tone, stress), natural hesitations (e.g., "um," "er" if contextually appropriate and not overused), and common conversational connectors (e.g., "so," "well," "alright," "now," "actually") to cultivate an organic, engaging, and relatable interaction style. The aim is to create a sense of unscripted, fluid dialogue.
+Modulated Pacing and Deliberate Pauses: Vary the speed of delivery and strategically incorporate pauses. This not only mirrors natural speech patterns but also aids listener comprehension by allowing moments for information absorption, especially with complex topics.
+Structured Auditory Information: When presenting detailed or multi-part information, structure it for easy listening. Employ techniques such as framing the information, using verbal signposting ("Firstly...", "Next...", "Finally..."), and providing concise summaries or rephrasing key points where it aids clarity, much like one would in a spoken explanation.
+Implicit Communicative Intent: Subtly convey the underlying purpose or tone (e.g., informative, inquisitive, supportive) through natural vocal nuances rather than explicit declarations of emotion, unless the context specifically calls for it. The expression should feel inherent to the way the words are spoken.
+Fostering Listener Engagement: Where appropriate, use intonation and phrasing that naturally invites continued interaction or signals attentiveness to the conversational partner. This can include slight upward inflections for questions or statements that invite a response, without being overtly demanding.
+</voice_instructions>
+"""
 async def initial_collect_full_name_handler(args: FlowArgs, flow_manager: FlowManager):
     """Handler for collecting user's full name."""
     first_name = args.get("first_name")
@@ -80,6 +92,10 @@ def create_unknown_client_initial_flow():
                 {
                     "role": "system",
                     "content": "You are a helpful assistant. Your responses will be converted to audio."
+                },
+                {
+                    "role": "system",
+                    "content": voice_instructions
                 }
             ],
             "task_messages": [
@@ -195,7 +211,7 @@ async def create_booking_handler(args: FlowArgs, flow_manager: FlowManager):
     rental_id = args.get("rental_id")
     start_date = args.get("start_date")
     end_date = args.get("end_date")
-    await accommodations_controller_create_booking.asyncio(
+    response = await accommodations_controller_create_booking.asyncio_detailed(
         client=crm_client,
         body=BookRentalDto(
             rental_id=rental_id,
@@ -204,6 +220,8 @@ async def create_booking_handler(args: FlowArgs, flow_manager: FlowManager):
             client_id=flow_manager.state['context'].get_client().id
         )
     )
+    if response.status_code < 200 or response.status_code >= 300:
+        return {"status": "error", "message": response.content}
     return {"status": "success", "rental_id": rental_id, "start_date": start_date, "end_date": end_date}
 
 create_booking_schema = FlowsFunctionSchema(
@@ -226,7 +244,7 @@ async def create_booking_flow():
         "role_messages": [
             {
                 "role": "system",
-                "content": "You are a helpful assistant. Your responses will be converted to audio."
+                "content": voice_instructions
             }
         ],
         "task_messages": [
@@ -299,6 +317,12 @@ async def create_booking_end_node(context: ConversationContext) -> NodeConfig:
     )
 
     return {
+        "role_messages": [
+            {
+                "role": "system",
+                "content": voice_instructions
+            }
+        ],
         "task_messages": [
             {
                 "role": "system",
@@ -334,7 +358,7 @@ def create_client_initial_flow(context: ConversationContext):
         "role_messages": [
             {
                 "role": "system",
-                "content": "You are a helpful assistant. Your responses will be converted to audio."
+                "content": voice_instructions
             }
         ],
         "task_messages": [
