@@ -286,7 +286,7 @@ route_client_to_intent_schema = FlowsFunctionSchema(
     handler=route_client_to_intent_handler,
 )
 
-async def create_end_node(context: ConversationContext) -> NodeConfig:
+async def create_booking_end_node(context: ConversationContext) -> NodeConfig:
     """Create the final node."""
     booking_details = await clients_controller_get_current_accommodation.asyncio(
         client=crm_client,
@@ -313,14 +313,14 @@ async def create_end_node(context: ConversationContext) -> NodeConfig:
         "post_actions": [{"type": "end_conversation"}],
     }
 
-async def end_quote_handler(args: FlowArgs, flow_manager: FlowManager):
-    flow_manager.set_node("end_quote", create_end_node())
+async def booking_end_quote_handler(args: FlowArgs, flow_manager: FlowManager):
+    flow_manager.set_node("booking_end_quote", create_booking_end_node())
 
-end_quote_schema = FlowsFunctionSchema(
-    name="end_quote",
-    description="Ends the current process or conversation. Call this when the user indicates they are finished or the task is complete.",
+booking_end_quote_schema = FlowsFunctionSchema(
+    name="booking_end_quote",
+    description="Ends the current process or conversation related to booking. Call this when the user indicates they are finished or the booking task is complete.",
     properties={},
-    handler=end_quote_handler,
+    handler=booking_end_quote_handler,
 )
 
 def create_client_initial_flow(context: ConversationContext):
