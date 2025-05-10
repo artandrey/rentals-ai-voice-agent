@@ -246,7 +246,8 @@ async def create_booking_flow():
                    - Verify that the end_date is after the start_date
                    - If validation fails, the function will return an error message - inform the client and ask for new dates
                 4. Inform the client about the availability.
-                5. (Future step, not yet implemented) If the client confirms a date and wants to book, you would proceed to booking. For now, just confirm you've noted their interest and the available dates.
+                5. If the client confirms a date and wants to book, use the `create_booking` function. Provide the `rental_id`, `start_date` (check-in), and `end_date` (check-out) for the booking. Ensure all dates are in DD-MM-YYYY format.
+                6. After successfully calling `create_booking`, confirm the booking details (rental, check-in date, check-out date) with the client and inform them that their booking is complete.
                 """
             },
             {
@@ -255,17 +256,17 @@ async def create_booking_flow():
                 <rentals>
                 {rentals_list}
                 </rentals>
-                When calling `get_rental_availability`, ensure you use the correct `rental_id` from the list above for the rental the user is interested in.
+                When calling `get_rental_availability` or `create_booking`, ensure you use the correct `rental_id` from the list above for the rental the user is interested in.
                 Always use DD-MM-YYYY format for dates.
-                Remember these validation rules:
-                1. Dates must be in DD-MM-YYYY format
-                2. Start date must not be before today ({current_date})
-                3. End date must be after start date
-                If the user provides dates that don't meet these criteria, explain the issue and ask for new dates.
+                Remember these validation rules for `get_rental_availability` and before calling `create_booking`:
+                1. Dates must be in DD-MM-YYYY format.
+                2. Start date must not be before today ({current_date}).
+                3. End date must be after start date.
+                If the user provides dates that don't meet these criteria, explain the issue and ask for new dates before proceeding.
                 """
             }
         ],
-        "functions": [get_rental_availability_schema]
+        "functions": [get_rental_availability_schema, create_booking_schema]
     }
     return flow_config
 
