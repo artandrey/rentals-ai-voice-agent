@@ -1,5 +1,13 @@
 import { Module } from '@nestjs/common';
 
+import {
+  ConfirmSettlementUseCase,
+  IConfirmSettlementUseCase,
+} from '~modules/crm/application/use-cases/confirm-settlement.use-case';
+import {
+  CreateBookingUseCase,
+  ICreateBookingUseCase,
+} from '~modules/crm/application/use-cases/create-booking.use-case';
 import { CreateClientUseCase, ICreateClientUseCase } from '~modules/crm/application/use-cases/create-client.use-case';
 import {
   FindClientByPhoneQuery,
@@ -38,12 +46,13 @@ import {
 } from '~modules/crm/application/use-cases/update-client-preferred-language.use-case';
 import { ClientMapper } from '~modules/crm/domain/mappers/client.mapper';
 import { RentalMapper } from '~modules/crm/domain/mappers/rental.mapper';
+import { AccommodationsController } from '~modules/crm/infrastructure/http/controllers/accommodations.controller';
 import { ClientsController } from '~modules/crm/infrastructure/http/controllers/clients.controller';
 import { RentalsController } from '~modules/crm/infrastructure/http/controllers/rentals.controller';
 
 @Module({
   imports: [],
-  controllers: [ClientsController, RentalsController],
+  controllers: [ClientsController, RentalsController, AccommodationsController],
   providers: [
     ClientMapper,
     RentalMapper,
@@ -59,6 +68,8 @@ import { RentalsController } from '~modules/crm/infrastructure/http/controllers/
     { provide: IGetRentalEmergencyDetailsQuery, useClass: GetRentalEmergencyDetailsQuery },
     { provide: IGetRentalAvailableDateSpansQuery, useClass: GetRentalAvailableDateSpansQuery },
     { provide: IGetCurrentClientAccommodationQuery, useClass: GetCurrentClientAccommodationQuery },
+    { provide: ICreateBookingUseCase, useClass: CreateBookingUseCase },
+    { provide: IConfirmSettlementUseCase, useClass: ConfirmSettlementUseCase },
   ],
 })
 export class CrmModule {}

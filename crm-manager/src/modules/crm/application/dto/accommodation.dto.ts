@@ -52,3 +52,9 @@ export class ClientAccommodationDto {
   status: string;
   rental: CompactRentalDto;
 }
+
+export class SettlementConfirmationDto {
+  @IsString()
+  @IsNotEmpty()
+  accommodationId: string;
+}
