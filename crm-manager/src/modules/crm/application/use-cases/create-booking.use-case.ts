@@ -34,6 +34,8 @@ export class CreateBookingUseCase extends ICreateBookingUseCase {
       throw new Error('Client not found');
     }
 
+    rental._setContext(this._dbContext);
+
     const accommodationId = await rental.createAccommodation(
       client.id,
       new DayDate(startDate.year, startDate.month, startDate.day),
