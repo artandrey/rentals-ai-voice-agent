@@ -248,6 +248,7 @@ async def create_booking_flow():
                 4. Inform the client about the availability.
                 5. If the client confirms a date and wants to book, use the `create_booking` function. Provide the `rental_id`, `start_date` (check-in), and `end_date` (check-out) for the booking. Ensure all dates are in DD-MM-YYYY format.
                 6. After successfully calling `create_booking`, confirm the booking details (rental, check-in date, check-out date) with the client and inform them that their booking is complete.
+                7. Once the booking is confirmed and the client has no more questions, or if the client wishes to end the conversation at any point, call the `booking_end_quote` function to terminate the call.
                 """
             },
             {
@@ -266,7 +267,7 @@ async def create_booking_flow():
                 """
             }
         ],
-        "functions": [get_rental_availability_schema, create_booking_schema]
+        "functions": [get_rental_availability_schema, create_booking_schema, booking_end_quote_schema]
     }
     return flow_config
 
