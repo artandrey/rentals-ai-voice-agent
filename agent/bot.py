@@ -353,7 +353,7 @@ async def get_settlement_details_handler(args: FlowArgs, flow_manager: FlowManag
         id=flow_manager.state['context'].get_client_accommodation().rental_id
     )
     print(settlement_details)
-    return {"status": "success", "settlement_details": settlement_details}
+    return {"status": "success", "settlement_details": settlement_details.settlement_details}
 
 get_settlement_details_schema = FlowsFunctionSchema(
     name="get_settlement_details",
