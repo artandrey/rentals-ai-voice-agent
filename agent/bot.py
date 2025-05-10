@@ -193,10 +193,12 @@ get_rental_availability_schema = FlowsFunctionSchema(
 
 async def confirm_settlement_handler(args: FlowArgs, flow_manager: FlowManager):
     accommodation_id = args.get("accommodation_id")
-    await accommodations_controller_confirm_settlement.asyncio(
+    response = await accommodations_controller_confirm_settlement.asyncio_detailed(
         client=crm_client,
         id=accommodation_id
     )
+    if response.status_code < 200 or response.status_code >= 300:
+        return {"status": "error", "message": response.content}
     return {"status": "success", "accommodation_id": accommodation_id}
 
 confirm_settlement_schema = FlowsFunctionSchema(
