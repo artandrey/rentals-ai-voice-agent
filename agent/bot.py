@@ -372,7 +372,8 @@ async def create_booking_end_node(context: ConversationContext) -> NodeConfig:
     }
 
 async def booking_end_quote_handler(args: FlowArgs, flow_manager: FlowManager):
-    flow_manager.set_node("booking_end_quote", create_booking_end_node(context=flow_manager.state['context']))
+    node = await create_booking_end_node(context=flow_manager.state['context'])
+    await flow_manager.set_node("booking_end_quote", node)
 
 booking_end_quote_schema = FlowsFunctionSchema(
     name="booking_end_quote",
