@@ -29,7 +29,7 @@ from pipecat.services.cartesia.tts import CartesiaTTSService
 from pipecat.services.openai.llm import OpenAILLMService
 from pipecat.services.openai.llm import OpenAILLMContext
 from pipecat.pipeline.task import PipelineParams
-from pipecat_flows import FlowManager, FlowsFunctionSchema, FlowArgs
+from pipecat_flows import FlowManager, FlowsFunctionSchema, FlowArgs, NodeConfig
 load_dotenv(override=True)
 
 
@@ -284,6 +284,43 @@ route_client_to_intent_schema = FlowsFunctionSchema(
     properties={"intent": {"type": "string"}},
     required=["intent"],
     handler=route_client_to_intent_handler,
+)
+
+async def create_end_node(context: ConversationContext) -> NodeConfig:
+    """Create the final node."""
+    booking_details = await clients_controller_get_current_accommodation.asyncio(
+        client=crm_client,
+        id=context.get_client().id
+    )
+
+    return {
+        "task_messages": [
+            {
+                "role": "system",
+                "content": (
+                    f"""Thank the customer for their time and end the conversation. 
+                    Mention that a representative will contact them about the quote. 
+                    Client name is: {context.get_client().first_name} {context.get_client().last_name}
+                    Inform client that he has booked accommodation with the following details:
+                    <accommodation>
+                    {booking_details}
+                    </accommodation>
+                    """
+                ),
+            }
+        ],
+        "functions": [],
+        "post_actions": [{"type": "end_conversation"}],
+    }
+
+async def end_quote_handler(args: FlowArgs, flow_manager: FlowManager):
+    flow_manager.set_node("end_quote", create_end_node())
+
+end_quote_schema = FlowsFunctionSchema(
+    name="end_quote",
+    description="Ends the current process or conversation. Call this when the user indicates they are finished or the task is complete.",
+    properties={},
+    handler=end_quote_handler,
 )
 
 def create_client_initial_flow(context: ConversationContext):
