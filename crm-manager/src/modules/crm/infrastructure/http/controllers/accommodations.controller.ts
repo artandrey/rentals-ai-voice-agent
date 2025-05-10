@@ -1,6 +1,6 @@
 import { Body, Controller, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 
-import { SettlementConfirmationDto } from '~modules/crm/application/dto/accommodation.dto';
+import { BookingResultDto, SettlementConfirmationDto } from '~modules/crm/application/dto/accommodation.dto';
 import { BookRentalDto } from '~modules/crm/application/dto/accommodation.dto';
 import { IConfirmSettlementUseCase } from '~modules/crm/application/use-cases/confirm-settlement.use-case';
 import { ICreateBookingUseCase } from '~modules/crm/application/use-cases/create-booking.use-case';
@@ -14,8 +14,8 @@ export class AccommodationsController {
   ) {}
 
   @Post()
-  async createBooking(@Body() body: BookRentalDto): Promise<void> {
-    await this.createBookingUseCase.execute(body);
+  async createBooking(@Body() body: BookRentalDto): Promise<BookingResultDto> {
+    return await this.createBookingUseCase.execute(body);
   }
 
   @Post(':id/confirm-settlement')

@@ -43,6 +43,14 @@ export class BookRentalDto {
   endDate: DateDayDto;
 }
 
+export class BookingResultDto {
+  id: string;
+  clientId: string;
+  rentalId: string;
+  startDate: string;
+  endDate: string;
+}
+
 export class ClientAccommodationDto {
   id: string;
   clientId: string;
