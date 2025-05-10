@@ -7,12 +7,14 @@ from uuid import uuid4
 
 from dotenv import load_dotenv
 from loguru import logger
+from crm_api_client.crm_manager_client.models.book_rental_dto import BookRentalDto
 from crm_api_client.crm_manager_client.api.clients import clients_controller_get_current_accommodation
 from crm_api_client.crm_manager_client.models.create_client_dto import CreateClientDto
 from crm_api_client.crm_manager_client.models.client_dto import ClientDto
 from domain.conversation_context import ConversationContext
 from crm_api_client.crm_manager_client.api.clients import clients_controller_find_client_by_phone, clients_controller_create_client
 from crm_api_client.crm_manager_client.api.rentals import rentals_controller_get_rentals, rentals_controller_get_rental_by_id, rentals_controller_get_rental_available_date_spans
+from crm_api_client.crm_manager_client.api.accommodations import accommodations_controller_confirm_settlement, accommodations_controller_create_booking
 from select_audio_device import AudioDevice, run_device_selector
 
 from pipecat.frames.frames import Frame, TranscriptionFrame
@@ -172,6 +174,41 @@ get_rental_availability_schema = FlowsFunctionSchema(
     handler=get_rental_availability_handler,
 )
 
+
+async def confirm_settlement_handler(args: FlowArgs, flow_manager: FlowManager):
+    accommodation_id = args.get("accommodation_id")
+    await accommodations_controller_confirm_settlement.asyncio(
+        client=crm_client,
+        id=accommodation_id
+    )
+    return {"status": "success", "accommodation_id": accommodation_id}
+
+confirm_settlement_schema = FlowsFunctionSchema(
+    name="confirm_settlement",
+    description="Confirm settlement of the accommodation.",
+    properties={"accommodation_id": {"type": "string", "description": "The ID of the accommodation to confirm settlement for."}},
+)
+
+async def create_booking_handler(args: FlowArgs, flow_manager: FlowManager):
+    rental_id = args.get("rental_id")
+    start_date = args.get("start_date")
+    end_date = args.get("end_date")
+    await accommodations_controller_create_booking.asyncio(
+        client=crm_client,
+        body=BookRentalDto(
+            rental_id=rental_id,
+            start_date=start_date,
+            end_date=end_date,
+            client_id=flow_manager.state['context'].get_client().id
+        )
+    )
+    return {"status": "success", "rental_id": rental_id, "start_date": start_date, "end_date": end_date}
+
+create_booking_schema = FlowsFunctionSchema(
+    name="create_booking",
+    description="Create a booking for the client.",
+    properties={"rental_id": {"type": "string", "description": "The ID of the rental to book."}, "start_date": {"type": "string", "description": "The start date in DD-MM-YYYY format."}, "end_date": {"type": "string", "description": "The end date in DD-MM-YYYY format."}},
+)
 
 async def create_booking_flow():
     rentals_list = await rentals_controller_get_rentals.asyncio(
