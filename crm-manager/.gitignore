@@ -61,5 +61,4 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 !.api-client/.npmrc
 !.api-client/package.json
 
-*.sqlite
 .env
