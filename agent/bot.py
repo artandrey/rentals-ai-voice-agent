@@ -653,14 +653,6 @@ booking_end_quote_schema = FlowsFunctionSchema(
 )
 
 def create_client_initial_flow(context: ConversationContext):
-    client_name = context.get_client().first_name
-    route_client_to_intent_schema = FlowsFunctionSchema(
-        name="route_client_to_intent",
-        description=f"Once the client confirms their name is {client_name} and you have introduced yourself and the services (booking, settlement, info-or-emergency), ask them what they need help with. Then, route the client based on their stated intent. If they are unsure, briefly reiterate the options.",
-        properties={"intent": {"type": "string", "enum": ["booking", "settlement", "info-or-emergency"]}},
-        required=["intent"],
-        handler=route_client_to_intent_handler,
-    )
     flow_config = {
         "role_messages": [
             {
@@ -671,15 +663,31 @@ def create_client_initial_flow(context: ConversationContext):
         "task_messages": [
             {
                 "role": "system",
-                "content": f"""Your goal is to greet the client, {client_name}, by their name, introduce yourself as their personal assistant from AI Rentals, and ask how you can help them today. Reassure them that you remember them.
-                Use a greeting like: "Welcome back to AI Rentals, {client_name}! This is your personal assistant. How can I help you today? I can assist with a new booking, help you with settlement into your accommodation, or provide information and assistance in an emergency."
-                Listen to their response and then call the `route_client_to_intent` function with their stated intent. If they mention needing information, help, or an emergency, use the 'info-or-emergency' intent.
-                The client\'s full name is {context.get_client().first_name} {context.get_client().last_name}.
-                Client has existing booking: {context.get_client_accommodation() is not None}
+                "content": """Start by greeting the user with message calling him by name. Use introduction message:
+                "Welcome to AI Assistant Rentals. I am your personal assistant. I can help you with booking, settlement and emergencies"
+                Account for note and preferences.
+                After you have understood client's intent: do not respond to customer and immediately call route_client_to_intent function with intent as argument.
+                """
+            },
+            {
+                "role": "system",
+                "content": f"""
+                Client name is: {context.get_client().first_name} {context.get_client().last_name}
+                You can call client by name.
+                <note>
+                {context.get_client().note}
+                </note>
+                <preferences>
+                Client preferences are: {context.get_client().preferences}
+                </preferences>
+                <accommodation>
+                Client accommodation is: {context.get_client_accommodation()}
+                In case he has no accommodation, you should ask him to book one.
+                </accommodation>
                 """
             }
         ],
-        "functions": [route_client_to_intent_schema]
+        "functions": [initial_collect_full_name_schema, route_client_to_intent_schema]
     }
     return flow_config
 
