@@ -13,7 +13,6 @@ describe('AudioStorageS3Service (integration)', () => {
   const testContent = 'Hello World';
 
   beforeAll(async () => {
-    // Set AWS config for local testing
     process.env.AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID || 'test';
     process.env.AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY || 'test';
     process.env.S3_ENDPOINT_URL = endpoint;
