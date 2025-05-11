@@ -739,11 +739,13 @@ async def main(input_device: int, output_device: int):
     # Event handler for user audio
     @user_audio_recorder.event_handler("on_audio_data")
     async def on_user_audio_data(processor, audio_data, sample_rate, num_channels):
+        logger.debug(f"User audio data received. Length: {len(audio_data)}, SR: {sample_rate}, Channels: {num_channels}")
         user_audio_buffer.write(audio_data)
 
     # Event handler for assistant audio
     @assistant_audio_recorder.event_handler("on_audio_data")
     async def on_assistant_audio_data(processor, audio_data, sample_rate, num_channels):
+        logger.debug(f"Assistant audio data received. Length: {len(audio_data)}, SR: {sample_rate}, Channels: {num_channels}")
         assistant_audio_buffer.write(audio_data)
     # --- End Audio Recording Setup ---
 
@@ -807,6 +809,9 @@ async def main(input_device: int, output_device: int):
     # --- Save Conversation Data ---
     # Create a unique ID for this conversation session for filenames
     session_id = str(uuid4())
+
+    logger.debug(f"User audio buffer size before save: {user_audio_buffer.tell()}")
+    logger.debug(f"Assistant audio buffer size before save: {assistant_audio_buffer.tell()}")
 
     transcript_filename = f"conversation_transcript_{session_id}.txt"
     try:
