@@ -623,7 +623,7 @@ async def route_client_to_intent_handler(args: FlowArgs, flow_manager: FlowManag
         await flow_manager.set_node("info_or_emergency", info_emergency_flow_config)
     else:
         return {"status": "error", "message": f"Unknown intent: {intent}, please provide one of the following intents: booking, settlement, info-or-emergency"}
-
+    flow_manager.state['context'].set_intent(intent)
     return {"status": "success", "intent": intent}
 
 route_client_to_intent_schema = FlowsFunctionSchema(

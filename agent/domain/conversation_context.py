@@ -9,6 +9,7 @@ from datetime import datetime, date, time
 class ConversationContext:
     phone_number: str
     accommodation: ClientAccommodationDto | None
+    intent: str | None
     def __init__(self, phone_number: str):
         self.phone_number = phone_number
         self.client: ClientDto | None = None
@@ -27,6 +28,12 @@ class ConversationContext:
 
     def set_client_accommodation(self, client_accommodation: ClientAccommodationDto | None):
         self.client_accommodation = client_accommodation
+
+    def get_intent(self) -> str | None:
+        return self.intent
+
+    def set_intent(self, intent: str | None):
+        self.intent = intent
 
     def check_is_allowed_to_settle(self) -> dict:
         """
