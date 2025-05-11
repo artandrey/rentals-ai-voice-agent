@@ -39,7 +39,7 @@ from pipecat.services.openai.llm import OpenAILLMContext
 from pipecat.pipeline.task import PipelineParams
 from pipecat_flows import FlowManager, FlowsFunctionSchema, FlowArgs, NodeConfig
 from crm_api_client.crm_manager_client.models.date_day_dto import DateDayDto
-from domain.events.call_completed_event import CallCompletedEvent
+from domain.events.call_completed_event import CallCompletedEvent, Replica
 from bullmq import Queue
 
 load_dotenv(override=True)
@@ -910,7 +910,10 @@ async def main(input_device: int, output_device: int):
     client = flow_manager.state['context'].get_client()
     accommodation = flow_manager.state['context'].get_client_accommodation()
     filtered_transcript = [
-        {"role": getattr(msg, "role", msg.get("role")), "text": getattr(msg, "content", msg.get("content"))}
+        Replica(
+            getattr(msg, "role", msg.get("role")),
+            getattr(msg, "content", msg.get("content"))
+        )
         for msg in conversation_messages
         if getattr(msg, "role", msg.get("role")) in ("user", "assistant")
     ]
