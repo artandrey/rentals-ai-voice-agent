@@ -1,12 +1,16 @@
 import asyncio
+from datetime import datetime
+import io
 import sys
 import os
 import json
 from typing import Tuple
 from uuid import uuid4
+import wave
 # import io  # Removed
 # import wave  # Removed
 
+import aiofiles
 from dotenv import load_dotenv
 from loguru import logger
 from crm_api_client.crm_manager_client.models.book_rental_dto import BookRentalDto
@@ -24,7 +28,7 @@ from pipecat.pipeline.pipeline import Pipeline
 from pipecat.pipeline.runner import PipelineRunner
 from pipecat.pipeline.task import PipelineTask
 from pipecat.processors.frame_processor import FrameDirection, FrameProcessor
-# from pipecat.processors.audio.audio_buffer_processor import AudioBufferProcessor  # Removed
+from pipecat.processors.audio.audio_buffer_processor import AudioBufferProcessor
 from pipecat.transports.local.audio import LocalAudioTransport, LocalAudioTransportParams
 from pipecat.services.deepgram.stt import DeepgramSTTService
 from pipecat.services.deepgram.stt import LiveOptions
@@ -35,7 +39,24 @@ from pipecat.pipeline.task import PipelineParams
 from pipecat_flows import FlowManager, FlowsFunctionSchema, FlowArgs, NodeConfig
 from crm_api_client.crm_manager_client.models.date_day_dto import DateDayDto
 load_dotenv(override=True)
-
+async def save_audio(audio: bytes, sample_rate: int, num_channels: int, name: str):
+    if len(audio) > 0:
+        filename = os.path.join(
+            "recordings",
+            f"{name}_conversation_recording{datetime.now().strftime('%Y%m%d_%H%M%S')}.wav",
+        )
+        with io.BytesIO() as buffer:
+            with wave.open(buffer, "wb") as wf:
+                wf.setsampwidth(2)
+                wf.setnchannels(num_channels)
+                wf.setframerate(sample_rate)
+                wf.writeframes(audio)
+            async with aiofiles.open(filename, "wb") as file:
+                await file.write(buffer.getvalue())
+        print(f"Merged audio saved to {filename}")
+    else:
+        print("No audio data to save")
+        
 voice_instructions = """
 You are a helpful assistant in a call center. You are talking to a client.
 Organization is called "AI Rentals".
@@ -735,7 +756,7 @@ async def main(input_device: int, output_device: int):
     context_aggregator = llm.create_context_aggregator(llm_context)
     
     tts = CartesiaTTSService(api_key=os.getenv("CARTESIA_API_KEY"), voice_id="5c42302c-194b-4d0c-ba1a-8cb485c84ab9", model="sonic-2")
-
+    audiobuffer = AudioBufferProcessor()
     # --- Audio Recording Setup --- (Removed)
     # user_audio_recorder = AudioBufferProcessor(name="user_audio_recorder")
     # assistant_audio_recorder = AudioBufferProcessor(name="assistant_audio_recorder")
@@ -764,7 +785,7 @@ async def main(input_device: int, output_device: int):
         context_aggregator.user(),
         llm,
         tts,
-        # assistant_audio_recorder, # Removed
+        audiobuffer,
         transport.output(),
         context_aggregator.assistant()
     ])
@@ -782,10 +803,17 @@ async def main(input_device: int, output_device: int):
         tts=tts,
     )
     phone_number="+380991111112"
+    @audiobuffer.event_handler("on_audio_data")
+    async def on_audio_data(buffer, audio, sample_rate, num_channels):
+        print(f"Audio data received. Length: {len(audio)}, SR: {sample_rate}, Channels: {num_channels}")
+        await save_audio(audio, sample_rate, num_channels, "full")
+
+
 
     flow_manager.state['context'] = ConversationContext(
         phone_number=phone_number,
     )
+    await audiobuffer.start_recording()
     client_info = await search_client_by_phone_number(phone_number)
     if client_info is not None:
         flow_manager.state['context'].set_client(client_info)
@@ -808,6 +836,7 @@ async def main(input_device: int, output_device: int):
     await runner.run(task)
     logger.info("Pipeline runner has finished.")
 
+    await audiobuffer.stop_recording()
     # --- Save Conversation Data ---
     # Create a unique ID for this conversation session for filenames
     session_id = str(uuid4())
