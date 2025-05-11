@@ -436,6 +436,145 @@ async def create_settlement_flow(context: ConversationContext) -> dict:
   
     
 
+async def get_emergency_details_handler(args: FlowArgs, flow_manager: FlowManager):
+    try:
+        rental_id = flow_manager.state['context'].get_client_accommodation().rental_id
+        if not rental_id:
+            logger.error("Rental ID not found in context for emergency details.")
+            return {"status": "error", "message": "Could not find your current rental information."}
+        
+        emergency_details_dto = await rentals_controller_get_rental_emergency_details.asyncio(
+            client=crm_client,
+            id=rental_id
+        )
+        if emergency_details_dto and emergency_details_dto.emergency_details:
+            logger.info(f"Fetched emergency details for rental {rental_id}")
+            return {"status": "success", "emergency_details": emergency_details_dto.emergency_details}
+        else:
+            logger.warning(f"No emergency details found for rental {rental_id}")
+            return {"status": "success", "emergency_details": "No specific emergency instructions are available for this rental. I can still help with general information or try to connect you to support if needed."}
+    except AttributeError:
+        logger.error("Client accommodation or rental ID not found in context.")
+        return {"status": "error", "message": "I couldn\'t retrieve your accommodation details. Please ensure you have an active booking."}
+    except Exception as e:
+        logger.error(f"Error fetching emergency details: {e}")
+        return {"status": "error", "message": f"An unexpected error occurred while fetching emergency details: {str(e)}"}
+
+get_emergency_details_schema = FlowsFunctionSchema(
+    name="get_emergency_details",
+    description="Get emergency details and instructions for the client\'s current accommodation.",
+    properties={},
+    required=[],
+    handler=get_emergency_details_handler,
+)
+
+async def create_info_or_emergency_end_node(context: ConversationContext) -> NodeConfig:
+    client_name = context.get_client().first_name if context.get_client() else "there"
+    return {
+        "role_messages": [
+            {"role": "system", "content": voice_instructions}
+        ],
+        "task_messages": [
+            {
+                "role": "system",
+                "content": f"Okay {client_name}, I hope I was able to assist you. If you need anything else, please don\'t hesitate to call again. Goodbye!"
+            }
+        ],
+        "functions": [],
+        "post_actions": [{"type": "end_conversation"}],
+    }
+
+async def info_or_emergency_conclude_call_handler(args: FlowArgs, flow_manager: FlowManager):
+    node_config = await create_info_or_emergency_end_node(flow_manager.state['context'])
+    await flow_manager.set_node("info_or_emergency_end_final", node_config)
+    logger.info("Info/Emergency call concluded.")
+    return {"status": "success"}
+
+info_or_emergency_conclude_call_schema = FlowsFunctionSchema(
+    name="info_or_emergency_conclude_call",
+    description="Conclude the call after providing information or handling an emergency query. Call this when the client confirms they have the information they need or the emergency is addressed to the best of your ability.",
+    properties={},
+    required=[],
+    handler=info_or_emergency_conclude_call_handler,
+)
+
+async def create_info_or_emergency_flow(context: ConversationContext) -> dict:
+    client_name = context.get_client().first_name if context.get_client() else "Guest"
+    
+    stay_check = context.is_currently_staying()
+    if not stay_check["success"]:
+        denial_reason = stay_check["message"]
+        logger.warning(f"Info/Emergency flow denied for {client_name if context.get_client() else 'Unknown Client'}: {denial_reason}")
+        flow_config = {
+            "role_messages": [
+                {"role": "system", "content": voice_instructions}
+            ],
+            "task_messages": [
+                {
+                    "role": "system",
+                    "content": f"Hello {client_name}. I understand you're looking for information or assistance. However, I can only provide specific emergency or informational details for guests who are currently settled and whose stay is ongoing. My records show: '{denial_reason}'. If you believe this is an error, please contact our support line. For now, I won't be able to proceed with this specific request. Is there anything general I can help you with before we disconnect?"
+                    # Alternative: a more direct ending if no general help is offered.
+                    # "content": f"Hello {client_name}. I understand you're looking for information or assistance. However, my records show: '{denial_reason}'. Therefore, I cannot proceed with providing specific emergency or rental information at this time. Please contact our support line if you believe this is incorrect. Goodbye."
+                }
+            ],
+            "functions": [], # No functions needed if we are just informing and ending.
+            "post_actions": [{"type": "end_conversation"}]
+        }
+        return flow_config
+
+    # If stay_check passed, we know accommodation is valid and has a rental_id.
+    accommodation = context.get_client_accommodation()
+
+    flow_config = {
+        "role_messages": [
+            {
+                "role": "system",
+                "content": voice_instructions
+            }
+        ],
+        "task_messages": [
+            {
+                "role": "system",
+                "content": f"""Your primary role is to assist {client_name} with their information request or emergency concerning their accommodation: {accommodation}.
+                You are to embody the persona of a calm, helpful, and efficient assistant.
+
+                Your first action is to call the `get_emergency_details` function. This function will provide you with specific instructions or information related to the rental.
+
+                Once you have received the details from the function:
+
+                1.  **Assess and Relay Information**:
+                    *   Read the `emergency_details` text carefully. This text contains the information or instructions you need to provide.
+                    *   **If the details suggest an URGENT EMERGENCY (e.g., mentions fire, gas leak, immediate danger):**
+                        *   Your responses MUST be as SHORT and CLEAR as possible. Brevity is key.
+                        *   Relay the critical instructions from `emergency_details` immediately and precisely.
+                        *   Example: "Okay, {client_name}, the instructions say: [critical instruction]. Please do that now."
+                        *   If the instructions advise calling emergency services, state that clearly: "The instructions say to call emergency services at [phone number if provided, otherwise 'your local emergency number']. Please do so immediately."
+                        *   After relaying critical emergency steps, if appropriate and you are not advising to call emergency services directly as the primary step, you may then call `info_or_emergency_conclude_call` or await further instruction from the user if they are still on the line and it's safe to continue.
+                    *   **If the details are INFORMATIONAL or describe a NON-IMMEDIATE issue:**
+                        *   Provide the information from `emergency_details` in a helpful and clear manner.
+                        *   You can engage in a more natural conversation, answer follow-up questions, and provide clarification.
+                        *   Example: "I have the information for you. It says: [details from function]. Does that help, or do you have more questions?"
+
+                2.  **Guiding and Assisting**:
+                    *   Listen to {client_name}\'s responses and questions carefully.
+                    *   Provide assistance based on the information you have.
+                    *   If you don\'t have the answer, be honest. You can say something like: "I don\'t have that specific information, but I can [suggest an alternative, e.g., note it down, suggest they contact support through another channel if appropriate after this call]."
+
+                3.  **Concluding the Interaction**:
+                    *   Once {client_name} confirms they have the information they need, or the emergency steps (that you can guide them through) are completed, or if they indicate they will take over (e.g., by calling emergency services as instructed), you MUST call the `info_or_emergency_conclude_call` function.
+                    *   Do not say goodbye yourself; the function call will handle the call conclusion.
+
+                Remember, the initial greeting has already been handled. Your conversation should pick up naturally. Absolutely do not greet the client again.
+                The client\'s full name is {context.get_client().first_name} {context.get_client().last_name}.
+                Current accommodation details: {accommodation}.
+                Speak clearly and calmly, especially if it seems like an emergency. If it is an emergency, prioritize brevity and directness in your speech after obtaining details from the function.
+                """
+            }
+        ],
+        "functions": [get_emergency_details_schema, info_or_emergency_conclude_call_schema],
+    }
+    return flow_config
+
 async def route_client_to_intent_handler(args: FlowArgs, flow_manager: FlowManager):
     intent = args.get("intent")
     logger.info(f"Routing client to intent: {intent}")
@@ -445,6 +584,9 @@ async def route_client_to_intent_handler(args: FlowArgs, flow_manager: FlowManag
         # Pass flow_manager to create_settlement_flow as it needs to set state
         settlement_flow_config = await create_settlement_flow(flow_manager.state['context'])
         await flow_manager.set_node("settlement", settlement_flow_config)
+    elif intent == "info-or-emergency":
+        info_emergency_flow_config = await create_info_or_emergency_flow(flow_manager.state['context'])
+        await flow_manager.set_node("info_or_emergency", info_emergency_flow_config)
     # Add other intents here like "info-or-emergency"
     # else:
     #     # Fallback or error handling if intent is not recognized
@@ -508,6 +650,14 @@ booking_end_quote_schema = FlowsFunctionSchema(
 )
 
 def create_client_initial_flow(context: ConversationContext):
+    client_name = context.get_client().first_name
+    route_client_to_intent_schema = FlowsFunctionSchema(
+        name="route_client_to_intent",
+        description=f"Once the client confirms their name is {client_name} and you have introduced yourself and the services (booking, settlement, info-or-emergency), ask them what they need help with. Then, route the client based on their stated intent. If they are unsure, briefly reiterate the options.",
+        properties={"intent": {"type": "string", "enum": ["booking", "settlement", "info-or-emergency"]}},
+        required=["intent"],
+        handler=route_client_to_intent_handler,
+    )
     flow_config = {
         "role_messages": [
             {
@@ -518,31 +668,15 @@ def create_client_initial_flow(context: ConversationContext):
         "task_messages": [
             {
                 "role": "system",
-                "content": """Start by greeting the user with message calling him by name. Use introduction message:
-                "Welcome to AI Assistant Rentals. I am your personal assistant. I can help you with booking, settlement and emergencies"
-                Account for note and preferences.
-                After you have understood client's intent: do not respond to customer and immediately call route_client_to_intent function with intent as argument.
-                """
-            },
-            {
-                "role": "system",
-                "content": f"""
-                Client name is: {context.get_client().first_name} {context.get_client().last_name}
-                You can call client by name.
-                <note>
-                {context.get_client().note}
-                </note>
-                <preferences>
-                Client preferences are: {context.get_client().preferences}
-                </preferences>
-                <accommodation>
-                Client accommodation is: {context.get_client_accommodation()}
-                In case he has no accommodation, you should ask him to book one.
-                </accommodation>
+                "content": f"""Your goal is to greet the client, {client_name}, by their name, introduce yourself as their personal assistant from AI Rentals, and ask how you can help them today. Reassure them that you remember them.
+                Use a greeting like: "Welcome back to AI Rentals, {client_name}! This is your personal assistant. How can I help you today? I can assist with a new booking, help you with settlement into your accommodation, or provide information and assistance in an emergency."
+                Listen to their response and then call the `route_client_to_intent` function with their stated intent. If they mention needing information, help, or an emergency, use the 'info-or-emergency' intent.
+                The client\'s full name is {context.get_client().first_name} {context.get_client().last_name}.
+                Client has existing booking: {context.get_client_accommodation() is not None}
                 """
             }
         ],
-        "functions": [initial_collect_full_name_schema, route_client_to_intent_schema]
+        "functions": [route_client_to_intent_schema]
     }
     return flow_config
 

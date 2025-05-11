@@ -80,3 +80,50 @@ class ConversationContext:
             }
 
         return {"success": True, "message": "You are eligible to proceed with settlement."}
+
+    def is_currently_staying(self) -> dict:
+        """
+        Checks if the client is currently settled in their accommodation and their stay is ongoing.
+        Returns a dictionary with "success": bool and "message": str.
+        """
+        accommodation = self.get_client_accommodation()
+
+        if not accommodation:
+            return {"success": False, "message": "You do not have an active accommodation record to access information or emergency services for."}
+
+        if not hasattr(accommodation, 'status') or not accommodation.status:
+            return {"success": False, "message": "Your accommodation status is missing. Cannot verify if you are currently staying."}
+
+        # Assuming status 'SETTLED' means the client is checked in.
+        # Adjust "SETTLED".upper() if the status comparison needs to be case-insensitive or match an enum.
+        if accommodation.status.upper() != "SETTLED":
+            return {"success": False, "message": f"Your accommodation status is '{accommodation.status}'. This service is for guests who are currently settled."}
+
+        if not hasattr(accommodation, 'end_date') or not accommodation.end_date:
+            return {"success": False, "message": "Your accommodation end date is missing. Cannot verify if your stay is ongoing."}
+
+        try:
+            end_date_details = accommodation.end_date # This is a DateDayDto
+            if not all(hasattr(end_date_details, attr) for attr in ['year', 'month', 'day']):
+                raise AttributeError("Accommodation end date is incomplete.")
+            
+            # Standard checkout time is 12:00 PM (noon) on the end date.
+            checkout_datetime = datetime(end_date_details.year, end_date_details.month, end_date_details.day, 12, 0, 0)
+        except AttributeError as e:
+            return {"success": False, "message": f"Could not properly read your accommodation end date: {e}"}
+        except ValueError as e: # Handles issues like invalid date components for datetime constructor
+            return {"success": False, "message": f"Your accommodation end date appears to be invalid: {e}"}
+
+        current_datetime = datetime.now()
+
+        if current_datetime >= checkout_datetime:
+            return {
+                "success": False,
+                "message": f"Your stay was scheduled to end on {checkout_datetime.strftime('%d.%m.%Y at %H:%M')}. This service is for guests with an active stay."
+            }
+
+        if not hasattr(accommodation, 'rental_id') or not accommodation.rental_id:
+            # This is important as the info/emergency flow needs rental_id to fetch details.
+            return {"success": False, "message": "Your accommodation details are incomplete (missing rental ID), cannot retrieve specific information."}
+
+        return {"success": True, "message": "You are currently staying and settled."}
