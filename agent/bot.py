@@ -40,10 +40,26 @@ from pipecat.pipeline.task import PipelineParams
 from pipecat_flows import FlowManager, FlowsFunctionSchema, FlowArgs, NodeConfig
 from crm_api_client.crm_manager_client.models.date_day_dto import DateDayDto
 from domain.events.call_completed_event import CallCompletedEvent
+from bullmq import Queue
+
 load_dotenv(override=True)
 S3_BUCKET = os.getenv("S3_BUCKET")
 S3_ENDPOINT_URL = os.getenv("S3_ENDPOINT_URL")
 AWS_REGION = os.getenv("AWS_REGION", "us-east-1")
+
+# Redis connection for BullMQ
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
+REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", None)
+REDIS_USERNAME = os.getenv("REDIS_USERNAME", None)
+REDIS_PROTOCOL = os.getenv("REDIS_PROTOCOL", "redis")
+if REDIS_USERNAME and REDIS_PASSWORD:
+    REDIS_URL = f"{REDIS_PROTOCOL}://{REDIS_USERNAME}:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}"
+elif REDIS_PASSWORD:
+    REDIS_URL = f"{REDIS_PROTOCOL}://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}"
+else:
+    REDIS_URL = f"{REDIS_PROTOCOL}://{REDIS_HOST}:{REDIS_PORT}"
+
 s3_client = boto3.client(
     "s3",
     aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
@@ -907,6 +923,11 @@ async def main(input_device: int, output_device: int):
         audio_file_id
     )
     print("CallCompletedEvent:", event.to_dict())
+
+    # Publish event to BullMQ queue
+    call_completed_queue = Queue("call-completed", {"connection": REDIS_URL})
+    await call_completed_queue.add("call-completed", event.to_dict())
+    await call_completed_queue.close()
 
 
 if __name__ == "__main__":
