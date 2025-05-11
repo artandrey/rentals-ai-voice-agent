@@ -802,6 +802,20 @@ async def main(input_device: int, output_device: int):
     @audiobuffer.event_handler("on_audio_data")
     async def on_audio_data(buffer, audio, sample_rate, num_channels):
         print(f"Audio data received. Length: {len(audio)}, SR: {sample_rate}, Channels: {num_channels}")
+        conversation_messages = []
+        if hasattr(llm_context, 'messages') and isinstance(llm_context.messages, list):
+            conversation_messages = llm_context.messages
+        intent = flow_manager.state['context'].get_intent()
+        client = flow_manager.state['context'].get_client()
+        accommodation = flow_manager.state['context'].get_client_accommodation()
+        filtered_transcript = [
+            Replica(
+                getattr(msg, "role", msg.get("role")),
+                getattr(msg, "content", msg.get("content"))
+            )
+            for msg in conversation_messages
+            if getattr(msg, "role", msg.get("role")) in ("user", "assistant")
+        ]
         file_id = await save_audio(audio, sample_rate, num_channels, "full")
         event = CallCompletedEvent(
             intent,
@@ -850,40 +864,14 @@ async def main(input_device: int, output_device: int):
     session_id = str(uuid4())
 
 
-    transcript_filename = f"conversation_transcript_{session_id}.txt"
-    try:
-        conversation_messages = []
-        if hasattr(llm_context, 'messages') and isinstance(llm_context.messages, list):
-            conversation_messages = llm_context.messages
-        elif hasattr(llm_context, 'get_messages') and callable(llm_context.get_messages):
-            conversation_messages = await llm_context.get_messages() # Assuming get_messages might be async
+
+    
+
         
-        with open(transcript_filename, "w", encoding="utf-8") as f:
-            if not conversation_messages:
-                f.write("No messages found in LLM context.\\n")
-                logger.warning("No messages found in LLM context to save.")
-            for msg in conversation_messages:
-                role = getattr(msg, 'role', msg.get('role', 'unknown'))
-                content = getattr(msg, 'content', msg.get('content', ''))
-                f.write(f"{role}: {content}\\n") # Escape newline for the string literal
-            logger.info(f"Saved transcript to {transcript_filename}")
-    except Exception as e:
-        logger.error(f"Error saving transcript: {e}")
+  
 
 
-    logger.info("Conversation transcript saving complete.")
-    # Create and print CallCompletedEvent
-    intent = flow_manager.state['context'].get_intent()
-    client = flow_manager.state['context'].get_client()
-    accommodation = flow_manager.state['context'].get_client_accommodation()
-    filtered_transcript = [
-        Replica(
-            getattr(msg, "role", msg.get("role")),
-            getattr(msg, "content", msg.get("content"))
-        )
-        for msg in conversation_messages
-        if getattr(msg, "role", msg.get("role")) in ("user", "assistant")
-    ]
+    
     
     
 
