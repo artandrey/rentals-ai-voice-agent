@@ -39,6 +39,7 @@ from pipecat.services.openai.llm import OpenAILLMContext
 from pipecat.pipeline.task import PipelineParams
 from pipecat_flows import FlowManager, FlowsFunctionSchema, FlowArgs, NodeConfig
 from crm_api_client.crm_manager_client.models.date_day_dto import DateDayDto
+from domain.events.call_completed_event import CallCompletedEvent
 load_dotenv(override=True)
 S3_BUCKET = os.getenv("S3_BUCKET")
 S3_ENDPOINT_URL = os.getenv("S3_ENDPOINT_URL")
@@ -64,8 +65,10 @@ async def save_audio(audio: bytes, sample_rate: int, num_channels: int, name: st
             loop = asyncio.get_running_loop()
             await loop.run_in_executor(None, s3_client.upload_fileobj, buffer, S3_BUCKET, object_key)
         print(f"Merged audio saved to s3://{S3_BUCKET}/{object_key}")
+        return object_key
     else:
         print("No audio data to save")
+        return None
         
 voice_instructions = """
 You are a helpful assistant in a call center. You are talking to a client.
@@ -812,7 +815,9 @@ async def main(input_device: int, output_device: int):
     @audiobuffer.event_handler("on_audio_data")
     async def on_audio_data(buffer, audio, sample_rate, num_channels):
         print(f"Audio data received. Length: {len(audio)}, SR: {sample_rate}, Channels: {num_channels}")
-        await save_audio(audio, sample_rate, num_channels, "full")
+        file_id = await save_audio(audio, sample_rate, num_channels, "full")
+        # Store the latest audio file ID in state
+        flow_manager.state['audio_file_id'] = file_id
 
 
 
@@ -884,6 +889,24 @@ async def main(input_device: int, output_device: int):
     # --- End Save Conversation Data ---
 
     logger.info("Conversation transcript saving complete.")
+    # Create and print CallCompletedEvent
+    intent = flow_manager.state['context'].get_intent()
+    client = flow_manager.state['context'].get_client()
+    accommodation = flow_manager.state['context'].get_client_accommodation()
+    filtered_transcript = [
+        {"role": getattr(msg, "role", msg.get("role")), "text": getattr(msg, "content", msg.get("content"))}
+        for msg in conversation_messages
+        if getattr(msg, "role", msg.get("role")) in ("user", "assistant")
+    ]
+    audio_file_id = flow_manager.state.get('audio_file_id')
+    event = CallCompletedEvent(
+        intent,
+        client.id if client else None,
+        accommodation.id if accommodation else None,
+        filtered_transcript,
+        audio_file_id
+    )
+    print("CallCompletedEvent:", event.to_dict())
 
 
 if __name__ == "__main__":
