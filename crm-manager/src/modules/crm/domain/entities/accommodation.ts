@@ -41,16 +41,22 @@ export class Accommodation extends Entity<AccommodationId> {
   private _rentalId: RentalId;
   private _endDate: DayDate;
   private _startDate: DayDate;
-  private _status: AccommodationStatus = AccommodationStatus.PENDING_BOOKING_CONFIRMATION;
+  private _status: AccommodationStatus;
   private _state: IAccommodationState;
 
-  constructor(clientId: ClientId, rentalId: RentalId, startDate: DayDate, endDate: DayDate) {
+  constructor(
+    clientId: ClientId,
+    rentalId: RentalId,
+    startDate: DayDate,
+    endDate: DayDate,
+    status: AccommodationStatus,
+  ) {
     super();
     this._clientId = clientId;
     this._rentalId = rentalId;
     this._startDate = startDate;
     this._endDate = endDate;
-
+    this._status = status;
     this._stateMap = {
       [AccommodationStatus.PENDING_BOOKING_CONFIRMATION]: new Accommodation.PendingBookingConfirmationState(this),
       [AccommodationStatus.BOOKING_CONFIRMED]: new Accommodation.BookingConfirmedState(this),

@@ -28,8 +28,8 @@ export class TwentyCrmAccommodationsMapper implements IDataAccessMapper<Accommod
       persistence.rentalId as RentalId,
       DayDate.fromISODateString(persistence.startdate!),
       DayDate.fromISODateString(persistence.enddate!),
+      persistence.status as AccommodationStatus,
     )
-      .status(persistence.status as AccommodationStatus)
       .id(persistence.id as AccommodationId)
       .build();
   }
