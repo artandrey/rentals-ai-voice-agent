@@ -24,6 +24,7 @@
   "dependencies": {
     "@nestjs-event-driven/core": "^0.2.0",
     "@nestjs/axios": "^4.0.0",
+    "@nestjs/bullmq": "^1.1.0",
     "@nestjs/common": "^11.0.13",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.13",
@@ -33,6 +34,7 @@
     "axios": "^1.8.4",
     "better-sqlite3": "^11.9.1",
     "builder-pattern": "^2.2.0",
+    "bullmq": "^4.18.2",
     "class-constructor": "^0.2.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
