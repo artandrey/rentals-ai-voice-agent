@@ -828,12 +828,24 @@ async def main(input_device: int, output_device: int):
         tts=tts,
     )
     phone_number="+380991111112"
+    
     @audiobuffer.event_handler("on_audio_data")
     async def on_audio_data(buffer, audio, sample_rate, num_channels):
         print(f"Audio data received. Length: {len(audio)}, SR: {sample_rate}, Channels: {num_channels}")
         file_id = await save_audio(audio, sample_rate, num_channels, "full")
-        # Store the latest audio file ID in state
-        flow_manager.state['audio_file_id'] = file_id
+        event = CallCompletedEvent(
+            intent,
+            client.id if client else None,
+            accommodation.id if accommodation else None,
+            filtered_transcript,
+            file_id
+        )
+        print("CallCompletedEvent:", event.to_plain())
+
+        call_completed_queue = Queue("call-completed", {"connection": REDIS_URL})
+        await call_completed_queue.add("call-completed", event.to_plain())
+        await call_completed_queue.close()
+
 
 
 
@@ -917,20 +929,8 @@ async def main(input_device: int, output_device: int):
         for msg in conversation_messages
         if getattr(msg, "role", msg.get("role")) in ("user", "assistant")
     ]
-    audio_file_id = flow_manager.state.get('audio_file_id')
-    event = CallCompletedEvent(
-        intent,
-        client.id if client else None,
-        accommodation.id if accommodation else None,
-        filtered_transcript,
-        audio_file_id
-    )
-    print("CallCompletedEvent:", event.to_dict())
-
-    # Publish event to BullMQ queue
-    call_completed_queue = Queue("call-completed", {"connection": REDIS_URL})
-    await call_completed_queue.add("call-completed", event.to_dict())
-    await call_completed_queue.close()
+    
+    
 
 
 if __name__ == "__main__":
