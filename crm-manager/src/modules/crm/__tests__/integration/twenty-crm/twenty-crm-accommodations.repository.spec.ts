@@ -1,7 +1,7 @@
 import { client } from 'twenty-crm-api-client/client/client.gen';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { Accommodation, AccommodationId } from '../../../domain/entities/accommodation';
+import { Accommodation, AccommodationId, AccommodationStatus } from '../../../domain/entities/accommodation';
 import { Client, ClientId, ClientPreferredLanguage } from '../../../domain/entities/client';
 import { Rental, RentalId } from '../../../domain/entities/rental';
 import { DayDate } from '../../../domain/value-objects/day-date.value';
@@ -67,7 +67,13 @@ describe('TwentyCrmAccommodationsRepository (integration)', () => {
 
     const startDate = new DayDate(2025, 2, 20);
     const endDate = new DayDate(2025, 2, 21);
-    const accommodationEntity = Accommodation.builder(clientId, rentalId, startDate, endDate).build();
+    const accommodationEntity = Accommodation.builder(
+      clientId,
+      rentalId,
+      startDate,
+      endDate,
+      AccommodationStatus.PENDING_BOOKING_CONFIRMATION,
+    ).build();
     const id = await repository.save(accommodationEntity);
     expect(id).toBeDefined();
     cleanupAccommodationId = id;
@@ -90,7 +96,13 @@ describe('TwentyCrmAccommodationsRepository (integration)', () => {
 
     const startDate = new DayDate(2025, 2, 20);
     const endDate = new DayDate(2025, 2, 21);
-    const accommodationEntity = Accommodation.builder(clientId, rentalId, startDate, endDate).build();
+    const accommodationEntity = Accommodation.builder(
+      clientId,
+      rentalId,
+      startDate,
+      endDate,
+      AccommodationStatus.PENDING_BOOKING_CONFIRMATION,
+    ).build();
     const id = await repository.save(accommodationEntity);
     cleanupAccommodationId = id;
 
@@ -120,7 +132,13 @@ describe('TwentyCrmAccommodationsRepository (integration)', () => {
 
     const startDate = new DayDate(2025, 2, 20);
     const endDate = new DayDate(2025, 2, 21);
-    const accommodationEntity = Accommodation.builder(clientId, rentalId, startDate, endDate).build();
+    const accommodationEntity = Accommodation.builder(
+      clientId,
+      rentalId,
+      startDate,
+      endDate,
+      AccommodationStatus.PENDING_BOOKING_CONFIRMATION,
+    ).build();
     const id = await repository.save(accommodationEntity);
     cleanupAccommodationId = id;
 
@@ -164,7 +182,13 @@ describe('TwentyCrmAccommodationsRepository (integration)', () => {
 
     const startDate = new DayDate(2025, 2, 20);
     const endDate = new DayDate(2025, 2, 21);
-    const accommodationEntity = Accommodation.builder(clientId, rentalId, startDate, endDate).build();
+    const accommodationEntity = Accommodation.builder(
+      clientId,
+      rentalId,
+      startDate,
+      endDate,
+      AccommodationStatus.PENDING_BOOKING_CONFIRMATION,
+    ).build();
     const id = await repository.save(accommodationEntity);
 
     await repository.delete(id);
@@ -208,14 +232,26 @@ describe('TwentyCrmAccommodationsRepository (integration)', () => {
 
     const startDate = new DayDate(2025, 2, 20);
     const endDate = new DayDate(2025, 2, 21);
-    const accommodationEntity = Accommodation.builder(clientId, rentalId, startDate, endDate).build();
+    const accommodationEntity = Accommodation.builder(
+      clientId,
+      rentalId,
+      startDate,
+      endDate,
+      AccommodationStatus.PENDING_BOOKING_CONFIRMATION,
+    ).build();
 
     // Mock the API client to throw an error during update
     const originalUpdateMethod = repository['accommodationsService'].updateOneAccommodation;
     repository['accommodationsService'].updateOneAccommodation = vi.fn().mockRejectedValue(new Error('Update failed'));
 
     // Create an accommodation with an invalid ID for update
-    const invalidEntity = Accommodation.builder(clientId, rentalId, startDate, endDate).build();
+    const invalidEntity = Accommodation.builder(
+      clientId,
+      rentalId,
+      startDate,
+      endDate,
+      AccommodationStatus.PENDING_BOOKING_CONFIRMATION,
+    ).build();
     (invalidEntity as any).id = 'invalid-id';
 
     // Expect the save operation to throw an error
@@ -243,12 +279,24 @@ describe('TwentyCrmAccommodationsRepository (integration)', () => {
     // Create two accommodations with different start dates
     const startDate1 = new DayDate(2025, 2, 20);
     const endDate1 = new DayDate(2025, 2, 21);
-    const accommodationEntity1 = Accommodation.builder(clientId, rentalId, startDate1, endDate1).build();
+    const accommodationEntity1 = Accommodation.builder(
+      clientId,
+      rentalId,
+      startDate1,
+      endDate1,
+      AccommodationStatus.PENDING_BOOKING_CONFIRMATION,
+    ).build();
     await repository.save(accommodationEntity1);
 
     const startDate2 = new DayDate(2025, 2, 22);
     const endDate2 = new DayDate(2025, 2, 23);
-    const accommodationEntity2 = Accommodation.builder(clientId, rentalId, startDate2, endDate2).build();
+    const accommodationEntity2 = Accommodation.builder(
+      clientId,
+      rentalId,
+      startDate2,
+      endDate2,
+      AccommodationStatus.PENDING_BOOKING_CONFIRMATION,
+    ).build();
     const id2 = await repository.save(accommodationEntity2);
     cleanupAccommodationId = id2;
 
