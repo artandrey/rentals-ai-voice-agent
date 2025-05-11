@@ -1,7 +1,7 @@
 import { CreateBucketCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { AudioStorageS3Service } from '../../infrastructure/s3/audio-storage-s3.service';
+import { AudioStorageS3Service } from '../../infrastructure/persistence/s3/audio-storage-s3.service';
 
 describe('AudioStorageS3Service (integration)', () => {
   const bucket = process.env.S3_BUCKET || 'audio';
