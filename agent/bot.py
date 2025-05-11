@@ -191,33 +191,6 @@ get_rental_availability_schema = FlowsFunctionSchema(
     handler=get_rental_availability_handler,
 )
 
-
-async def confirm_settlement_handler(args: FlowArgs, flow_manager: FlowManager):
-    accommodation_id = args.get("accommodation_id")
-    response = await accommodations_controller_confirm_settlement.asyncio_detailed(
-        client=crm_client,
-        id=accommodation_id
-    )
-    print(response)
-    if response.status_code < 200 or response.status_code >= 300:
-        message = response.content.decode("utf-8") if isinstance(response.content, bytes) else str(response.content)
-        try:
-            import json
-            error_json = json.loads(message)
-            message = error_json.get("message", message)
-        except Exception:
-            pass
-        return {"status": "error", "message": message}
-    return {"status": "success", "accommodation_id": accommodation_id}
-
-confirm_settlement_schema = FlowsFunctionSchema(
-    name="confirm_settlement",
-    description="Confirm settlement of the accommodation.",
-    properties={"accommodation_id": {"type": "string", "description": "The ID of the accommodation to confirm settlement for."}},
-    handler=confirm_settlement_handler,
-    required=[]
-)
-
 async def create_booking_handler(args: FlowArgs, flow_manager: FlowManager):
     rental_id = args.get("rental_id")
     start_date_str = args.get("start_date")
@@ -329,7 +302,6 @@ async def create_booking_flow():
 async def create_settlement_success_end_node(context: ConversationContext) -> NodeConfig:
     """Creates a node to confirm successful settlement and end the call."""
     # Potentially fetch updated accommodation details if necessary
-    client_name = context.get_client().first_name if context.get_client() else "valued customer"
     return {
         "role_messages": [
             {
@@ -340,7 +312,7 @@ async def create_settlement_success_end_node(context: ConversationContext) -> No
         "task_messages": [
             {
                 "role": "system",
-                "content": f"Great news, {client_name}! Your settlement has been successfully confirmed. We hope you have a wonderful stay at AI Rentals. If you need anything else, feel free to reach out. Goodbye!"
+                "content": f"Great news, {context.get_client().first_name}! Your settlement has been successfully confirmed. We hope you have a wonderful stay at AI Rentals. If you need anything else, feel free to reach out. Goodbye!"
             }
         ],
         "functions": [],
@@ -364,6 +336,10 @@ get_settlement_details_schema = FlowsFunctionSchema(
 )
 async def settlement_success_conclude_call_handler(args: FlowArgs, flow_manager: FlowManager):
     node_config = await create_settlement_success_end_node(flow_manager.state['context'])
+    await accommodations_controller_confirm_settlement.asyncio_detailed(
+        client=crm_client,
+        id=flow_manager.state['context'].get_client_accommodation().id
+    )
     await flow_manager.set_node("settlement_success_final", node_config)
     return {"status": "success"}
 
