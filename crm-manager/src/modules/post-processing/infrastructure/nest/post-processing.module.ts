@@ -2,6 +2,9 @@ import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
+import { IAppConfigService } from '~shared/application/services/app-config-service.interface';
+import { BaseToken } from '~shared/constants';
+
 import { CallCompletedHandler } from '../../application/handlers/call-completed.handler';
 import { CallCompletedProcessor } from '../bull/call-completed.processor';
 
@@ -10,13 +13,13 @@ import { CallCompletedProcessor } from '../bull/call-completed.processor';
     ConfigModule,
     BullModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
+      useFactory: (configService: IAppConfigService) => ({
         connection: {
-          host: configService.get<string>('REDIS_HOST'),
-          port: Number(configService.get<string>('REDIS_PORT')),
+          host: configService.get('REDIS_HOST'),
+          port: configService.get('REDIS_PORT'),
         },
       }),
-      inject: [ConfigService],
+      inject: [BaseToken.APP_CONFIG],
     }),
     BullModule.registerQueue({ name: 'call-completed' }),
   ],
