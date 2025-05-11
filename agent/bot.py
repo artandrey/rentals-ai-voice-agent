@@ -4,8 +4,8 @@ import os
 import json
 from typing import Tuple
 from uuid import uuid4
-import io  # Added
-import wave  # Added
+# import io  # Removed
+# import wave  # Removed
 
 from dotenv import load_dotenv
 from loguru import logger
@@ -24,7 +24,7 @@ from pipecat.pipeline.pipeline import Pipeline
 from pipecat.pipeline.runner import PipelineRunner
 from pipecat.pipeline.task import PipelineTask
 from pipecat.processors.frame_processor import FrameDirection, FrameProcessor
-from pipecat.processors.audio.audio_buffer_processor import AudioBufferProcessor  # Added
+# from pipecat.processors.audio.audio_buffer_processor import AudioBufferProcessor  # Removed
 from pipecat.transports.local.audio import LocalAudioTransport, LocalAudioTransportParams
 from pipecat.services.deepgram.stt import DeepgramSTTService
 from pipecat.services.deepgram.stt import LiveOptions
@@ -696,14 +696,14 @@ class TranscriptionLogger(FrameProcessor):
             print(f"Transcription: {frame.text}")
 
 
-def save_wav(filename: str, audio_bytes: io.BytesIO, sample_rate: int, channels: int, sample_width: int = 2):
-    """Saves audio data from BytesIO to a WAV file."""
-    with wave.open(filename, 'wb') as wf:
-        wf.setnchannels(channels)
-        wf.setsampwidth(sample_width)  # Bytes per sample (e.g., 2 for 16-bit audio)
-        wf.setframerate(sample_rate)
-        wf.writeframes(audio_bytes.getvalue())
-    logger.info(f"Saved audio to {filename}")
+# def save_wav(filename: str, audio_bytes: io.BytesIO, sample_rate: int, channels: int, sample_width: int = 2):
+#     """Saves audio data from BytesIO to a WAV file."""
+#     with wave.open(filename, 'wb') as wf:
+#         wf.setnchannels(channels)
+#         wf.setsampwidth(sample_width)  # Bytes per sample (e.g., 2 for 16-bit audio)
+#         wf.setframerate(sample_rate)
+#         wf.writeframes(audio_bytes.getvalue())
+#     logger.info(f"Saved audio to {filename}")
 
 
 async def main(input_device: int, output_device: int):
@@ -721,7 +721,6 @@ async def main(input_device: int, output_device: int):
 
     llm = OpenAILLMService(api_key=os.getenv("OPENAI_API_KEY"))
  
-
     # This 'llm_context' is the OpenAILLMContext
     # It will store the conversation history.
     llm_context = OpenAILLMContext() # Renamed from 'context' for clarity
@@ -729,35 +728,35 @@ async def main(input_device: int, output_device: int):
     
     tts = CartesiaTTSService(api_key=os.getenv("CARTESIA_API_KEY"), voice_id="5c42302c-194b-4d0c-ba1a-8cb485c84ab9", model="sonic-2")
 
-    # --- Audio Recording Setup ---
-    user_audio_recorder = AudioBufferProcessor(name="user_audio_recorder")
-    assistant_audio_recorder = AudioBufferProcessor(name="assistant_audio_recorder")
+    # --- Audio Recording Setup --- (Removed)
+    # user_audio_recorder = AudioBufferProcessor(name="user_audio_recorder")
+    # assistant_audio_recorder = AudioBufferProcessor(name="assistant_audio_recorder")
 
-    user_audio_buffer = io.BytesIO()
-    assistant_audio_buffer = io.BytesIO()
+    # user_audio_buffer = io.BytesIO()
+    # assistant_audio_buffer = io.BytesIO()
 
-    # Event handler for user audio
-    @user_audio_recorder.event_handler("on_audio_data")
-    async def on_user_audio_data(processor, audio_data, sample_rate, num_channels):
-        logger.debug(f"User audio data received. Length: {len(audio_data)}, SR: {sample_rate}, Channels: {num_channels}")
-        user_audio_buffer.write(audio_data)
+    # # Event handler for user audio
+    # @user_audio_recorder.event_handler("on_audio_data")
+    # async def on_user_audio_data(processor, audio_data, sample_rate, num_channels):
+    #     logger.debug(f"User audio data received. Length: {len(audio_data)}, SR: {sample_rate}, Channels: {num_channels}")
+    #     user_audio_buffer.write(audio_data)
 
-    # Event handler for assistant audio
-    @assistant_audio_recorder.event_handler("on_audio_data")
-    async def on_assistant_audio_data(processor, audio_data, sample_rate, num_channels):
-        logger.debug(f"Assistant audio data received. Length: {len(audio_data)}, SR: {sample_rate}, Channels: {num_channels}")
-        assistant_audio_buffer.write(audio_data)
+    # # Event handler for assistant audio
+    # @assistant_audio_recorder.event_handler("on_audio_data")
+    # async def on_assistant_audio_data(processor, audio_data, sample_rate, num_channels):
+    #     logger.debug(f"Assistant audio data received. Length: {len(audio_data)}, SR: {sample_rate}, Channels: {num_channels}")
+    #     assistant_audio_buffer.write(audio_data)
     # --- End Audio Recording Setup ---
 
     pipeline = Pipeline([
         transport.input(),
-        user_audio_recorder,      # Record user's input audio
+        # user_audio_recorder,      # Removed
         stt,
         # tl, # Not using TranscriptionLogger for final transcript
         context_aggregator.user(),
         llm,
         tts,
-        assistant_audio_recorder, # Record assistant's synthesized audio
+        # assistant_audio_recorder, # Removed
         transport.output(),
         context_aggregator.assistant()
     ])
@@ -788,12 +787,7 @@ async def main(input_device: int, output_device: int):
         )
         flow_manager.state['context'].set_client_accommodation(client_accommodation)
     
-        
-
     await flow_manager.initialize()
-
-   
-  
 
     if flow_manager.state['context'].get_client() is None:
         await flow_manager.set_node("initial", create_unknown_client_initial_flow())
@@ -810,8 +804,8 @@ async def main(input_device: int, output_device: int):
     # Create a unique ID for this conversation session for filenames
     session_id = str(uuid4())
 
-    logger.debug(f"User audio buffer size before save: {user_audio_buffer.tell()}")
-    logger.debug(f"Assistant audio buffer size before save: {assistant_audio_buffer.tell()}")
+    # logger.debug(f"User audio buffer size before save: {user_audio_buffer.tell()}")
+    # logger.debug(f"Assistant audio buffer size before save: {assistant_audio_buffer.tell()}")
 
     transcript_filename = f"conversation_transcript_{session_id}.txt"
     try:
@@ -833,20 +827,20 @@ async def main(input_device: int, output_device: int):
     except Exception as e:
         logger.error(f"Error saving transcript: {e}")
 
-    # Save User Audio
-    user_audio_filename = f"user_audio_{session_id}.wav"
-    save_wav(user_audio_filename, user_audio_buffer, 
-             sample_rate=task.params.audio_in_sample_rate, 
-             channels=1)
+    # Save User Audio (Removed)
+    # user_audio_filename = f"user_audio_{session_id}.wav"
+    # save_wav(user_audio_filename, user_audio_buffer, 
+    #          sample_rate=task.params.audio_in_sample_rate, 
+    #          channels=1)
 
-    # Save Assistant Audio
-    assistant_audio_filename = f"assistant_audio_{session_id}.wav"
-    save_wav(assistant_audio_filename, assistant_audio_buffer, 
-             sample_rate=task.params.audio_out_sample_rate, 
-             channels=1)
+    # # Save Assistant Audio (Removed)
+    # assistant_audio_filename = f"assistant_audio_{session_id}.wav"
+    # save_wav(assistant_audio_filename, assistant_audio_buffer, 
+    #          sample_rate=task.params.audio_out_sample_rate, 
+    #          channels=1)
     # --- End Save Conversation Data ---
 
-    logger.info("Conversation data saving complete.")
+    logger.info("Conversation transcript saving complete.")
 
 
 if __name__ == "__main__":
