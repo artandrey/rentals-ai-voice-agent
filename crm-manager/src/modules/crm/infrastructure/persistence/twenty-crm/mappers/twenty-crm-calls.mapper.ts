@@ -39,9 +39,11 @@ export class TwentyCrmCallsMapper implements IDataAccessMapper<Call, CallForResp
       callType: entity.type ?? undefined,
       clientId: entity.clientId ?? undefined,
       asociateedRentalId: entity.associatedRentalId ?? undefined,
-      startedAt: entity.startedAt?.toISOString(),
-      completedAt: entity.completedAt?.toISOString(),
       transcript: transcriptToObject(entity.transcript),
+      audioMetadata: {
+        audioFileId: entity.audioFileId,
+      },
+      summary: entity.summary || undefined,
     };
   }
 
@@ -67,14 +69,6 @@ export class TwentyCrmCallsMapper implements IDataAccessMapper<Call, CallForResp
 
     if (persistence.asociateedRentalId) {
       builder.associatedRentalId(persistence.asociateedRentalId as RentalId);
-    }
-
-    if (persistence.startedAt) {
-      builder.startedAt(new Date(persistence.startedAt));
-    }
-
-    if (persistence.completedAt) {
-      builder.completedAt(new Date(persistence.completedAt));
     }
 
     if (persistence.transcript) {

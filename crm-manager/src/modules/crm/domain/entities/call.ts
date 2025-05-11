@@ -11,7 +11,6 @@ export type CallId = Nominal<string, 'CallId'>;
 
 export enum CallType {
   SETTLEMENT = 'SETTLEMENT',
-  EMERGENCY = 'EMERGENCY',
   BOOKING = 'BOOKING',
   INFORMATIVE = 'INFORMATIVE',
 }
@@ -22,10 +21,8 @@ export class Call extends Entity<CallId> {
   private _type: CallType | null = null;
   private _clientId: ClientId | null = null;
   private _associatedRentalId: RentalId | null = null;
-  private _callDashboardUrl: string | null = null;
-  private _startedAt: Date | null = new Date();
-  private _completedAt: Date | null = null;
-
+  private _audioFileId: string | null = null;
+  private _summary: string | null = null;
   constructor(callerPhoneNumber: PhoneNumber) {
     super();
     this._callerPhoneNumber = callerPhoneNumber;
@@ -51,20 +48,12 @@ export class Call extends Entity<CallId> {
     return this._associatedRentalId;
   }
 
-  get callDashboardUrl(): string | null {
-    return this._callDashboardUrl;
+  get audioFileId(): string | null {
+    return this._audioFileId;
   }
 
-  get startedAt(): Date | null {
-    return this._startedAt;
-  }
-
-  get completedAt(): Date | null {
-    return this._completedAt;
-  }
-
-  complete() {
-    this._completedAt = new Date();
+  get summary(): string | null {
+    return this._summary;
   }
 
   public static builder = toBuilderMethod(Call).classAsOptionals();

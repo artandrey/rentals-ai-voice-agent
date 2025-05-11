@@ -7842,10 +7842,6 @@
           "transcript": {
             "type": "object"
           },
-          "callType": {
-            "type": "string",
-            "enum": ["SETTLEMENT", "EMERGENCY", "BOOKING", "INFORMATIVE"]
-          },
           "clientId": {
             "type": "string",
             "format": "uuid"
@@ -7854,9 +7850,19 @@
             "type": "string",
             "format": "uuid"
           },
+          "callType": {
+            "type": "string",
+            "enum": ["SETTLEMENT", "BOOKING", "INFORMATIVE"]
+          },
           "completedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "audioMetadata": {
+            "type": "object"
+          },
+          "summary": {
+            "type": "string"
           }
         }
       },
@@ -7918,10 +7924,6 @@
           "transcript": {
             "type": "object"
           },
-          "callType": {
-            "type": "string",
-            "enum": ["SETTLEMENT", "EMERGENCY", "BOOKING", "INFORMATIVE"]
-          },
           "clientId": {
             "type": "string",
             "format": "uuid"
@@ -7930,9 +7932,19 @@
             "type": "string",
             "format": "uuid"
           },
+          "callType": {
+            "type": "string",
+            "enum": ["SETTLEMENT", "BOOKING", "INFORMATIVE"]
+          },
           "completedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "audioMetadata": {
+            "type": "object"
+          },
+          "summary": {
+            "type": "string"
           }
         }
       },
@@ -8021,10 +8033,6 @@
           "transcript": {
             "type": "object"
           },
-          "callType": {
-            "type": "string",
-            "enum": ["SETTLEMENT", "EMERGENCY", "BOOKING", "INFORMATIVE"]
-          },
           "clientId": {
             "type": "string",
             "format": "uuid"
@@ -8033,9 +8041,19 @@
             "type": "string",
             "format": "uuid"
           },
+          "callType": {
+            "type": "string",
+            "enum": ["SETTLEMENT", "BOOKING", "INFORMATIVE"]
+          },
           "completedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "audioMetadata": {
+            "type": "object"
+          },
+          "summary": {
+            "type": "string"
           },
           "timelineActivities": {
             "type": "array",
@@ -8310,12 +8328,6 @@
               "$ref": "#/components/schemas/TaskTarget for Response"
             },
             "description": "TaskTargets tied to the Accommodation"
-          },
-          "accommodations": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Accommodation for Response"
-            }
           }
         }
       },
@@ -8647,6 +8659,12 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Call for Response"
+            }
+          },
+          "accommodations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Accommodation for Response"
             }
           }
         }

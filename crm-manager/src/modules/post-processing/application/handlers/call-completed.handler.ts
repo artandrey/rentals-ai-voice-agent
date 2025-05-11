@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
+import { CallCompletedEvent } from '~modules/post-processing/domain/events/call-completed.event';
+
 @Injectable()
 export class CallCompletedHandler {
   async handle(event: any): Promise<void> {
