@@ -621,12 +621,8 @@ async def route_client_to_intent_handler(args: FlowArgs, flow_manager: FlowManag
     elif intent == "info-or-emergency":
         info_emergency_flow_config = await create_info_or_emergency_flow(flow_manager.state['context'])
         await flow_manager.set_node("info_or_emergency", info_emergency_flow_config)
-    # Add other intents here like "info-or-emergency"
-    # else:
-    #     # Fallback or error handling if intent is not recognized
-    #     # For now, just return success without routing if intent is unknown
-    #     logger.warning(f"Unknown intent: {intent}. No specific flow to route to.")
-    #     return {"status": "success", "intent": intent, "message": "Intent not fully handled."}
+    else:
+        return {"status": "error", "message": f"Unknown intent: {intent}, please provide one of the following intents: booking, settlement, info-or-emergency"}
 
     return {"status": "success", "intent": intent}
 
