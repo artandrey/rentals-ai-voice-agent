@@ -1,5 +1,6 @@
 import os
 
+from crm_api_client.crm_manager_client.api.accommodations import accommodations_controller_confirm_settlement
 from crm_api_client.crm_manager_client.models.book_rental_dto import BookRentalDto
 from crm_api_client.crm_manager_client.api.accommodations import accommodations_controller_create_booking
 from crm_api_client.crm_manager_client.api.rentals import rentals_controller_get_rental_available_date_spans
@@ -30,7 +31,7 @@ with Client(base_url=CRM_MANAGER_URL) as client:
         end_date="2025-05-15"
     )
 
-    response = accommodations_controller_create_booking.sync_detailed(
+    response = accommodations_controller_create_booking.sync(
         client=client,
         body=BookRentalDto(
             rental_id=rentals_list[0].id,
@@ -47,7 +48,10 @@ with Client(base_url=CRM_MANAGER_URL) as client:
             )
         )
     )
-    print(f"Response: {response}")
-    print(f"Rentals list: {rentals_list}")
-    print(f"Rental available date spans: {rental_available_date_spans}")
+    confirmation_response = accommodations_controller_confirm_settlement.sync_detailed(
+        client=client,
+        id="cdb0b281-fdd0-47f6-9b41-92534289d6d2"
+    )
+    print(confirmation_response)
+    
  
