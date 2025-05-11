@@ -7,6 +7,7 @@ import json
 from typing import Tuple
 from uuid import uuid4
 import wave
+import boto3
 # import io  # Removed
 # import wave  # Removed
 
@@ -39,21 +40,30 @@ from pipecat.pipeline.task import PipelineParams
 from pipecat_flows import FlowManager, FlowsFunctionSchema, FlowArgs, NodeConfig
 from crm_api_client.crm_manager_client.models.date_day_dto import DateDayDto
 load_dotenv(override=True)
+S3_BUCKET = os.getenv("S3_BUCKET")
+S3_ENDPOINT_URL = os.getenv("S3_ENDPOINT_URL")
+AWS_REGION = os.getenv("AWS_REGION", "us-east-1")
+s3_client = boto3.client(
+    "s3",
+    aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+    aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
+    endpoint_url=S3_ENDPOINT_URL,
+    region_name=AWS_REGION
+)
 async def save_audio(audio: bytes, sample_rate: int, num_channels: int, name: str):
     if len(audio) > 0:
-        filename = os.path.join(
-            "recordings",
-            f"{name}_conversation_recording{datetime.now().strftime('%Y%m%d_%H%M%S')}.wav",
-        )
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        object_key = f"{name}_conversation_recording{timestamp}.wav"
         with io.BytesIO() as buffer:
             with wave.open(buffer, "wb") as wf:
                 wf.setsampwidth(2)
                 wf.setnchannels(num_channels)
                 wf.setframerate(sample_rate)
                 wf.writeframes(audio)
-            async with aiofiles.open(filename, "wb") as file:
-                await file.write(buffer.getvalue())
-        print(f"Merged audio saved to {filename}")
+            buffer.seek(0)
+            loop = asyncio.get_running_loop()
+            await loop.run_in_executor(None, s3_client.upload_fileobj, buffer, S3_BUCKET, object_key)
+        print(f"Merged audio saved to s3://{S3_BUCKET}/{object_key}")
     else:
         print("No audio data to save")
         
