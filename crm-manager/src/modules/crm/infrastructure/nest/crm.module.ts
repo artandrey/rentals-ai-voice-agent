@@ -8,6 +8,7 @@ import {
   CreateBookingUseCase,
   ICreateBookingUseCase,
 } from '~modules/crm/application/use-cases/create-booking.use-case';
+import { CreateCallUseCase, ICreateCallUseCase } from '~modules/crm/application/use-cases/create-call.use-case';
 import { CreateClientUseCase, ICreateClientUseCase } from '~modules/crm/application/use-cases/create-client.use-case';
 import {
   FindClientByPhoneQuery,
@@ -44,6 +45,7 @@ import {
   IUpdateClientPreferredLanguageUseCase,
   UpdateClientPreferredLanguageUseCase,
 } from '~modules/crm/application/use-cases/update-client-preferred-language.use-case';
+import { CallMapper } from '~modules/crm/domain/mappers/call.mapper';
 import { ClientMapper } from '~modules/crm/domain/mappers/client.mapper';
 import { RentalMapper } from '~modules/crm/domain/mappers/rental.mapper';
 import { AccommodationsController } from '~modules/crm/infrastructure/http/controllers/accommodations.controller';
@@ -56,6 +58,7 @@ import { RentalsController } from '~modules/crm/infrastructure/http/controllers/
   providers: [
     ClientMapper,
     RentalMapper,
+    CallMapper,
     { provide: IGetClientByIdQuery, useClass: GetClientByIdQuery },
     { provide: IFindClientByPhoneQuery, useClass: FindClientByPhoneQuery },
     { provide: ICreateClientUseCase, useClass: CreateClientUseCase },
@@ -70,6 +73,7 @@ import { RentalsController } from '~modules/crm/infrastructure/http/controllers/
     { provide: IGetCurrentClientAccommodationQuery, useClass: GetCurrentClientAccommodationQuery },
     { provide: ICreateBookingUseCase, useClass: CreateBookingUseCase },
     { provide: IConfirmSettlementUseCase, useClass: ConfirmSettlementUseCase },
+    { provide: ICreateCallUseCase, useClass: CreateCallUseCase },
   ],
 })
 export class CrmModule {}
