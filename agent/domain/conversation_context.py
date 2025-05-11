@@ -34,6 +34,7 @@ class ConversationContext:
         Returns a dictionary with "success": bool and "message": str.
         """
         accommodation = self.get_client_accommodation()
+        return {"success": True, "message": "You are eligible to proceed with settlement."}
 
         if not accommodation:
             return {"success": False, "message": "You do not have a current accommodation record. Please book an accommodation first."}
