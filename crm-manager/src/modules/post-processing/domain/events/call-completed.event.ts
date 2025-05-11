@@ -13,6 +13,7 @@ export class CallCompletedEvent {
   intent: CallIntent;
   clientId: string;
   accommodationId: string;
+  callerPhoneNumber: string;
   transcript: Replica[];
   audioFileId: string;
 }

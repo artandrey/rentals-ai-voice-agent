@@ -75,5 +75,6 @@ import { RentalsController } from '~modules/crm/infrastructure/http/controllers/
     { provide: IConfirmSettlementUseCase, useClass: ConfirmSettlementUseCase },
     { provide: ICreateCallUseCase, useClass: CreateCallUseCase },
   ],
+  exports: [ICreateCallUseCase],
 })
 export class CrmModule {}

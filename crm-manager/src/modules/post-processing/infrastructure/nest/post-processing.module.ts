@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import OpenAI from 'openai';
 
+import { CrmModule } from '~modules/crm/infrastructure/nest/crm.module';
 import { IAppConfigService } from '~shared/application/services/app-config-service.interface';
 import { BaseToken } from '~shared/constants';
 
@@ -26,6 +27,7 @@ import { OpenAiLlmService } from '../llm/openai/openai-llm.service';
       inject: [BaseToken.APP_CONFIG],
     }),
     BullModule.registerQueue({ name: 'call-completed' }),
+    CrmModule,
   ],
   providers: [
     CallCompletedProcessor,
