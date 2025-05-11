@@ -16,8 +16,5 @@ export class CallDto {
   type: CallType | null;
   clientId: string | null;
   associatedRentalId: string | null;
-  callDashboardUrl: string | null;
-  startedAt: string | null;
-  completedAt: string | null;
   transcript: TranscriptDto;
 }

@@ -42,6 +42,7 @@
     "class-validator": "^0.14.1",
     "drizzle-orm": "^0.41.0",
     "nest-winston": "^1.10.2",
+    "openai": "^4.98.0",
     "pg": "^8.14.1",
     "phone": "^3.1.59",
     "postgres": "^3.4.5",

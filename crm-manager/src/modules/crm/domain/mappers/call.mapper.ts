@@ -11,9 +11,6 @@ export class CallMapper {
       type: call.type,
       clientId: call.clientId,
       associatedRentalId: call.associatedRentalId,
-      callDashboardUrl: call.callDashboardUrl,
-      startedAt: call.startedAt?.toISOString() ?? null,
-      completedAt: call.completedAt?.toISOString() ?? null,
       transcript: this.transcriptToDto(call.transcript),
     };
   }
