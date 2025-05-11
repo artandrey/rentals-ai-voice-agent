@@ -65,7 +65,11 @@ s3_client = boto3.client(
     aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
     aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
     endpoint_url=S3_ENDPOINT_URL,
-    region_name=AWS_REGION
+    region_name=AWS_REGION,
+    config=boto3.session.Config(
+        signature_version='s3v4',
+        s3={'addressing_style': 'path'}
+    )
 )
 async def save_audio(audio: bytes, sample_rate: int, num_channels: int, name: str):
     if len(audio) > 0:
@@ -79,9 +83,32 @@ async def save_audio(audio: bytes, sample_rate: int, num_channels: int, name: st
                 wf.writeframes(audio)
             buffer.seek(0)
             loop = asyncio.get_running_loop()
-            await loop.run_in_executor(None, s3_client.upload_fileobj, buffer, S3_BUCKET, object_key)
-        print(f"Merged audio saved to s3://{S3_BUCKET}/{object_key}")
-        return object_key
+            
+            # Check if bucket exists and create it if it doesn't
+            try:
+                await loop.run_in_executor(None, lambda: s3_client.head_bucket(Bucket=S3_BUCKET))
+            except Exception:
+                # Bucket doesn't exist, create it
+                try:
+                    create_bucket_kwargs = {'Bucket': S3_BUCKET}
+                    # If we're not using the default region (us-east-1), we need to specify LocationConstraint
+                    if AWS_REGION != 'us-east-1':
+                        create_bucket_kwargs['CreateBucketConfiguration'] = {
+                            'LocationConstraint': AWS_REGION
+                        }
+                    await loop.run_in_executor(None, lambda: s3_client.create_bucket(**create_bucket_kwargs))
+                    print(f"Created bucket: {S3_BUCKET}")
+                except Exception as e:
+                    print(f"Error creating bucket: {str(e)}")
+                    return None
+            
+            try:
+                await loop.run_in_executor(None, s3_client.upload_fileobj, buffer, S3_BUCKET, object_key)
+                print(f"Merged audio saved to s3://{S3_BUCKET}/{object_key}")
+                return object_key
+            except Exception as e:
+                print(f"Error uploading to S3: {str(e)}")
+                return None
     else:
         print("No audio data to save")
         return None
@@ -816,7 +843,14 @@ async def main(input_device: int, output_device: int):
             for msg in conversation_messages
             if getattr(msg, "role", msg.get("role")) in ("user", "assistant")
         ]
-        file_id = await save_audio(audio, sample_rate, num_channels, "full")
+        
+        # Try to save audio, but continue if it fails
+        try:
+            file_id = await save_audio(audio, sample_rate, num_channels, "full")
+        except Exception as e:
+            print(f"Failed to save audio: {str(e)}")
+            file_id = None
+            
         event = CallCompletedEvent(
             intent,
             client.id if client else None,
