@@ -4,6 +4,8 @@ import os
 import json
 from typing import Tuple
 from uuid import uuid4
+import io  # Added
+import wave  # Added
 
 from dotenv import load_dotenv
 from loguru import logger
@@ -22,6 +24,7 @@ from pipecat.pipeline.pipeline import Pipeline
 from pipecat.pipeline.runner import PipelineRunner
 from pipecat.pipeline.task import PipelineTask
 from pipecat.processors.frame_processor import FrameDirection, FrameProcessor
+from pipecat.processors.audio.audio_buffer_processor import AudioBufferProcessor  # Added
 from pipecat.transports.local.audio import LocalAudioTransport, LocalAudioTransportParams
 from pipecat.services.deepgram.stt import DeepgramSTTService
 from pipecat.services.deepgram.stt import LiveOptions
@@ -693,6 +696,16 @@ class TranscriptionLogger(FrameProcessor):
             print(f"Transcription: {frame.text}")
 
 
+def save_wav(filename: str, audio_bytes: io.BytesIO, sample_rate: int, channels: int, sample_width: int = 2):
+    """Saves audio data from BytesIO to a WAV file."""
+    with wave.open(filename, 'wb') as wf:
+        wf.setnchannels(channels)
+        wf.setsampwidth(sample_width)  # Bytes per sample (e.g., 2 for 16-bit audio)
+        wf.setframerate(sample_rate)
+        wf.writeframes(audio_bytes.getvalue())
+    logger.info(f"Saved audio to {filename}")
+
+
 async def main(input_device: int, output_device: int):
     transport = LocalAudioTransport(
         LocalAudioTransportParams(
@@ -704,19 +717,54 @@ async def main(input_device: int, output_device: int):
     )
     stt = DeepgramSTTService(api_key=os.getenv("DEEPGRAM_API_KEY"), live_options=LiveOptions(language="en", model="nova-2", smart_format=True))
 
-    tl = TranscriptionLogger()
+    # tl = TranscriptionLogger() # We'll get transcript from LLM context
 
     llm = OpenAILLMService(api_key=os.getenv("OPENAI_API_KEY"))
  
 
-    context = OpenAILLMContext()
-    context_aggregator = llm.create_context_aggregator(context)
+    # This 'llm_context' is the OpenAILLMContext
+    # It will store the conversation history.
+    llm_context = OpenAILLMContext() # Renamed from 'context' for clarity
+    context_aggregator = llm.create_context_aggregator(llm_context)
+    
     tts = CartesiaTTSService(api_key=os.getenv("CARTESIA_API_KEY"), voice_id="5c42302c-194b-4d0c-ba1a-8cb485c84ab9", model="sonic-2")
 
-    pipeline = Pipeline([transport.input(), stt, context_aggregator.user(), llm, tts, transport.output(), context_aggregator.assistant()])
+    # --- Audio Recording Setup ---
+    user_audio_recorder = AudioBufferProcessor(name="user_audio_recorder")
+    assistant_audio_recorder = AudioBufferProcessor(name="assistant_audio_recorder")
 
-    task = PipelineTask(pipeline, params=PipelineParams(audio_in_sample_rate=16000, audio_out_sample_rate=16000,
-        allow_interruptions=True))
+    user_audio_buffer = io.BytesIO()
+    assistant_audio_buffer = io.BytesIO()
+
+    # Event handler for user audio
+    @user_audio_recorder.event_handler("on_audio_data")
+    async def on_user_audio_data(processor, audio_data, sample_rate, num_channels):
+        user_audio_buffer.write(audio_data)
+
+    # Event handler for assistant audio
+    @assistant_audio_recorder.event_handler("on_audio_data")
+    async def on_assistant_audio_data(processor, audio_data, sample_rate, num_channels):
+        assistant_audio_buffer.write(audio_data)
+    # --- End Audio Recording Setup ---
+
+    pipeline = Pipeline([
+        transport.input(),
+        user_audio_recorder,      # Record user's input audio
+        stt,
+        # tl, # Not using TranscriptionLogger for final transcript
+        context_aggregator.user(),
+        llm,
+        tts,
+        assistant_audio_recorder, # Record assistant's synthesized audio
+        transport.output(),
+        context_aggregator.assistant()
+    ])
+
+    task = PipelineTask(pipeline, params=PipelineParams(
+        audio_in_sample_rate=16000, 
+        audio_out_sample_rate=16000,
+        allow_interruptions=True
+    ))
     
     flow_manager = FlowManager(
         task=task,
@@ -752,7 +800,48 @@ async def main(input_device: int, output_device: int):
 
     runner = PipelineRunner(handle_sigint=False if sys.platform == "win32" else True)
 
+    logger.info("Starting pipeline runner...")
     await runner.run(task)
+    logger.info("Pipeline runner has finished.")
+
+    # --- Save Conversation Data ---
+    # Create a unique ID for this conversation session for filenames
+    session_id = str(uuid4())
+
+    transcript_filename = f"conversation_transcript_{session_id}.txt"
+    try:
+        conversation_messages = []
+        if hasattr(llm_context, 'messages') and isinstance(llm_context.messages, list):
+            conversation_messages = llm_context.messages
+        elif hasattr(llm_context, 'get_messages') and callable(llm_context.get_messages):
+            conversation_messages = await llm_context.get_messages() # Assuming get_messages might be async
+        
+        with open(transcript_filename, "w", encoding="utf-8") as f:
+            if not conversation_messages:
+                f.write("No messages found in LLM context.\\n")
+                logger.warning("No messages found in LLM context to save.")
+            for msg in conversation_messages:
+                role = getattr(msg, 'role', msg.get('role', 'unknown'))
+                content = getattr(msg, 'content', msg.get('content', ''))
+                f.write(f"{role}: {content}\\n") # Escape newline for the string literal
+            logger.info(f"Saved transcript to {transcript_filename}")
+    except Exception as e:
+        logger.error(f"Error saving transcript: {e}")
+
+    # Save User Audio
+    user_audio_filename = f"user_audio_{session_id}.wav"
+    save_wav(user_audio_filename, user_audio_buffer, 
+             sample_rate=task.params.audio_in_sample_rate, 
+             channels=1)
+
+    # Save Assistant Audio
+    assistant_audio_filename = f"assistant_audio_{session_id}.wav"
+    save_wav(assistant_audio_filename, assistant_audio_buffer, 
+             sample_rate=task.params.audio_out_sample_rate, 
+             channels=1)
+    # --- End Save Conversation Data ---
+
+    logger.info("Conversation data saving complete.")
 
 
 if __name__ == "__main__":
